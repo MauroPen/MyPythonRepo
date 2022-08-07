@@ -24,7 +24,7 @@ int main () {
 if (i == 0)                                               					//Un solo valore inserito
 	i = 1;
 	
-printf ("\nLa media dei valori è %f", media (somma, i));
+printf ("\nLa media dei valori ï¿½ %f", media (somma, i));
 return 0;
 }
 

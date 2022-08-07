@@ -117,7 +117,7 @@ void search (pointer p1, int ricerca) {				//Ricorsione
 		
 	else 
 		if (p1->num == ricerca)
-			printf ("\nIl valore è stato trovato all'interno della lista\n");
+			printf ("\nIl valore ï¿½ stato trovato all'interno della lista\n");
 			
 		else {
 			p1 = p1->next;

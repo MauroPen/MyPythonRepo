@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-typedef int *punt;              		//solo per x, perchè int
+typedef int *punt;              		//solo per x, perchï¿½ int
 
 typedef struct {
 	int civico;
@@ -15,7 +15,7 @@ int main () {
 	
 	pu->civico = 12;
 	
-	printf ("Il civico è %d\n", a.civico);
+	printf ("Il civico ï¿½ %d\n", a.civico);
 	printf ("Puntatore dereferenziato: %d\n", *p);
 	printf ("Valore puntatore: %d\n", p);
 	printf ("Indirizzo di x: %d\n", &x);

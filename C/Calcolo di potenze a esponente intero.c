@@ -12,14 +12,14 @@ int main () {
 	
 	
 	if (x==0) {                               //Caso esponente = 0
-		printf ("Il risultato è 1");
+		printf ("Il risultato ï¿½ 1");
 		return 0;
 	}
  	
  	
 	
     if (a==0) {                               //Caso base = 0  
-    	printf ("Il risultato è 0");
+    	printf ("Il risultato ï¿½ 0");
     	return 0;
 	}
 	
@@ -30,7 +30,7 @@ int main () {
 	x=x-1;
     } while (x>0);
     
-    printf ("Il risultato è %.0f", ris);
+    printf ("Il risultato ï¿½ %.0f", ris);
     return 0;
     }
     
@@ -45,11 +45,11 @@ int main () {
     scanf ("%d", &a);
       if (a==0) {
 	  
-	     printf ("Il risultato è 1\\%.0f", ris);
+	     printf ("Il risultato ï¿½ 1\\%.0f", ris);
          return 0;
 	   }
 	  else {
-		printf ("Il risultato è %f", 1/ris);             
+		printf ("Il risultato ï¿½ %f", 1/ris);             
 		return 0;
 	  }
    }

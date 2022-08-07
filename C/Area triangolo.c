@@ -13,6 +13,6 @@ int main () {
 	}
 	area = (float) (base * altezza) / 2;   
 	                                     
-	printf ("L'area del triangolo di base %d e altezza %d è %f\n", base, altezza, area);
+	printf ("L'area del triangolo di base %d e altezza %d ï¿½ %f\n", base, altezza, area);
 	return 0;
 }
