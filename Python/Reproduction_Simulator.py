@@ -1,6 +1,8 @@
 # Reproduction Simulator
 
 from numpy import random
+from tabulate import tabulate
+from matplotlib import pyplot
 
 print("Welcome to the Reproduction Simulator!\n")
 
@@ -8,19 +10,21 @@ print("Welcome to the Reproduction Simulator!\n")
 
 N = int(input("\nPlease input the Inital Number of Population (Initial_Population) that you want to set:\n", )) # Exceptions to be added
 
+Period = int(input("\nAmazing! Now, please input the length of the Period of time that you want to consider for the simulation:\n"))
+
 b = float(input("\nGreat! Now, please input the Birth Rate (Birth_Rate):\n", )) # Exceptions to be added
 
 d = float(input("\nFinally, please input the desired Death Rate (Death_Rate): \n", )) # Exceptions to be added
 
 # Computation
 
-Days = 10 #Must become a parameter set by the user
+Period_Tab = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
 
 N_Tab = [N] #Collects the resulting N each time
 
 D_Tab =  [0]#Collects the resuling D each time
 
-for i in range(1, Days + 1, 1):
+for i in range(1, Period + 1, 1):
 
     D = 0 #Collects the Delta each time
 
@@ -46,20 +50,20 @@ for i in range(1, Days + 1, 1):
 
     N_Tab.append(N)
 
-# print("\nProcessing! Please Wait...\n\nCurrent Day: ", i, "/", Days)
+# print("\nProcessing! Please Wait...\n\nCurrent Day: ", i, "/", Period)
 
 # Results Presentation
 
+print("\n", tabulate(list(zip(N_Tab, D_Tab)), headers = ["Period", "Population", "Delta"], showindex = True, tablefmt = "github", numalign = "center"))
+
 print("\nInitial_Population: ", N_Tab[0])
-print("\nFinal_Population: ", N_Tab[Days - 1])
+print("\nBirth Rate set: ", b)
+print("\nDeath Rate set: ", d)
+print("\nFinal_Population: ", N_Tab[Period])
+print("\nTotal_Delta: ", sum(D_Tab))
 
-print("\nTotal Delta: ", sum(D_Tab))
-
-print("\n",N_Tab, "\n",D_Tab)
-
-
-
-
-
-
-
+pyplot.title("Simulation Results") 
+pyplot.xlabel("Period") 
+pyplot.ylabel("Population") 
+pyplot.plot(Period_Tab, N_Tab)
+pyplot.show()
