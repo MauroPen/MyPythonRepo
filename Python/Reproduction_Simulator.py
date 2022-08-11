@@ -8,13 +8,15 @@ print("Welcome to the Reproduction Simulator!\n")
 
 # Variables settings
 
-N = int(input("\nPlease input the Inital Number of Population (Initial_Population) that you want to set:\n", )) # Exceptions to be added
+N = int(input("\nPlease input the Inital Number of Population that you want to set:\n", )) # Exceptions to be added
 
-Period = int(input("\nAmazing! Now, please input the length of the Period of time that you want to consider for the simulation:\n"))
+Period = int(input("\nAmazing! Now, please input the length of the Period of time that you want to consider for the simulation:\n")) # Exceptions to be added
 
-b = float(input("\nGreat! Now, please input the Birth Rate (Birth_Rate):\n", )) # Exceptions to be added
+b = float(input("\nGreat! Now, please input the Birth Rate:\n", )) # Exceptions to be added
 
-d = float(input("\nFinally, please input the desired Death Rate (Death_Rate): \n", )) # Exceptions to be added
+d = float(input("\nAwesome! Now, please input the desired Death Rate: \n", )) # Exceptions to be added
+
+c = float(input("\nFinally, please input the Crowding Coefficient. \nPAY ATTENTION! This coefficient will positively affect the Death Rate of your population for each period (default_value: 0.001):\n"), )
 
 # Computation
 
@@ -32,7 +34,7 @@ for i in range(1, Period + 1, 1):
 
         br = random.binomial(1, b, 1)[0]
 
-        dr = random.binomial(1, d, 1)[0]
+        dr = random.binomial(1, d + (c * N), 1)[0]
 
         if (br == 1):
 
@@ -54,13 +56,14 @@ for i in range(1, Period + 1, 1):
 
 # Results Presentation
 
-print("\n", tabulate(list(zip(N_Tab, D_Tab)), headers = ["Period", "Population", "Delta"], showindex = True, tablefmt = "github", numalign = "center"))
+print("\n")
+print(tabulate(list(zip(N_Tab, D_Tab)), headers = ["Period", "Population", "Delta"], showindex = True, tablefmt = "github", numalign = "center"))
 
-print("\nInitial_Population: ", N_Tab[0])
+print("\nInitial Population: ", N_Tab[0])
 print("\nBirth Rate set: ", b)
 print("\nDeath Rate set: ", d)
 print("\nFinal_Population: ", N_Tab[Period])
-print("\nTotal_Delta: ", sum(D_Tab))
+print("\nTotal Delta: ", sum(D_Tab))
 
 pyplot.title("Simulation Results") 
 pyplot.xlabel("Period") 
