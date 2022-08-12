@@ -1,5 +1,5 @@
 # Reproduction Simulator
-from numpy import random, mean
+from numpy import random, mean, linspace
 from tabulate import tabulate
 from matplotlib import pyplot
 
@@ -126,6 +126,7 @@ while (running == True):
 
     D_Tab = [] #Collects the resuling D each time for each iteration
 
+    #pyplot.subplot(1, 2, 1)
     pyplot.title("Simulation Results")
     pyplot.xlabel("Period") 
     pyplot.ylabel("Population") 
@@ -176,15 +177,30 @@ while (running == True):
         
         pyplot.plot(Period_Arr, N_Arr, linestyle = ":")
 
-    #print(N_Tab, D_Tab)
-
     Avg_N = compute_mean(N_Tab, Period, Starting_N)
 
     Avg_D = compute_mean(D_Tab, Period, 0)
 
-    #print(Avg_N, "\n", Avg_D)
+    # Plot Simulation Results
 
     pyplot.plot(Period_Arr, Avg_N)
+
+    """""
+    
+    # Plot Theoretical Delta Function
+    
+    x = linspace(0, ((b-d)/c), 10000)
+
+    y = x * (b - d - c * x)
+
+    pyplot.subplot(1, 2, 2)
+    pyplot.title("Theoretical Delta Function")
+    pyplot.xlabel("Population") 
+    pyplot.ylabel("Delta")
+
+    pyplot.plot(x, y)
+
+    """
 
     """
     # Results Presentation
