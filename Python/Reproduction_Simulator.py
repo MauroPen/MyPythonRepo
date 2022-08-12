@@ -1,4 +1,7 @@
 # Reproduction Simulator
+from numpy import random, mean
+from tabulate import tabulate
+from matplotlib import pyplot
 
 def int_input_check():
 
@@ -48,10 +51,22 @@ def yn_input_check():
 
             print("\nThe inserted value is not valid, please input Y or N\n")
 
+def compute_mean(Tab, Period, Starting_Value):
 
-from numpy import random
-from tabulate import tabulate
-from matplotlib import pyplot
+    Avg_Array = [Starting_Value]
+
+    for i in range(0, Period + 1, 1):
+
+        Avg_Values = [value[i] for value in Tab]
+        
+        Avg_Array[i] = mean(Avg_Values)
+
+        Avg_Array.append([])
+    
+    del Avg_Array[-1]
+
+    return Avg_Array
+
 
 running = bool(True)
 
@@ -105,21 +120,29 @@ while (running == True):
 
     # Computation
 
-    Period_Tab = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
+    Period_Arr = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
 
-    pyplot.title("Simulation Results") 
+    N_Tab = [] #Collects the resulting N each time for each iteration
+
+    D_Tab = [] #Collects the resuling D each time for each iteration
+
+    pyplot.title("Simulation Results")
     pyplot.xlabel("Period") 
     pyplot.ylabel("Population") 
 
     for i in range(1, Repeat + 1, 1): #Iterating the same simulation 30 times
 
-        N_Tab = [Starting_N] #Collects the resulting N each time for each iteration
+        N_Tab.append([])
 
-        D_Tab =  [0] #Collects the resuling D each time for each iteration
+        D_Tab.append([])
+
+        N_Arr = [Starting_N] #Collects the resulting N each time
+
+        D_Arr =  [0] #Collects the resuling D each time
 
         for j in range(1, Period + 1, 1):
 
-            N = N_Tab[j - 1] #Sets the starting population for calculation
+            N = N_Arr[j - 1] #Sets the starting population for calculation
 
             D = 0 #Collects the Delta each time
 
@@ -141,25 +164,39 @@ while (running == True):
 
             N += D
             
-            D_Tab.append(D) #Updates table
+            D_Arr.append(D) #Updates with the new values
 
-            N_Tab.append(N) #Updates table
+            N_Arr.append(N) #Updates with the new values
+            
+            #print("\nProcessing! Please Wait...\n\nCurrent Day: ", j, "/", Period)
+        
+        N_Tab[i - 1] = N_Arr
+        
+        D_Tab[i - 1] = D_Arr
+        
+        pyplot.plot(Period_Arr, N_Arr, linestyle = ":")
 
-        pyplot.plot(Period_Tab, N_Tab, linestyle = ":")
+    #print(N_Tab, D_Tab)
 
-        #print("\nProcessing! Please Wait...\n\nCurrent Day: ", j, "/", Period)
+    Avg_N = compute_mean(N_Tab, Period, Starting_N)
+
+    Avg_D = compute_mean(D_Tab, Period, 0)
+
+    #print(Avg_N, "\n", Avg_D)
+
+    pyplot.plot(Period_Arr, Avg_N)
 
     """
     # Results Presentation
 
     print("\n")
-    print(tabulate(list(zip(N_Tab, D_Tab)), headers = ["Period", "Population", "Delta"], showindex = True, tablefmt = "github", numalign = "center"))
+    print(tabulate(list(zip(N_Arr, D_Arr)), headers = ["Period", "Population", "Delta"], showindex = True, tablefmt = "github", numalign = "center"))
 
-    print("\nInitial Population: ", N_Tab[0])
+    print("\nInitial Population: ", N_Arr[0])
     print("\nBirth Rate set: ", b)
     print("\nDeath Rate set: ", d)
-    print("\nFinal_Population: ", N_Tab[Period])
-    print("\nTotal Delta: ", sum(D_Tab))
+    print("\nFinal_Population: ", N_Arr[Period])
+    print("\nTotal Delta: ", sum(D_Arr))
 
     """
     pyplot.show()
