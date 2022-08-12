@@ -1,4 +1,5 @@
 # Reproduction Simulator
+
 from numpy import random, mean, linspace
 from tabulate import tabulate
 from matplotlib import pyplot
@@ -50,6 +51,7 @@ def yn_input_check():
         else:
 
             print("\nThe inserted value is not valid, please input Y or N\n")
+
 
 def compute_mean(Tab, Period, Starting_Value):
 
@@ -126,10 +128,14 @@ while (running == True):
 
     D_Tab = [] #Collects the resuling D each time for each iteration
 
-    #pyplot.subplot(1, 2, 1)
-    pyplot.title("Simulation Results")
-    pyplot.xlabel("Period") 
-    pyplot.ylabel("Population") 
+    # Plot Simulation Results
+
+    fig, axs = pyplot.subplots(2, sharex = True)
+    axs[0].set_title("Simulation Results - Population Growth Overtime") 
+    axs[0].set_ylabel("Population")
+    axs[1].set_title("Simulation Results - Delta Population Overtime")
+    axs[1].set_xlabel("Period") 
+    axs[1].set_ylabel("Delta")
 
     for i in range(1, Repeat + 1, 1): #Iterating the same simulation 30 times
 
@@ -175,30 +181,56 @@ while (running == True):
         
         D_Tab[i - 1] = D_Arr
         
-        pyplot.plot(Period_Arr, N_Arr, linestyle = ":")
+        axs[0].plot(Period_Arr, N_Arr, linestyle = ":")
+
+        axs[1].plot(Period_Arr, D_Arr, linestyle = ":")
 
     Avg_N = compute_mean(N_Tab, Period, Starting_N)
 
     Avg_D = compute_mean(D_Tab, Period, 0)
 
-    # Plot Simulation Results
+    # Plot Average Simulation Results
 
-    pyplot.plot(Period_Arr, Avg_N)
+    axs[0].plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
+
+    axs[1].plot(Period_Arr, Avg_D, linewidth = 3, color = "k", label = "Average Delta Population")
+    
+    # Plot Theoretical Population Growth
+
+    yn = [Starting_N]
+
+    for j in range(1, Period + 1, 1):
+
+        yn.append(yn[j - 1] + yn[j - 1] * (b - d - c * yn[j - 1]))
+
+    axs[0].plot(Period_Arr, yn, linewidth = 2, color = "m",  label = "Expected Population Growth")
+
+    axs[0].legend(loc = "upper left", fontsize = 6)
+    
+    # Plot Theoretical Delta Population Function
+
+    yd = [0]
+
+    for j in range(1, Period + 1, 1):
+
+        yd.append(yn[j] - yn[j - 1])
+
+    axs[1].plot(Period_Arr, yd, linewidth = 2, color = "m", label = "Expected Delta Population")
+
+    axs[1].legend(loc = "upper left", fontsize = 6)
 
     """""
-    
-    # Plot Theoretical Delta Function
-    
-    x = linspace(0, ((b-d)/c), 10000)
+    #This piece of code plots Delta in function of Population
 
-    y = x * (b - d - c * x)
+    xd = linspace(0, ((b-d)/c), 10000)
 
-    pyplot.subplot(1, 2, 2)
-    pyplot.title("Theoretical Delta Function")
-    pyplot.xlabel("Population") 
-    pyplot.ylabel("Delta")
+    yd = xd * (b - d - c * xd)
 
-    pyplot.plot(x, y)
+    axs[1][1].set_title("Theoretical Delta Function")
+    axs[1][1].set_xlabel("Population") 
+    axs[1][1].set_ylabel("Delta")
+
+    axs[1][1].plot(xd, yd)
 
     """
 
