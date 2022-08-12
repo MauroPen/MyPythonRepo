@@ -24,7 +24,7 @@ def end():
 
     char_input = "Default"
 
-    print("\nEnd of program! Would like to start over? (Y/N)\n")
+    print("\nEnd of program! Would you like to start over? (Y/N)\n")
 
     while(not(char_input == "Y" or char_input == "N")):
 
