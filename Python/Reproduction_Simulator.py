@@ -1,10 +1,8 @@
 # Reproduction Simulator
 
-def end():
+def yn_input():
 
     char_input = "Default"
-
-    print("\n\nSimulation ended!\n\nDo you want to start over? (Y/N)\n")
 
     while(not(char_input == "Y" or char_input == "N")):
 
@@ -22,7 +20,7 @@ def end():
 
         else:
 
-            print("\nInserted value is not valid, please input Y or N\n")
+            print("\nThe inserted value is not valid, please input Y or N\n")
 
 
 from numpy import random
@@ -33,19 +31,39 @@ running = bool(True)
 
 while (running == True):
 
-    print("Welcome to the Reproduction Simulator!\n")
+    print("Welcome to the Reproduction Simulator!\n\nDo you want to run in Default Mode? (Y/N)\n")
+    
+    Default_mode = yn_input()
+    
+    if (Default_mode == True):
+
+        Starting_N = 50
+
+        Period = 30
+
+        b = 0.2
+
+        d = 0.1
+
+        c = 0.001
+
+        repeat = 30
+
+    else:
 
     # Variables settings
 
-    Starting_N = int(input("\nPlease input the Inital Number of Population that you want to set:\n", )) # Exceptions to be added
+        Starting_N = int(input("\nPlease input the Inital Number of Population that you want to set:\n", )) # Exceptions to be added
 
-    Period = int(input("\nAmazing! Now, please input the length of the Period of time that you want to consider for the simulation:\n")) # Exceptions to be added
+        Period = int(input("\nAmazing! Now, please input the length of the Period of time that you want to consider for the simulation:\n")) # Exceptions to be added
 
-    b = float(input("\nGreat! Now, please input the Birth Rate:\n", )) # Exceptions to be added
+        b = float(input("\nGreat! Now, please input the Birth Rate:\n", )) # Exceptions to be added
 
-    d = float(input("\nAwesome! Now, please input the desired Death Rate: \n", )) # Exceptions to be added
+        d = float(input("\nAwesome! Now, please input the desired Death Rate: \n", )) # Exceptions to be added
 
-    c = float(input("\nFinally, please input the Crowding Coefficient. \nPAY ATTENTION! This coefficient will positively affect the Death Rate of your population for each period (default_value: 0.001):\n"), )
+        c = float(input("\n\nFantastic! Now, please input the Crowding Coefficient. \n\nPAY ATTENTION! This coefficient will positively affect the Death Rate of your population for each period (default_value: 0.001):\n"), )
+
+        repeat = int(input("\nFinally, please input the number of times that you want this simulation to be repeated:\n", )) # Exceptions to be added
 
     # Computation
 
@@ -55,7 +73,7 @@ while (running == True):
     pyplot.xlabel("Period") 
     pyplot.ylabel("Population") 
 
-    for i in range(1, 31, 1): #Iterating the same simulation 30 times. Must become a parameter
+    for i in range(1, repeat + 1, 1): #Iterating the same simulation 30 times
 
         N_Tab = [Starting_N] #Collects the resulting N each time for each iteration
 
@@ -108,4 +126,6 @@ while (running == True):
     """
     pyplot.show()
 
-    running = end()
+    print("\n\nSimulation ended!\n\nDo you want to start over? (Y/N)\n")
+    
+    running = yn_input()
