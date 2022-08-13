@@ -34,23 +34,21 @@ def yn_input_check():
 
     char_input = "Default"
 
-    while(not(char_input == "Y" or char_input == "N")):
+    while(not(char_input == "y" or char_input == "n")):
 
         char_input = input()
 
-        if char_input == "Y":
-
-            print("\n")
+        if char_input == "y":
 
             return 1
 
-        elif char_input == "N":
+        elif char_input == "n":
 
             return 0
 
         else:
 
-            print("\nThe inserted value is not valid, please input Y or N\n")
+            print("\nThe inserted value is not valid, please input y or n\n")
 
 
 def compute_mean(Tab, Period, Starting_Value):
@@ -74,7 +72,7 @@ running = bool(True)
 
 while (running == True):
 
-    print("Welcome to the Reproduction Simulator!\n\nDo you want to run in Default Mode? (Y/N)\n")
+    print("\n\nWelcome to the Reproduction Simulator!\n\nDo you want to run in Default Mode? (y/n)\n")
 
     # Variables settings  
 
@@ -137,7 +135,11 @@ while (running == True):
     axs[1].set_xlabel("Period") 
     axs[1].set_ylabel("Delta")
 
-    for i in range(1, Repeat + 1, 1): #Iterating the same simulation 30 times
+    print("\n\nProcessing! Please Wait...\n")
+
+    for i in range(1, Repeat + 1, 1): #Iterating the same simulation multiple times
+
+        print("Current Iteration: {} / {}" .format(i, Repeat), end = "\r")
 
         N_Tab.append([])
 
@@ -167,15 +169,11 @@ while (running == True):
 
                     D -= 1
 
-                #print("\nProcessing! Please Wait...\n\nCurrent Person Evaluated: ", k, "/", N)
-
             N += D
             
             D_Arr.append(D) #Updates with the new values
 
             N_Arr.append(N) #Updates with the new values
-            
-            #print("\nProcessing! Please Wait...\n\nCurrent Day: ", j, "/", Period)
         
         N_Tab[i - 1] = N_Arr
         
@@ -221,23 +219,23 @@ while (running == True):
     
     # Results Presentation
 
-    print("\nInitial Population: ", Starting_N)
+    print("\n\n\nInitial Population: ", Starting_N)
     print("\nBirth Rate set: ", b)
     print("\nDeath Rate set: ", d)
     print("\nCrowding Coefficient set: ", c)
     print("\nNumber of iterations done: ", Repeat)
 
-    print("\nAverage Final Population: ", Avg_N[Period])
+    print("\n\nAverage Final Population: ", Avg_N[Period])
     print("\nTheoretical Final Population: ", yn[Period])
     print("\nAverage Delta per Period: ", mean(Avg_D))
     print("\nTheoretical Delta per Period: ", yd[Period])
 
-    print("\nAverage Population per Period: \n")
+    print("\n\nAverage Population per Period: \n")
     print(tabulate(list(zip(Period_Arr, Avg_N)), headers = ["Period", "Average Population"], tablefmt = "github", numalign = "center"))
     
     pyplot.show()
 
-    print("\n\nSimulation ended!\n\nDo you want to start over? (Y/N)\n")
+    print("\n\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
     
     running = yn_input_check()
 
