@@ -218,37 +218,41 @@ while (running == True):
     axs[1].plot(Period_Arr, yd, linewidth = 2, color = "m", label = "Expected Delta Population")
 
     axs[1].legend(loc = "upper left", fontsize = 6)
-
-    """""
-    #This piece of code plots Delta in function of Population
-
-    xd = linspace(0, ((b-d)/c), 10000)
-
-    yd = xd * (b - d - c * xd)
-
-    axs[1][1].set_title("Theoretical Delta Function")
-    axs[1][1].set_xlabel("Population") 
-    axs[1][1].set_ylabel("Delta")
-
-    axs[1][1].plot(xd, yd)
-
-    """
-
-    """
+    
     # Results Presentation
 
-    print("\n")
-    print(tabulate(list(zip(N_Arr, D_Arr)), headers = ["Period", "Population", "Delta"], showindex = True, tablefmt = "github", numalign = "center"))
-
-    print("\nInitial Population: ", N_Arr[0])
+    print("\nInitial Population: ", Starting_N)
     print("\nBirth Rate set: ", b)
     print("\nDeath Rate set: ", d)
-    print("\nFinal_Population: ", N_Arr[Period])
-    print("\nTotal Delta: ", sum(D_Arr))
+    print("\nCrowding Coefficient set: ", c)
+    print("\nNumber of iterations done: ", Repeat)
 
-    """
+    print("\nAverage Final Population: ", Avg_N[Period])
+    print("\nTheoretical Final Population: ", yn[Period])
+    print("\nAverage Delta per Period: ", mean(Avg_D))
+    print("\nTheoretical Delta per Period: ", yd[Period])
+
+    print("\nAverage Population per Period: \n")
+    print(tabulate(list(zip(Period_Arr, Avg_N)), headers = ["Period", "Average Population"], tablefmt = "github", numalign = "center"))
+    
     pyplot.show()
 
     print("\n\nSimulation ended!\n\nDo you want to start over? (Y/N)\n")
     
     running = yn_input_check()
+
+
+"""""
+#This piece of code plots the theoretical variation of the Delta in function of the Population
+
+xd = linspace(0, ((b-d)/c), 10000)
+
+yd = xd * (b - d - c * xd)
+
+axs[1][1].set_title("Theoretical Delta Function")
+axs[1][1].set_xlabel("Population") 
+axs[1][1].set_ylabel("Delta")
+
+axs[1][1].plot(xd, yd)
+
+"""
