@@ -24,6 +24,4 @@ V1.1
 
     default_Repeat = int(30)
 
-V1.1
-
-- Adedd the length of Period in the results presentation
+- Added the length of Period in the results presentation
