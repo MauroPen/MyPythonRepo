@@ -246,6 +246,7 @@ while (running == True):
     # Results Presentation
 
     print("\n\n\nInitial Population: ", Starting_N)
+    print("\nLength of Period set: ", Period)
     print("\nBirth Rate set: ", b)
     print("\nDeath Rate set: ", d)
     print("\nCrowding Coefficient set: ", c)
