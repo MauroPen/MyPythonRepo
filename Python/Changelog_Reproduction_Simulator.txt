@@ -1,12 +1,12 @@
 CHENGELOG REPRODUCTION SIMULATOR
 
-V1.0.1
+v1.0.1
 
 - Fixed a critical issue with the death counter within the simulation:
   whenever a member of the population reproduced itself, it was not checked whether it died too,
 	resulting in a surplus of the overall population for each period
 
-V1.1
+v1.1
 
 - Added the possibility to change the default values while running.
 
@@ -25,3 +25,13 @@ V1.1
     default_Repeat = int(30)
 
 - Added the length of Period in the results presentation
+
+v1.2
+
+- Refactoring results presentation:
+  the changes introduced provide with more meaningful data visualization about the variation of the Delta Population, in particular:
+
+  - A new plot is included showing the theoretical curve of Delta Population as a function of the Population over a histogram of the actual mean values obtained during the simulations
+  
+  - More data about the numbers obtained during the simulations are printed out in tables at the end of the execution
+    (EVOLUTION: data can be exported)

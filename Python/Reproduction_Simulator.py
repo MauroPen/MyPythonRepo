@@ -2,7 +2,7 @@
 
 from numpy import random, mean, linspace
 from tabulate import tabulate
-from matplotlib import pyplot
+from matplotlib import pyplot, gridspec
 
 def int_input_check():
 
@@ -154,12 +154,24 @@ while (running == True):
 
     # Plot Simulation Results
 
-    fig, axs = pyplot.subplots(2, sharex = True)
-    axs[0].set_title("Simulation Results - Population Growth Overtime") 
-    axs[0].set_ylabel("Population")
-    axs[1].set_title("Simulation Results - Delta Population Overtime")
-    axs[1].set_xlabel("Period") 
-    axs[1].set_ylabel("Delta")
+    gs = gridspec.GridSpec(2, 2)
+
+    fig = pyplot.figure()
+    ax1 = fig.add_subplot(gs[0, 0])
+    pyplot.setp(ax1.get_xticklabels(), visible = False) #Hiding ticks for readability
+    ax1.set_title("Population Growth Overtime") 
+    ax1.set_ylabel("Population")
+
+    ax2 = fig.add_subplot(gs[1, 0], sharex = ax1)
+    ax2.set_title("Delta Population Overtime")
+    ax2.set_xlabel("Period")
+    ax2.set_ylabel("Delta")
+
+    ax3 = fig.add_subplot(gs[:, 1])
+    ax3.set_title("Delta in Function of Population")
+    ax3.set_xlabel("Population") 
+    ax3.set_ylabel("Delta", rotation = -90)
+    ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
 
     print("\n\nProcessing! Please Wait...\n")
 
@@ -205,9 +217,9 @@ while (running == True):
         
         D_Tab[i - 1] = D_Arr
         
-        axs[0].plot(Period_Arr, N_Arr, linestyle = ":")
+        ax1.plot(Period_Arr, N_Arr, linestyle = ":")
 
-        axs[1].plot(Period_Arr, D_Arr, linestyle = ":")
+        ax2.plot(Period_Arr, D_Arr, linestyle = ":")
 
     Avg_N = compute_mean(N_Tab, Period, Starting_N)
 
@@ -215,9 +227,9 @@ while (running == True):
 
     # Plot Average Simulation Results
 
-    axs[0].plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
+    ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
 
-    axs[1].plot(Period_Arr, Avg_D, linewidth = 3, color = "k", label = "Average Delta Population")
+    ax2.plot(Period_Arr, Avg_D, linewidth = 3, color = "k", label = "Average Delta Population")
     
     # Plot Theoretical Population Growth
 
@@ -227,9 +239,9 @@ while (running == True):
 
         yn.append(yn[j - 1] + yn[j - 1] * (b - d - c * yn[j - 1]))
 
-    axs[0].plot(Period_Arr, yn, linewidth = 2, color = "m",  label = "Expected Population Growth")
+    ax1.plot(Period_Arr, yn, linewidth = 2, color = "m",  label = "Expected Population Growth")
 
-    axs[0].legend(loc = "upper left", fontsize = 6)
+    ax1.legend(loc = "upper left", fontsize = 6)
     
     # Plot Theoretical Delta Population Function
 
@@ -239,10 +251,20 @@ while (running == True):
 
         yd.append(yn[j] - yn[j - 1])
 
-    axs[1].plot(Period_Arr, yd, linewidth = 2, color = "m", label = "Expected Delta Population")
+    ax2.plot(Period_Arr, yd, linewidth = 2, color = "m", label = "Expected Delta Population")
 
-    axs[1].legend(loc = "upper left", fontsize = 6)
+    ax2.legend(loc = "upper left", fontsize = 6)
     
+    #Plot Theoretical Delta in function of Population
+
+    xdn = linspace(0, (1.05*((b-d)/c)), 10000)
+
+    ydn = xdn * (b - d - c * xdn)
+
+    ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
+
+    ax3.legend(loc = "upper left", fontsize = 6)
+
     # Results Presentation
 
     print("\n\n\nInitial Population: ", Starting_N)
@@ -265,19 +287,3 @@ while (running == True):
     print("\n\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
     
     running = yn_input_check()
-
-
-"""""
-#This piece of code plots the theoretical variation of the Delta in function of the Population
-
-xd = linspace(0, ((b-d)/c), 10000)
-
-yd = xd * (b - d - c * xd)
-
-axs[1][1].set_title("Theoretical Delta Function")
-axs[1][1].set_xlabel("Population") 
-axs[1][1].set_ylabel("Delta")
-
-axs[1][1].plot(xd, yd)
-
-"""
