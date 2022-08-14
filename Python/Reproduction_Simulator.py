@@ -67,8 +67,21 @@ def compute_mean(Tab, Period, Starting_Value):
 
     return Avg_Array
 
+#Setting Default Values
 
 running = bool(True)
+
+default_Starting_N = int(50)
+
+default_Period = int(30)
+
+default_b = float(0.2)
+
+default_d = float(0.1)
+
+default_c = float(0.001)
+
+default_Repeat = int(30)
 
 while (running == True):
 
@@ -80,17 +93,17 @@ while (running == True):
     
     if (Default_mode == True):
 
-        Starting_N = 50
+        Starting_N = default_Starting_N
 
-        Period = 30
+        Period = default_Period
 
-        b = 0.2
+        b = default_b
 
-        d = 0.1
+        d = default_d
 
-        c = 0.001
+        c = default_c
 
-        Repeat = 30
+        Repeat = default_Repeat
 
     else:
 
@@ -117,6 +130,19 @@ while (running == True):
         print("\nFinally, please input the number of times that you want this simulation to be repeated:\n")
 
         Repeat = int_input_check()
+
+        print("\nDo you want these settings to become the Default Settings for the next iterations? (y/n)\n")
+
+        Edit_default = yn_input_check()
+
+        if (Edit_default == True):
+
+            default_Starting_N = Starting_N
+            default_Period = Period
+            default_b = b
+            default_d = d
+            default_c = c
+            default_Repeat = Repeat
 
     # Computation
 

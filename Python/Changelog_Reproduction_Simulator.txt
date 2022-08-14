@@ -5,3 +5,21 @@ V1.0.1
 - Fixed a critical issue with the death counter within the simulation:
   whenever a member of the population reproduced itself, it was not checked whether it died too,
 	resulting in a surplus of the overall population for each period
+
+V1.1
+
+- Added the possibility to change the default values while running.
+
+  Default values set:
+
+    default_Starting_N = int(50)
+
+    default_Period = int(30)
+
+    default_b = float(0.2)
+
+    default_d = float(0.1)
+
+    default_c = float(0.001)
+
+    default_Repeat = int(30)
