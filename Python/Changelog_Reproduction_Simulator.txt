@@ -1,0 +1,7 @@
+CHENGELOG REPRODUCTION SIMULATOR
+
+V1.0.1
+
+- Fixed a critical issue with the death counter within the simulation:
+  whenever a member of the population reproduced itself, it was not checked whether it died too,
+	resulting in a surplus of the overall population for each period

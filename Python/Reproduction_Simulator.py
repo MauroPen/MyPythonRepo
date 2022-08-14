@@ -165,7 +165,7 @@ while (running == True):
 
                     D += 1
 
-                elif (dr == 1):
+                if (dr == 1):
 
                     D -= 1
 
