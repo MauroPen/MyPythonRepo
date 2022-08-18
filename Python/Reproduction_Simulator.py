@@ -1,8 +1,10 @@
 # Reproduction Simulator
 
-from numpy import random, mean, linspace
+from re import X
+from numpy import random, mean, linspace, full
 from tabulate import tabulate
 from matplotlib import pyplot, gridspec
+from pandas import DataFrame, Series
 
 def int_input_check():
 
@@ -55,17 +57,19 @@ def compute_mean(Tab, Period, Starting_Value):
 
     Avg_Array = [Starting_Value]
 
-    for i in range(0, Period + 1, 1):
-
-        Avg_Values = [value[i] for value in Tab]
-        
-        Avg_Array[i] = mean(Avg_Values)
+    for i in range(1, Period + 1, 1):
 
         Avg_Array.append([])
-    
-    del Avg_Array[-1]
+
+        Avg_Array[i] = mean(Tab["Period " + str(i)])
 
     return Avg_Array
+
+
+    #def N_array_for_histogram(N_Tab): # This is a function extracting only the values for N obtained during the simulation
+
+    
+
 
 #Setting Default Values
 
@@ -148,9 +152,15 @@ while (running == True):
 
     Period_Arr = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
 
-    N_Tab = [] #Collects the resulting N each time for each iteration
+    N_Tab = DataFrame({"Period 0": full(Repeat, Starting_N)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resulting N each time for each iteration
 
-    D_Tab = [] #Collects the resuling D each time for each iteration
+    D_Tab = DataFrame({"Period 0": full(Repeat, 0)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resuling D each time for each iteration
+
+    for i in range(1, Period + 1, 1) :
+        
+        N_Tab["Period " + str(i)] = Series(dtype = int)
+        
+        D_Tab["Period " + str(i)] = Series(dtype = int)
 
     # Plot Simulation Results
 
@@ -178,10 +188,6 @@ while (running == True):
     for i in range(1, Repeat + 1, 1): #Iterating the same simulation multiple times
 
         print("Current Iteration: {} / {}" .format(i, Repeat), end = "\r")
-
-        N_Tab.append([])
-
-        D_Tab.append([])
 
         N_Arr = [Starting_N] #Collects the resulting N each time
 
@@ -213,17 +219,21 @@ while (running == True):
 
             N_Arr.append(N) #Updates with the new values
         
-        N_Tab[i - 1] = N_Arr
-        
-        D_Tab[i - 1] = D_Arr
-        
         ax1.plot(Period_Arr, N_Arr, linestyle = ":")
 
         ax2.plot(Period_Arr, D_Arr, linestyle = ":")
 
+        N_Tab.loc[i] = N_Arr
+        
+        D_Tab.loc[i] = D_Arr
+
     Avg_N = compute_mean(N_Tab, Period, Starting_N)
 
     Avg_D = compute_mean(D_Tab, Period, 0)
+
+        #N_Arr = N_array_for_histogram(N_Tab)
+
+        #Avg_D_N = compute_avg_for_histogram(N_Arr, N_Tab, D_Tab, Period)
 
     # Plot Average Simulation Results
 
