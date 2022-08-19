@@ -1,7 +1,7 @@
 # Reproduction Simulator
 
-from re import X
-from numpy import random, mean, linspace, full
+from tkinter import Y
+from numpy import random, mean, linspace, full, unique
 from tabulate import tabulate
 from matplotlib import pyplot, gridspec
 from pandas import DataFrame, Series
@@ -16,7 +16,7 @@ def int_input_check():
 
         int_input = int(input())
 
-    return (int_input)
+    return int_input
 
 
 def float_input_check():
@@ -29,7 +29,7 @@ def float_input_check():
 
         float_input = float(input())
 
-    return (float_input)
+    return float_input
 
 
 def yn_input_check():
@@ -66,7 +66,19 @@ def compute_mean(Tab, Period, Starting_Value):
     return Avg_Array
 
 
-    #def N_array_for_histogram(N_Tab): # This is a function extracting only the values for N obtained during the simulation
+def N_array_for_histogram(Tab, Period, Repeat): # This is a function extracting only the values for N obtained during the simulation
+
+    Tab_Values = []
+
+    for i in range(0, Period + 1, 1):
+
+        for j in range(1, Repeat + 1, 1):
+            
+            Tab_Values.append(Tab["Period " + str(i)][j])
+
+    return unique(Tab_Values)
+
+
 
     
 
@@ -231,7 +243,7 @@ while (running == True):
 
     Avg_D = compute_mean(D_Tab, Period, 0)
 
-        #N_Arr = N_array_for_histogram(N_Tab)
+    N_Arr = N_array_for_histogram(N_Tab, Period, Repeat)
 
         #Avg_D_N = compute_avg_for_histogram(N_Arr, N_Tab, D_Tab, Period)
 
