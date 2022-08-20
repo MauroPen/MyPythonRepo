@@ -1,6 +1,6 @@
 # Reproduction Simulator
 
-from tkinter import Y
+from math import isnan
 from numpy import random, mean, linspace, full, unique
 from tabulate import tabulate
 from matplotlib import pyplot, gridspec
@@ -66,7 +66,7 @@ def compute_mean(Tab, Period, Starting_Value):
     return Avg_Array
 
 
-def N_array_for_histogram(Tab, Period, Repeat): # This is a function extracting only the values for N obtained during the simulation
+def compute_unique_Tab_Values(Tab, Period, Repeat): # This is a function extracting only the values for N obtained during the simulation
 
     Tab_Values = []
 
@@ -79,17 +79,40 @@ def N_array_for_histogram(Tab, Period, Repeat): # This is a function extracting 
     return unique(Tab_Values)
 
 
+def compute_avg_Delta_Population(Unique_Array, Tab1, Tab2, Period, Repeat):
 
-    
+    Avg_Values = []
+
+    for i in range(0, int(max(Unique_Array)) + 1, 1):
+
+        collector = [] #Collects the values of D to average for each N
+
+        for j in range(0, Period, 1): # Only "Period" because there is no data available for the last Period of simulation
+
+            for k in range(1, Repeat + 1, 1):
+            
+                if (Tab1["Period " + str(j)][k] == i):
+                    
+                    collector.append(Tab2["Period " + str(j + 1)][k])
+            
+        if (isnan(mean(collector)) == True):
+
+            Avg_Values.append(0)
+
+        else:
+
+            Avg_Values.append(mean(collector))
+
+    return Avg_Values
 
 
 #Setting Default Values
 
 running = bool(True)
 
-default_Starting_N = int(50)
+default_Starting_N = int(25)
 
-default_Period = int(30)
+default_Period = int(50)
 
 default_b = float(0.2)
 
@@ -189,12 +212,6 @@ while (running == True):
     ax2.set_xlabel("Period")
     ax2.set_ylabel("Delta")
 
-    ax3 = fig.add_subplot(gs[:, 1])
-    ax3.set_title("Delta in Function of Population")
-    ax3.set_xlabel("Population") 
-    ax3.set_ylabel("Delta", rotation = -90)
-    ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
-
     print("\n\nProcessing! Please Wait...\n")
 
     for i in range(1, Repeat + 1, 1): #Iterating the same simulation multiple times
@@ -243,9 +260,9 @@ while (running == True):
 
     Avg_D = compute_mean(D_Tab, Period, 0)
 
-    N_Arr = N_array_for_histogram(N_Tab, Period, Repeat)
+    N_Arr = compute_unique_Tab_Values(N_Tab, Period, Repeat)
 
-        #Avg_D_N = compute_avg_for_histogram(N_Arr, N_Tab, D_Tab, Period)
+    Avg_D_N = compute_avg_Delta_Population(N_Arr, N_Tab, D_Tab, Period, Repeat)
 
     # Plot Average Simulation Results
 
@@ -277,14 +294,25 @@ while (running == True):
 
     ax2.legend(loc = "upper left", fontsize = 6)
     
-    #Plot Theoretical Delta in function of Population
+    # Plot Actual Average Delta in function of Population
 
-    xdn = linspace(0, (1.05*((b-d)/c)), 10000)
+    ax3 = fig.add_subplot(gs[:, 1])
+    ax3.set_title("Delta in Function of Population")
+    ax3.set_xlabel("Population") 
+    ax3.set_ylabel("Delta", rotation = -90)
+    ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
+    ax3.set_xlim(Starting_N, len(Avg_D_N) + 1)
+    
+    ax3.plot(Avg_D_N, color = "k", label = "Average Delta in function of Population")
+
+    # Plot Actual Average Delta in function of Population
+
+    xdn = linspace(0, len(Avg_D_N) + 1, 1000)
 
     ydn = xdn * (b - d - c * xdn)
 
     ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
-
+    
     ax3.legend(loc = "upper left", fontsize = 6)
 
     # Results Presentation

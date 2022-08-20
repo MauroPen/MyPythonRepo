@@ -31,10 +31,14 @@ v1.2
 - Tables' types redefinition:
   N_Tab and D_Tab have been refactored through Pandas DataFrame module, so it is now easier to collect data and run computations
 
+- A new plot is included showing the theoretical curve of Delta Population as a function of the Population over a histogram of the actual mean values obtained during the simulations
+  
+
+v1.3 (TBR)
+
 - Refactoring results presentation:
   the changes introduced provide with more meaningful data visualization about the variation of the Delta Population, in particular:
 
-  - A new plot is included showing the theoretical curve of Delta Population as a function of the Population over a histogram of the actual mean values obtained during the simulations
-  
-  - More data about the numbers obtained during the simulations are printed out in tables at the end of the execution
-    (EVOLUTION: data can be exported)
+- More data about the numbers obtained during the simulations are printed out in tables at the end of the execution
+  (EVOLUTION: data can be exported)
+
