@@ -1,10 +1,12 @@
-- Rivedere dati mostrati rispetto ai valori medi della simulazione e utilizzare DataFrame
+- Rivedere dati mostrati rispetto ai valori medi della simulazione
 
-- Studiare gli le conseguenze nei casi in cui d + c*N > b
-
-- Analizzare dove è possibile limitarsi all'uso della dichiarazione della variabile (:)
+- Studiare le conseguenze nei casi in cui d + c*N > b
 
 - Gestire meglio gli input utente (non accettare decimali/interi/stringhe)
+
+- Aggiungere la possibilità di non stampare l'ultimo grafico (per rapidità)
+
+    - Rifattorizzare la creazione dei grafici
 
 
 

@@ -5,6 +5,11 @@ from numpy import random, mean, linspace, full, unique
 from tabulate import tabulate
 from matplotlib import pyplot, gridspec
 from pandas import DataFrame, Series
+from sys import warnoptions
+
+if not warnoptions:
+    from warnings import simplefilter
+    simplefilter("ignore")
 
 def int_input_check():
 
@@ -83,7 +88,11 @@ def compute_avg_Delta_Population(Unique_Array, Tab1, Tab2, Period, Repeat):
 
     Avg_Values = []
 
+    print("\n\nI am now computing the Average Delta in function of the Population from the simulation results\n")
+
     for i in range(0, int(max(Unique_Array)) + 1, 1):
+
+        print("Please, Wait... Current Iteration: {} / {}" .format(i, int(max(Unique_Array))), end = "\r")
 
         collector = [] #Collects the values of D to average for each N
 
@@ -120,7 +129,7 @@ default_d = float(0.1)
 
 default_c = float(0.001)
 
-default_Repeat = int(30)
+default_Repeat = int(50)
 
 while (running == True):
 
@@ -189,7 +198,7 @@ while (running == True):
 
     N_Tab = DataFrame({"Period 0": full(Repeat, Starting_N)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resulting N each time for each iteration
 
-    D_Tab = DataFrame({"Period 0": full(Repeat, 0)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resuling D each time for each iteration
+    D_Tab = DataFrame({"Period 0": full(Repeat, 0)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resulting D each time for each iteration
 
     for i in range(1, Period + 1, 1) :
         
@@ -220,13 +229,13 @@ while (running == True):
 
         N_Arr = [Starting_N] #Collects the resulting N each time
 
-        D_Arr =  [0] #Collects the resuling D each time
+        D_Arr =  [0] #Collects the resuling D for each Iteration
 
         for j in range(1, Period + 1, 1):
 
             N = N_Arr[j - 1] #Sets the starting population for calculation
 
-            D = 0 #Collects the Delta each time
+            D = 0 #Collects the Delta each Period
 
             for k in range(1, N + 1, 1):
 
@@ -244,9 +253,9 @@ while (running == True):
 
             N += D
             
-            D_Arr.append(D) #Updates with the new values
+            D_Arr.append(D) #Updating with the new values
 
-            N_Arr.append(N) #Updates with the new values
+            N_Arr.append(N) #Updating with the new values
         
         ax1.plot(Period_Arr, N_Arr, linestyle = ":")
 
@@ -322,16 +331,14 @@ while (running == True):
     print("\nBirth Rate set: ", b)
     print("\nDeath Rate set: ", d)
     print("\nCrowding Coefficient set: ", c)
-    print("\nNumber of iterations done: ", Repeat)
+    print("\nNumber of Iterations done: ", Repeat)
 
     print("\n\nAverage Final Population: ", Avg_N[Period])
     print("\nTheoretical Final Population: ", yn[Period])
-    print("\nAverage Delta per Period: ", mean(Avg_D))
-    print("\nTheoretical Delta per Period: ", yd[Period])
 
     print("\n\nAverage Population per Period: \n")
-    print(tabulate(list(zip(Period_Arr, Avg_N)), headers = ["Period", "Average Population"], tablefmt = "github", numalign = "center"))
-    
+    print(tabulate(DataFrame({"Period": Period_Arr, "Average Population": Avg_N, "Average Delta": Avg_D}), headers = ["Period", "Average Population", "Average Delta"], tablefmt = "github", numalign = "center", showindex = False))
+
     pyplot.show()
 
     print("\n\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
