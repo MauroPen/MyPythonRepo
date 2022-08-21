@@ -1,12 +1,11 @@
 - Rivedere dati mostrati rispetto ai valori medi della simulazione
 
-- Studiare le conseguenze nei casi in cui d + c*N > b
+- Studiare le conseguenze nei casi in cui d + c*Starting_N > b
+
+    - Verificare soprattutto l'ultimo grafico: l'asse x utilizzato non è idoneo alla rappresentazione del Delta in funzione di Population
 
 - Gestire meglio gli input utente (non accettare decimali/interi/stringhe)
 
-- Aggiungere la possibilità di non stampare l'ultimo grafico (per rapidità)
-
-    - Rifattorizzare la creazione dei grafici
 
 
 
@@ -43,3 +42,5 @@
     - Definire ydn (la funzione dovrebbe esserci già, bisogna adattarla) DONE
     - Definire Avg_D_N come valore medio di Delta per ogni N esistente DONE
     - Disegnare il grafico medio della simulazione DONE
+
+- Aggiungere la possibilità di non stampare l'ultimo grafico (per rapidità) DONE

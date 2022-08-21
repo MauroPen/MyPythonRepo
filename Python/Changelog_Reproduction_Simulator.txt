@@ -33,7 +33,7 @@ v1.2
 
 - A new plot is included showing the theoretical curve of Delta Population as a function of the Population compared to the actual mean values obtained during the simulations
 
-  - Can be disabled to shorten the expected time of execution (TBD)
+  - Can be disabled to shorten the expected time of execution
 
 v1.3 (TBD)
 

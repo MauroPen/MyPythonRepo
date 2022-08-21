@@ -1,6 +1,7 @@
 # Reproduction Simulator
 
 from math import isnan
+from tkinter import Y
 from numpy import random, mean, linspace, full, unique
 from tabulate import tabulate
 from matplotlib import pyplot, gridspec
@@ -8,8 +9,11 @@ from pandas import DataFrame, Series
 from sys import warnoptions
 
 if not warnoptions:
+
     from warnings import simplefilter
+
     simplefilter("ignore")
+
 
 def int_input_check():
 
@@ -47,11 +51,11 @@ def yn_input_check():
 
         if char_input == "y":
 
-            return 1
+            return True
 
         elif char_input == "n":
 
-            return 0
+            return False
 
         else:
 
@@ -171,7 +175,7 @@ while (running == True):
 
         d = float_input_check()
 
-        print("\n\nFantastic! Now, please input the Crowding Coefficient. \n\nPAY ATTENTION! This coefficient will positively affect the Death Rate of your population for each period (recommended value: 0.001):\n")
+        print("\n\nFantastic! Now, please input the Crowding Coefficient. \n\nWARNING! This coefficient will positively affect the Death Rate of your population for each period (recommended value: 0.001):\n")
 
         c = float_input_check()
 
@@ -192,6 +196,12 @@ while (running == True):
             default_c = c
             default_Repeat = Repeat
 
+    # Computation of Average Delta in function of the Population? (y/n)
+    
+    print("\n\nDo you want to compute the Average Delta in function of the Population too? (y/n)\n\nWARNING! This computation may require longer times of execution of the program.\n")
+
+    Compute_Avg_Delta_Population = yn_input_check()
+
     # Computation
 
     Period_Arr = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
@@ -208,7 +218,13 @@ while (running == True):
 
     # Plot Simulation Results
 
-    gs = gridspec.GridSpec(2, 2)
+    if (Compute_Avg_Delta_Population == True):
+
+        gs = gridspec.GridSpec(2, 2)
+
+    else:
+
+        gs = gridspec.GridSpec(2, 1)
 
     fig = pyplot.figure()
     ax1 = fig.add_subplot(gs[0, 0])
@@ -271,8 +287,6 @@ while (running == True):
 
     N_Arr = compute_unique_Tab_Values(N_Tab, Period, Repeat)
 
-    Avg_D_N = compute_avg_Delta_Population(N_Arr, N_Tab, D_Tab, Period, Repeat)
-
     # Plot Average Simulation Results
 
     ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
@@ -302,27 +316,33 @@ while (running == True):
     ax2.plot(Period_Arr, yd, linewidth = 2, color = "m", label = "Expected Delta Population")
 
     ax2.legend(loc = "upper left", fontsize = 6)
+
+    # Plot Average Delta in function of the Population
     
-    # Plot Actual Average Delta in function of Population
+    if (Compute_Avg_Delta_Population == True): 
 
-    ax3 = fig.add_subplot(gs[:, 1])
-    ax3.set_title("Delta in Function of Population")
-    ax3.set_xlabel("Population") 
-    ax3.set_ylabel("Delta", rotation = -90)
-    ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
-    ax3.set_xlim(Starting_N, len(Avg_D_N) + 1)
-    
-    ax3.plot(Avg_D_N, color = "k", label = "Average Delta in function of Population")
+        # Plot Actual Average Delta in function of Population
 
-    # Plot Actual Average Delta in function of Population
+        Avg_D_N = compute_avg_Delta_Population(N_Arr, N_Tab, D_Tab, Period, Repeat)
+        
+        ax3 = fig.add_subplot(gs[:, 1])
+        ax3.set_title("Delta in Function of Population")
+        ax3.set_xlabel("Population") 
+        ax3.set_ylabel("Delta", rotation = -90)
+        ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
+        ax3.set_xlim(Starting_N, len(Avg_D_N) + 1)
+        
+        ax3.plot(Avg_D_N, color = "k", label = "Average Delta in function of Population")
+   
+        # Plot Theoretical Average Delta in function of Population
 
-    xdn = linspace(0, len(Avg_D_N) + 1, 1000)
+        xdn = linspace(0, len(Avg_D_N) + 1, 1000)
 
-    ydn = xdn * (b - d - c * xdn)
+        ydn = xdn * (b - d - c * xdn)
 
-    ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
-    
-    ax3.legend(loc = "upper left", fontsize = 6)
+        ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
+        
+        ax3.legend(loc = "upper left", fontsize = 6)
 
     # Results Presentation
 
