@@ -92,11 +92,11 @@ def compute_avg_Delta_Population(Unique_Array, Tab1, Tab2, Period, Repeat):
 
     Avg_Values = []
 
-    print("\n\nI am now computing the Average Delta in function of the Population from the simulation results\n")
+    print("\n\nAlmost done! Please, wait while computing the Average Delta in function of the Population...\n")
 
     for i in range(0, int(max(Unique_Array)) + 1, 1):
 
-        print("Please, Wait... Current Iteration: {} / {}" .format(i, int(max(Unique_Array))), end = "\r")
+        print("Current Iteration: {} / {}" .format(i, int(max(Unique_Array))), end = "\r")
 
         collector = [] #Collects the values of D to average for each N
 
@@ -257,15 +257,21 @@ while (running == True):
 
                 br = random.binomial(1, b, 1)[0]
 
-                dr = random.binomial(1, d + (c * N), 1)[0]
-
                 if (br == 1):
 
                     D += 1
+                
+                if (d + (c * N) <= 1):
+                    
+                    dr = random.binomial(1, d + (c * N), 1)[0]
 
-                if (dr == 1):
+                    if (dr == 1):
 
-                    D -= 1
+                        D -= 1
+
+                else:
+
+                    D-= 1
 
             N += D
             
@@ -284,8 +290,6 @@ while (running == True):
     Avg_N = compute_mean(N_Tab, Period, Starting_N)
 
     Avg_D = compute_mean(D_Tab, Period, 0)
-
-    N_Arr = compute_unique_Tab_Values(N_Tab, Period, Repeat)
 
     # Plot Average Simulation Results
 
@@ -322,15 +326,17 @@ while (running == True):
     if (Compute_Avg_Delta_Population == True): 
 
         # Plot Actual Average Delta in function of Population
+        
+        N_Array = compute_unique_Tab_Values(N_Tab, Period, Repeat)
 
-        Avg_D_N = compute_avg_Delta_Population(N_Arr, N_Tab, D_Tab, Period, Repeat)
+        Avg_D_N = compute_avg_Delta_Population(N_Array, N_Tab, D_Tab, Period, Repeat)
         
         ax3 = fig.add_subplot(gs[:, 1])
         ax3.set_title("Delta in Function of Population")
         ax3.set_xlabel("Population") 
         ax3.set_ylabel("Delta", rotation = -90)
         ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
-        ax3.set_xlim(Starting_N, len(Avg_D_N) + 1)
+        ax3.set_xlim(min(N_Array), len(Avg_D_N) + 1)
         
         ax3.plot(Avg_D_N, color = "k", label = "Average Delta in function of Population")
    

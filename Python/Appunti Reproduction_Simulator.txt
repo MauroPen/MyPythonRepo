@@ -1,8 +1,16 @@
-- Rivedere dati mostrati rispetto ai valori medi della simulazione
+- Rivedere dati mostrati rispetto ai valori medi della simulazione e renderli esportabili
 
-- Studiare le conseguenze nei casi in cui d + c*Starting_N > b
+- Introdurre più procedure e funzioni, riordinandole
 
-    - Verificare soprattutto l'ultimo grafico: l'asse x utilizzato non è idoneo alla rappresentazione del Delta in funzione di Population
+- Considerare di ridurre la lunghezza dell'asse x di ax2
+
+    - Spesso i grandi cambiamenti su quella curva si vedono solo a ridosso del primo periodo, poi si appiattisce a zero
+
+- Studiare come varia il modello al variare dei parametri
+
+    - Dare suggerimenti agli utenti sui valori da inserire
+
+- Rework input: presentare un'interfaccia semplice in cui mostrare e rendere editabili i parametri 
 
 - Gestire meglio gli input utente (non accettare decimali/interi/stringhe)
 

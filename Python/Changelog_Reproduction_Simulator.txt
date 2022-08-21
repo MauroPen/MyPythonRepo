@@ -37,9 +37,4 @@ v1.2
 
 v1.3 (TBD)
 
-- Refactoring results presentation:
-  the changes introduced provide with more meaningful data visualization about the variation of the Delta Population, in particular:
-
-- More data about the numbers obtained during the simulations are printed out in tables at the end of the execution
-  (EVOLUTION: data can be exported)
-
+Stay tuned!
