@@ -38,3 +38,5 @@ v1.2
 v1.3 (TBD)
 
 - Managed typeExceptions due to certain incorrect user inputs
+
+- The results of the simulation can now be exported in a single .xlsx file (and/or in .csv?)

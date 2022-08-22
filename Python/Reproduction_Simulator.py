@@ -3,9 +3,10 @@
 from math import isnan
 from tkinter import Y
 from numpy import random, mean, linspace, full, unique
-from tabulate import tabulate
 from matplotlib import pyplot, gridspec
-from pandas import DataFrame, Series
+from pandas import DataFrame, Series, option_context, ExcelWriter
+from os import getcwd
+from datetime import datetime
 from sys import warnoptions
 
 if not warnoptions:
@@ -63,9 +64,7 @@ def float_input_check():
             print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
 
             float_input = -1
-
     
-
 
 def yn_input_check():
 
@@ -228,6 +227,12 @@ while (running == True):
 
     Compute_Avg_Delta_Population = yn_input_check()
 
+    # Export Results in .csv Files? (y/n)
+    
+    print("\n\nDo you want to export the results of the simulation in a .xlsx file? (y/n)\n\nWARNING! This will create a new file in your current working directory, which is: {}\n" .format(getcwd()))
+
+    Export_File = yn_input_check()
+    
     # Computation
 
     Period_Arr = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
@@ -317,6 +322,8 @@ while (running == True):
 
     Avg_D = compute_mean(D_Tab, Period, 0)
 
+    Avg_Tab = DataFrame({"Period": Period_Arr, "Average Population": Avg_N, "Average Delta": Avg_D}, index = list(range(0, Period + 1, 1)))
+
     # Plot Average Simulation Results
 
     ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
@@ -389,7 +396,35 @@ while (running == True):
     print("\nTheoretical Final Population: ", yn[Period])
 
     print("\n\nAverage Population per Period: \n")
-    print(tabulate(DataFrame({"Period": Period_Arr, "Average Population": Avg_N, "Average Delta": Avg_D}), headers = ["Period", "Average Population", "Average Delta"], tablefmt = "github", numalign = "center", showindex = False))
+
+    with option_context("display.max_rows", None, "display.max_columns", None, "display.precision", 2): #Sets options of visualizations valid only for the "with" instance
+
+        print(Avg_Tab.to_markdown(tablefmt = "github", numalign = "center", showindex = False))
+    
+    # Export Results
+
+    if (Export_File == True):
+
+        datetime_string = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+
+        with ExcelWriter ("Simulation Results ({}).xlsx" .format(datetime_string)) as writer:
+
+            N_Tab.to_excel(writer, sheet_name = "Population Overtime", index = True)
+            
+            D_Tab.to_excel(writer, sheet_name = "Delta Population Overtime", index = True)
+
+            Avg_Tab.to_excel(writer, sheet_name = "Average Delta Population", index = False)
+        
+        """ 
+        # Export the values obtained in three different .csv files
+
+        N_Tab.to_csv("Population_Overtime({}).csv" .format(datetime_string), index = True)
+
+        D_Tab.to_csv("Delta_Population_Overtime({}).csv" .format(datetime_string), index = True)
+
+        Avg_Tab.to_excel("Average_Delta_Population({}).csv" .format(datetime_string), index = False)
+
+        """
 
     pyplot.show()
 
