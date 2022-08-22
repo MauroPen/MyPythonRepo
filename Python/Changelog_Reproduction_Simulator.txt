@@ -37,4 +37,4 @@ v1.2
 
 v1.3 (TBD)
 
-Stay tuned!
+- Managed typeExceptions due to certain incorrect user inputs

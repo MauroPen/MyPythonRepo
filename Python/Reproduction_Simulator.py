@@ -17,28 +17,54 @@ if not warnoptions:
 
 def int_input_check():
 
-    int_input = int(input())
+    int_input = -1
+
+    while (int_input < 0):
+
+        try:
+            
+            int_input = int(input())
     
-    while(int_input < 0):
+            while(int_input < 0):
 
-        print("\nThe inserted value is not valid, please input a number higher than 0:\n")
+                print("\nThe inserted value is not valid, please input a number higher than 0:\n")
 
-        int_input = int(input())
+                int_input = int(input())
 
-    return int_input
+            return int_input
+        
+        except:
+
+            print("\nThe inserted value is not valid, please input a number higher than 0:\n")
+
+            int_input = -1
 
 
 def float_input_check():
 
-    float_input = float(input())
+    float_input = -1.0
 
-    while (not(float_input >= 0 and float_input <= 1)):
+    while (float_input < 0):
 
-        print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+        try:
 
-        float_input = float(input())
+            float_input = float(input())
 
-    return float_input
+            while (not(float_input >= 0 and float_input <= 1)):
+
+                print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+
+                float_input = float(input())
+
+            return float_input
+
+        except:
+
+            print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+
+            float_input = -1
+
+    
 
 
 def yn_input_check():

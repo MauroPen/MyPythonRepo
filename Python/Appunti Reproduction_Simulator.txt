@@ -10,10 +10,7 @@
 
     - Dare suggerimenti agli utenti sui valori da inserire
 
-- Rework input: presentare un'interfaccia semplice in cui mostrare e rendere editabili i parametri 
-
-- Gestire meglio gli input utente (non accettare decimali/interi/stringhe)
-
+- Rework input: presentare un'interfaccia semplice in cui mostrare e rendere editabili i parametri
 
 
 
@@ -52,3 +49,7 @@
     - Disegnare il grafico medio della simulazione DONE
 
 - Aggiungere la possibilità di non stampare l'ultimo grafico (per rapidità) DONE
+
+- Gestire meglio gli input utente (non accettare decimali/interi/stringhe) DONE
+
+    - Usare try - except - finally DONE
