@@ -1,10 +1,11 @@
 # Reproduction Simulator
 
 from math import isnan
-from tkinter import Y
+from IPython.display import display
 from numpy import random, mean, linspace, full, unique
 from matplotlib import pyplot, gridspec
 from pandas import DataFrame, Series, option_context, ExcelWriter
+from tabulate import tabulate
 from os import getcwd
 from datetime import datetime
 from sys import warnoptions
@@ -393,13 +394,27 @@ while (running == True):
     print("\nNumber of Iterations done: ", Repeat)
 
     print("\n\nAverage Final Population: ", Avg_N[Period])
-    print("\nTheoretical Final Population: ", yn[Period])
+    print("\nTheoretical Final Population: ", "{:.2f}" .format(yn[Period]))
 
-    print("\n\nAverage Population per Period: \n")
+    with option_context("display.max_rows", None,
+                        "display.max_columns", 12,
+                        "display.width", 1000,
+                        "display.colheader_justify", "center",
+                        "display.precision", 2): #Sets options of visualization for display() valid only for the "with" instance
 
-    with option_context("display.max_rows", None, "display.max_columns", None, "display.precision", 2): #Sets options of visualizations valid only for the "with" instance
+        print("\n\nResults of the simulation:")
 
-        print(Avg_Tab.to_markdown(tablefmt = "github", numalign = "center", showindex = False))
+        print("\nPopulation: per Period:\n")
+        
+        display(N_Tab)
+
+        print("\nDelta Population: per Period:\n")
+        
+        display(D_Tab)
+        
+        print("\n\nAverage Population per Period: \n")
+        
+        print(tabulate(Avg_Tab, headers = Avg_Tab.columns, tablefmt = "github", numalign = "center", showindex = "False"))
     
     # Export Results
 

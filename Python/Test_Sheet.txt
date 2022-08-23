@@ -1,0 +1,35 @@
+Test Base:
+
+    - Starting_N = 20
+
+    - Period = 100
+
+    - Birth Rate (b) = 0.1
+
+    - Death Rate (d) = 0.05
+
+    - Crowding Coefficient (c) = 0.001
+
+    - Repeat = 100
+
+    - Print Average Delta Population plot
+
+    - Save results into an Excel file
+
+Test (d + c * Starting_N > 1):
+
+    - Starting_N = 200
+
+    - Period = 100
+
+    - Birth Rate (b) = 0.35
+
+    - Death Rate (d) = 0.25
+
+    - Crowding Coefficient (c) = 0.001
+
+    - Repeat = 100
+
+    - Print Average Delta Population plot
+
+    - Save results into an Excel file
