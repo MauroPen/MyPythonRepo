@@ -230,10 +230,20 @@ while (running == True):
 
     # Export Results in .csv Files? (y/n)
     
-    print("\n\nDo you want to export the results of the simulation in a .xlsx file? (y/n)\n\nWARNING! This will create a new file in your current working directory, which is: {}\n" .format(getcwd()))
-
-    Export_File = yn_input_check()
+    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create one or more new files in your current working directory, which is: {}\n" .format(getcwd()))
     
+    if (yn_input_check() == True):
+
+        print("\n\nDo you want to export the results in a single .xlsx file (1), in three separated .csv files (2), or both (3)? If you changed your mind, just enter \"4\"\n")
+
+        Export_File = int_input_check()
+        
+        while (Export_File < 1 or Export_File > 4):
+        
+            print("\nThe inserted value is not valid, please input a number between 1 and 4:\n")
+
+            Export_File = int_input_check()
+
     # Computation
 
     Period_Arr = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
@@ -397,7 +407,7 @@ while (running == True):
     print("\nTheoretical Final Population: ", "{:.2f}" .format(yn[Period]))
 
     with option_context("display.max_rows", None,
-                        "display.max_columns", 12,
+                        "display.max_columns", 10,
                         "display.width", 1000,
                         "display.colheader_justify", "center",
                         "display.precision", 2): #Sets options of visualization for display() valid only for the "with" instance
@@ -418,9 +428,11 @@ while (running == True):
     
     # Export Results
 
-    if (Export_File == True):
+    datetime_string = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
 
-        datetime_string = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+    if (Export_File == 1 or Export_File == 3):
+
+        # Export the values obtained in a single .xlsx file
 
         with ExcelWriter ("Simulation Results ({}).xlsx" .format(datetime_string)) as writer:
 
@@ -429,17 +441,16 @@ while (running == True):
             D_Tab.to_excel(writer, sheet_name = "Delta Population Overtime", index = True)
 
             Avg_Tab.to_excel(writer, sheet_name = "Average Delta Population", index = False)
+
+    if (Export_File == 2 or Export_File == 3):
         
-        """ 
         # Export the values obtained in three different .csv files
 
         N_Tab.to_csv("Population_Overtime({}).csv" .format(datetime_string), index = True)
 
         D_Tab.to_csv("Delta_Population_Overtime({}).csv" .format(datetime_string), index = True)
 
-        Avg_Tab.to_excel("Average_Delta_Population({}).csv" .format(datetime_string), index = False)
-
-        """
+        Avg_Tab.to_csv("Average_Delta_Population({}).csv" .format(datetime_string), index = False)
 
     pyplot.show()
 
