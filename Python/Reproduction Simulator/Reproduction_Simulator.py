@@ -442,18 +442,26 @@ while (running == True):
 
             Avg_Tab.to_excel(writer, sheet_name = "Average Delta Population", index = False)
 
+            print("\nIn this directory: {}\nA file named: \"Simulation Results ({}).xlsx\" has been successfully created!\n" .format(getcwd(), datetime_string))
+
     if (Export_File == 2 or Export_File == 3):
         
         # Export the values obtained in three different .csv files
 
         N_Tab.to_csv("Population_Overtime({}).csv" .format(datetime_string), index = True)
 
+        print("\nIn this directory: {}\nA file named: \"Population_Overtime({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
+
         D_Tab.to_csv("Delta_Population_Overtime({}).csv" .format(datetime_string), index = True)
+
+        print("\nIn this directory: {}\nA file named: \"Delta_Population_Overtime({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
 
         Avg_Tab.to_csv("Average_Delta_Population({}).csv" .format(datetime_string), index = False)
 
+        print("\nIn this directory: {}\nA file named: \"Average_Delta_Population({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
+
     pyplot.show()
 
-    print("\n\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
+    print("\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
     
     running = yn_input_check()

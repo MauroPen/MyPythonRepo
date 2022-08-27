@@ -14,13 +14,15 @@ Test Default:
 
     - Print Average Delta Population plot
 
-    - Save results into an Excel file
+    - Save results in a .xlsx file
+
+    - Save results in a .csv file
 
 Test (d + c * Starting_N > 1):
 
     - Starting_N = 200
 
-    - Period = 100
+    - Period = 50
 
     - Birth Rate (b) = 0.35
 
@@ -32,4 +34,6 @@ Test (d + c * Starting_N > 1):
 
     - Print Average Delta Population plot
 
-    - Save results into an Excel file
+    - Save results in a .xlsx file
+
+    - Save results in a .csv file

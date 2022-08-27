@@ -37,8 +37,8 @@ v1.2
 
 v1.3
 
-- Managed typeExceptions due to certain incorrect user inputs
-
 - The results of the simulation can now be exported in a single .xlsx file and/or in three different .csv files
 
-- The the results presentation section has been rethinked and is now showing more and more meaningful results
+- The results presentation section has been rethinked and is now showing more and more meaningful results
+
+- Managed typeExceptions due to certain incorrect user inputs
