@@ -35,6 +35,10 @@ v1.2
 
   - Can be disabled to shorten the expected time of execution
 
-v1.3 (TBD)
+v1.3
 
-Stay tuned!
+- The results of the simulation can now be exported in a single .xlsx file and/or in three different .csv files
+
+- The results presentation section has been rethinked and is now showing more and more meaningful results
+
+- Managed typeExceptions due to certain incorrect user inputs

@@ -1,4 +1,6 @@
-- Rivedere dati mostrati rispetto ai valori medi della simulazione e renderli esportabili
+- Capire come gestire l'export in modo sicuro
+
+    - Ora si crea il file nella cwd, come permettere un salvataggio migliore (servirebbe "Sfoglia...")?
 
 - Introdurre più procedure e funzioni, riordinandole
 
@@ -10,9 +12,12 @@
 
     - Dare suggerimenti agli utenti sui valori da inserire
 
-- Rework input: presentare un'interfaccia semplice in cui mostrare e rendere editabili i parametri 
+- Rework input
+    
+    - Presentare un'interfaccia semplice in cui mostrare e rendere editabili i parametri iniziali
 
-- Gestire meglio gli input utente (non accettare decimali/interi/stringhe)
+    - Presentare un'interfaccia semplice in cui far scegliere all'utente quali file in formato .csv vuole esportare
+
 
 
 
@@ -52,3 +57,9 @@
     - Disegnare il grafico medio della simulazione DONE
 
 - Aggiungere la possibilità di non stampare l'ultimo grafico (per rapidità) DONE
+
+- Gestire meglio gli input utente (non accettare decimali/interi/stringhe) DONE
+
+    - Usare try - except - finally DONE
+
+- Rivedere dati mostrati rispetto ai valori medi della simulazione DONE

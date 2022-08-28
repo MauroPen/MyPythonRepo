@@ -1,11 +1,13 @@
 # Reproduction Simulator
 
 from math import isnan
-from tkinter import Y
+from IPython.display import display
 from numpy import random, mean, linspace, full, unique
-from tabulate import tabulate
 from matplotlib import pyplot, gridspec
-from pandas import DataFrame, Series
+from pandas import DataFrame, Series, option_context, ExcelWriter
+from tabulate import tabulate
+from os import getcwd
+from datetime import datetime
 from sys import warnoptions
 
 if not warnoptions:
@@ -17,29 +19,53 @@ if not warnoptions:
 
 def int_input_check():
 
-    int_input = int(input())
+    int_input = -1
+
+    while (int_input < 0):
+
+        try:
+            
+            int_input = int(input())
     
-    while(int_input < 0):
+            while(int_input < 0):
 
-        print("\nThe inserted value is not valid, please input a number higher than 0:\n")
+                print("\nThe inserted value is not valid, please input a number higher than 0:\n")
 
-        int_input = int(input())
+                int_input = int(input())
 
-    return int_input
+            return int_input
+        
+        except:
+
+            print("\nThe inserted value is not valid, please input a number higher than 0:\n")
+
+            int_input = -1
 
 
 def float_input_check():
 
-    float_input = float(input())
+    float_input = -1.0
 
-    while (not(float_input >= 0 and float_input <= 1)):
+    while (float_input < 0):
 
-        print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+        try:
 
-        float_input = float(input())
+            float_input = float(input())
 
-    return float_input
+            while (not(float_input >= 0 and float_input <= 1)):
 
+                print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+
+                float_input = float(input())
+
+            return float_input
+
+        except:
+
+            print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+
+            float_input = -1
+    
 
 def yn_input_check():
 
@@ -202,6 +228,22 @@ while (running == True):
 
     Compute_Avg_Delta_Population = yn_input_check()
 
+    # Export Results in .csv Files? (y/n)
+    
+    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create one or more new files in your current working directory, which is: {}\n" .format(getcwd()))
+    
+    if (yn_input_check() == True):
+
+        print("\n\nDo you want to export the results in a single .xlsx file (1), in three separated .csv files (2), or both (3)? If you changed your mind, just enter \"4\"\n")
+
+        Export_File = int_input_check()
+        
+        while (Export_File < 1 or Export_File > 4):
+        
+            print("\nThe inserted value is not valid, please input a number between 1 and 4:\n")
+
+            Export_File = int_input_check()
+
     # Computation
 
     Period_Arr = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
@@ -291,6 +333,8 @@ while (running == True):
 
     Avg_D = compute_mean(D_Tab, Period, 0)
 
+    Avg_Tab = DataFrame({"Period": Period_Arr, "Average Population": Avg_N, "Average Delta": Avg_D}, index = list(range(0, Period + 1, 1)))
+
     # Plot Average Simulation Results
 
     ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
@@ -360,13 +404,64 @@ while (running == True):
     print("\nNumber of Iterations done: ", Repeat)
 
     print("\n\nAverage Final Population: ", Avg_N[Period])
-    print("\nTheoretical Final Population: ", yn[Period])
+    print("\nTheoretical Final Population: ", "{:.2f}" .format(yn[Period]))
 
-    print("\n\nAverage Population per Period: \n")
-    print(tabulate(DataFrame({"Period": Period_Arr, "Average Population": Avg_N, "Average Delta": Avg_D}), headers = ["Period", "Average Population", "Average Delta"], tablefmt = "github", numalign = "center", showindex = False))
+    with option_context("display.max_rows", None,
+                        "display.max_columns", 10,
+                        "display.width", 1000,
+                        "display.colheader_justify", "center",
+                        "display.precision", 2): #Sets options of visualization for display() valid only for the "with" instance
+
+        print("\n\nResults of the simulation:")
+
+        print("\nPopulation: per Period:\n")
+        
+        display(N_Tab)
+
+        print("\nDelta Population: per Period:\n")
+        
+        display(D_Tab)
+        
+        print("\n\nAverage Population per Period: \n")
+        
+        print(tabulate(Avg_Tab, headers = Avg_Tab.columns, tablefmt = "github", numalign = "center", showindex = "False"))
+    
+    # Export Results
+
+    datetime_string = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+
+    if (Export_File == 1 or Export_File == 3):
+
+        # Export the values obtained in a single .xlsx file
+
+        with ExcelWriter ("Simulation Results ({}).xlsx" .format(datetime_string)) as writer:
+
+            N_Tab.to_excel(writer, sheet_name = "Population Overtime", index = True)
+            
+            D_Tab.to_excel(writer, sheet_name = "Delta Population Overtime", index = True)
+
+            Avg_Tab.to_excel(writer, sheet_name = "Average Delta Population", index = False)
+
+            print("\nIn this directory: {}\nA file named: \"Simulation Results ({}).xlsx\" has been successfully created!\n" .format(getcwd(), datetime_string))
+
+    if (Export_File == 2 or Export_File == 3):
+        
+        # Export the values obtained in three different .csv files
+
+        N_Tab.to_csv("Population_Overtime({}).csv" .format(datetime_string), index = True)
+
+        print("\nIn this directory: {}\nA file named: \"Population_Overtime({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
+
+        D_Tab.to_csv("Delta_Population_Overtime({}).csv" .format(datetime_string), index = True)
+
+        print("\nIn this directory: {}\nA file named: \"Delta_Population_Overtime({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
+
+        Avg_Tab.to_csv("Average_Delta_Population({}).csv" .format(datetime_string), index = False)
+
+        print("\nIn this directory: {}\nA file named: \"Average_Delta_Population({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
 
     pyplot.show()
 
-    print("\n\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
+    print("\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
     
     running = yn_input_check()
