@@ -122,7 +122,7 @@ def compute_avg_Delta_Population(Unique_Array, Tab1, Tab2, Period, Repeat):
 
     for i in range(0, int(max(Unique_Array)) + 1, 1):
 
-        print("Current Iteration: {} / {}" .format(i, int(max(Unique_Array))), end = "\r")
+        print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = int(max(Unique_Array))), end = "\r")
 
         collector = [] #Collects the values of D to average for each N
 
@@ -230,7 +230,7 @@ while (running == True):
 
     # Export Results in .csv Files? (y/n)
     
-    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create one or more new files in your current working directory, which is: {}\n" .format(getcwd()))
+    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create one or more new files in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
     
     if (yn_input_check() == True):
 
@@ -243,6 +243,10 @@ while (running == True):
             print("\nThe inserted value is not valid, please input a number between 1 and 4:\n")
 
             Export_File = int_input_check()
+
+    else:
+
+        Export_File = 0
 
     # Computation
 
@@ -283,7 +287,7 @@ while (running == True):
 
     for i in range(1, Repeat + 1, 1): #Iterating the same simulation multiple times
 
-        print("Current Iteration: {} / {}" .format(i, Repeat), end = "\r")
+        print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = Repeat), end = "\r")
 
         N_Arr = [Starting_N] #Collects the resulting N each time
 
@@ -434,7 +438,7 @@ while (running == True):
 
         # Export the values obtained in a single .xlsx file
 
-        with ExcelWriter ("Simulation Results ({}).xlsx" .format(datetime_string)) as writer:
+        with ExcelWriter ("Simulation Results ({Timestamp}).xlsx" .format(Timestamp = datetime_string)) as writer:
 
             N_Tab.to_excel(writer, sheet_name = "Population Overtime", index = True)
             
@@ -442,23 +446,23 @@ while (running == True):
 
             Avg_Tab.to_excel(writer, sheet_name = "Average Delta Population", index = False)
 
-            print("\nIn this directory: {}\nA file named: \"Simulation Results ({}).xlsx\" has been successfully created!\n" .format(getcwd(), datetime_string))
+            print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Simulation Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
 
     if (Export_File == 2 or Export_File == 3):
         
         # Export the values obtained in three different .csv files
 
-        N_Tab.to_csv("Population_Overtime({}).csv" .format(datetime_string), index = True)
+        N_Tab.to_csv("Population_Overtime ({Timestamp}).csv" .format(Timestamp = datetime_string), index = True)
 
-        print("\nIn this directory: {}\nA file named: \"Population_Overtime({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
+        print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Population_Overtime ({Timestamp}).csv\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
 
-        D_Tab.to_csv("Delta_Population_Overtime({}).csv" .format(datetime_string), index = True)
+        D_Tab.to_csv("Delta_Population_Overtime ({Timestamp}).csv" .format(Timestamp = datetime_string), index = True)
 
-        print("\nIn this directory: {}\nA file named: \"Delta_Population_Overtime({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
+        print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Delta_Population_Overtime ({Timestamp}).csv\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
 
-        Avg_Tab.to_csv("Average_Delta_Population({}).csv" .format(datetime_string), index = False)
+        Avg_Tab.to_csv("Average_Delta_Population ({Timestamp}).csv" .format(Timestamp = datetime_string), index = False)
 
-        print("\nIn this directory: {}\nA file named: \"Average_Delta_Population({}).csv\" has been successfully created!\n" .format(getcwd(), datetime_string))
+        print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Average_Delta_Population ({Timestamp}).csv\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
 
     pyplot.show()
 

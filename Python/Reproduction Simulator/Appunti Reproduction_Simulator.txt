@@ -18,6 +18,8 @@
 
     - Presentare un'interfaccia semplice in cui far scegliere all'utente quali file in formato .csv vuole esportare
 
+- Considerare l'uso di dizionari ({})
+
 
 
 
