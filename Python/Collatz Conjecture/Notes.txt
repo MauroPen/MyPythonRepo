@@ -1,0 +1,19 @@
+Notes about Collatz Conjecture program
+
+- Presentation window
+
+- User input
+
+	- The input defines the range of starting numbers to compute the Collatz Conjecture for
+
+- Graph presentation
+
+	- X: iterations
+
+	- Y: starting number
+
+- Data insights
+
+- Data export
+
+- Consider UI design eventually
