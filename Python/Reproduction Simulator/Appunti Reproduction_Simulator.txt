@@ -12,14 +12,13 @@
 
     - Dare suggerimenti agli utenti sui valori da inserire
 
-- Rework input
+- Considerare l'uso di dizionari ({})
+
+- Rework input --> Tkinter/Kyvi/PyQt
     
     - Presentare un'interfaccia semplice in cui mostrare e rendere editabili i parametri iniziali
 
     - Presentare un'interfaccia semplice in cui far scegliere all'utente quali file in formato .csv vuole esportare
-
-- Considerare l'uso di dizionari ({})
-
 
 
 

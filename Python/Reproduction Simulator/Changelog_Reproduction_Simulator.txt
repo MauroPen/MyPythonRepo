@@ -45,7 +45,7 @@ v1.3
 
 v.1.3.1
 
-- Fixed a critical issue happening if the user was not wiling to export the results of the simulation
+- Fixed a critical issue happening if the user was not willing to export the results of the simulation
 
 v1.4 (TBD)
 
