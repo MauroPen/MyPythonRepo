@@ -1,10 +1,14 @@
 Notes about Collatz Conjecture program
 
-- Presentation window
+- Presentation window DONE
 
-- User input
+- User input DONE
 
-	- The input defines the range of starting numbers to compute the Collatz Conjecture for
+	- The input defines the range of starting numbers to compute the Collatz Conjecture for DONE
+
+	- Consider to adapt to the application (check if second input is higher than first, beyond being integers)
+
+- Computation
 
 - Graph presentation
 
