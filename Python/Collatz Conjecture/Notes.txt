@@ -6,7 +6,7 @@ Notes about Collatz Conjecture program
 
 	- The input defines the range of starting numbers to compute the Collatz Conjecture for DONE
 
-	- Consider to adapt to the application (check if second input is higher than first, beyond being integers)
+	- Consider to adapt to the application (check if second input is higher than first, beyond being integers) DONE
 
 - Computation
 

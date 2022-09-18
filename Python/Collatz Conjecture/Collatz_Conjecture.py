@@ -1,5 +1,7 @@
 # Collatz Conjecture
 
+from numpy import sort
+
 def yn_input_check():
 
     char_input = "Default"
@@ -56,7 +58,7 @@ while (running == True):
 
     # Variables settings
 
-    Range = [] 
+    Range = [1, 0] #Initialized to unsatisfy the condition in "else" 
 
     Default_mode = yn_input_check()
 
@@ -66,15 +68,25 @@ while (running == True):
 
     else:
 
-        print("\nPlease input the number that you would like to start the computation from:\n")
-        
-        Range.append(int_input_check())
+        while (Range[0] > Range[1]):
 
-        print("\nAmazing! Now, please input the last number of the computation:\n")
-        
-        Range.append(int_input_check()) #WATCH OUT! It might be lower than the first one (must be checked)
+            print("\nPlease input the number that you would like to start the computation from:\n")
+            
+            Range[0] = int_input_check()
 
-    print(Range, "\n")
+            print("\nAmazing! Now, please input the last number of the computation:\n")
+            
+            Range[1] = int_input_check()
+
+            if (Range[0] > Range[1]):
+
+                print("\nThe last number inputed is lower than the first one. Would you like to revert their order and continue with the execution? (y/n)\n\n(Otherwise, you will be required to input the two values again)\n")
+
+                if (yn_input_check() == True):
+
+                    Range = sort(Range)
+
+    print("\n", Range, "\n")
 
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
