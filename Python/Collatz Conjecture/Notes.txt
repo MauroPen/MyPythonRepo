@@ -8,13 +8,13 @@ Notes about Collatz Conjecture program
 
 	- Consider to adapt to the application (check if second input is higher than first, beyond being integers) DONE
 
-- Computation
+- Computation DONE
 
-- Graph presentation
+- Graph presentation (must be done later to know the maximum values for the axis)
 
-	- X: iterations
+	- X: Iterations (1 - Max_Iterations)
 
-	- Y: starting number
+	- Y: Numbers obtained (1 - Max Number)
 
 - Data insights
 
