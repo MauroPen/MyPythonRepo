@@ -10,11 +10,11 @@ Notes about Collatz Conjecture program
 
 - Computation DONE
 
-- Graph presentation (must be done later to know the maximum values for the axis)
+- Graph presentation (must be done later to know the maximum values for the axis) DONE
 
-	- X: Iterations (1 - Max_Iterations)
+	- X: Iterations (1 - Max_Iterations) DONE
 
-	- Y: Numbers obtained (1 - Max Number)
+	- Y: Numbers obtained (1 - Max Number) DONE
 
 - Data insights
 

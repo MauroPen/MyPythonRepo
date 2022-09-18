@@ -1,8 +1,9 @@
 # Collatz Conjecture
 
-from numpy import sort, array, append
+from numpy import sort, array, append, where
 from pandas import DataFrame, Series
 from IPython.display import display
+from matplotlib import pyplot, gridspec
 
 def yn_input_check():
 
@@ -48,11 +49,21 @@ def int_input_check():
 
             int_input = -1
 
+def normalizeValues(Table, Range, Max_Iterations):
+
+    for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to add as many "0" as necessary to make every array having as many values as the longest iteration
+
+        while (len(Table.at[i, "Obtained Values"]) != Max_Iterations):
+
+            Table.at[i, "Obtained Values"] = append(Table.at[i, "Obtained Values"], int(0))
+
+    return Table
+
 #Setting Default Values
 
 running = bool(True)
 
-Default_Range = array([10, 15])
+Default_Range = array([10, 100])
 
 while (running == True):
 
@@ -90,15 +101,24 @@ while (running == True):
 
     # Computation
 
-    Execution_Table = DataFrame({"Starting Numbers": list(range(Range[0], Range[1] + 1, 1))}, index = list(range(1, (Range[1] - Range[0] + 2), 1))) #Creating the table collecting valuesobtained for each starting number
+    Execution_Table = DataFrame({"Starting Number": list(range(Range[0], Range[1] + 1, 1))}, index = list(range(1, (Range[1] - Range[0] + 2), 1))) #Creating the table collecting valuesobtained for each starting number
 
     Execution_Table["Obtained Values"] = Series(dtype = object) #Creating an empty column hosting the obtained values in array form
 
     Execution_Table["Obtained Values"] = Execution_Table["Obtained Values"].apply(lambda column: [])
 
-    Max_Number = Range[1]
+    Max_Number_Tag = {
+        "Id": 1,
+        "Starting Number": Range[0],
+        "Max Number": Range[1],
+        "Iteration": 0
+    }
 
-    Max_Iterations = 0
+    Max_Iterations_Tag = {
+        "Id": 1,
+        "Starting Number": Range[0],
+        "Max Iterations": 0
+    }
 
     for i in range(1, (Range[1] - Range[0] + 2), 1):
 
@@ -114,16 +134,58 @@ while (running == True):
 
                 Iteration_Array = append(Iteration_Array, Iteration_Array[-1] * 3 + 1)
 
-        if (Max_Number < max(Iteration_Array)):
+        if (Max_Number_Tag["Max Number"] < max(Iteration_Array)):
 
-            Max_Number = max(Iteration_Array)
+            Max_Number_Tag["Id"] = i
+            Max_Number_Tag["Starting Number"] = (Range[0] + i - 1)
+            Max_Number_Tag["Max Number"] = max(Iteration_Array)
+            Max_Number_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array)) #To refactor
 
-        if (Max_Iterations < (len(Iteration_Array) - 1)):
+        if (Max_Iterations_Tag["Max Iterations"] < len(Iteration_Array)):
 
-            Max_Iterations = (len(Iteration_Array) - 1)
+            Max_Iterations_Tag["Id"] = i
+            Max_Iterations_Tag["Starting Number"] = (Range[0] + i - 1)
+            Max_Iterations_Tag["Max Iterations"] = len(Iteration_Array)
 
         Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
 
+    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together
+
+    # Graph
+
+    Iterations_Axis = list(range(1, Max_Iterations_Tag["Max Iterations"] + 1, 1))
+
+    gs = gridspec.GridSpec(3, 1)
+    fig = pyplot.figure()
+
+    ax1 = fig.add_subplot(gs[0, 0])
+    pyplot.setp(ax1.get_xticklabels(), visible = False) #Hiding ticks for readability
+    ax1.set_title("Results Overview")
+    ax1.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
+    ax1.set_ylabel("Number")
+
+    ax2 = fig.add_subplot(gs[1, 0], sharex = ax1)
+    pyplot.setp(ax2.get_xticklabels(), visible = False) #Hiding ticks for readability
+    ax2.set_title("Longest Iteration")
+    ax2.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
+    ax2.set_ylabel("Number")
+
+    ax3 = fig.add_subplot(gs[2, 0], sharex = ax1)
+    ax3.set_title("Highest Number")
+    ax3.set_xlabel("Iteration")
+    ax3.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
+    ax3.set_ylabel("Number")
+
+    for i in range(1, (Range[1] - Range[0] + 2), 1):
+        
+        ax1.plot(Iterations_Axis, Execution_Table.at[i, "Obtained Values"], linestyle = ":")
+
+    ax2.plot(Iterations_Axis, Execution_Table.at[Max_Iterations_Tag["Id"], "Obtained Values"], linewidth = 2, color = "k", label = "Longest Iteration")
+
+    ax3.plot(Iterations_Axis, Execution_Table.at[Max_Number_Tag["Id"], "Obtained Values"], linewidth = 2, color = "b", label = "Highest Number")
+
+    pyplot.show()
+    
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
     running = yn_input_check()
