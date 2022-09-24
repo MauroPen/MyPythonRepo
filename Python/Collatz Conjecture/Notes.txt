@@ -16,8 +16,10 @@ Notes about Collatz Conjecture program
 
 	- Y: Numbers obtained (1 - Max Number) DONE
 
-- Data insights
+- Data insights DONE
 
-- Data export
+- Data export DONE
+
+	- Needs refactoring because data cannot be plotted if saved in array format
 
 - Consider UI design eventually

@@ -1,9 +1,11 @@
 # Collatz Conjecture
 
 from numpy import sort, array, append, where
-from pandas import DataFrame, Series
+from pandas import DataFrame, Series, ExcelWriter
 from IPython.display import display
 from matplotlib import pyplot, gridspec
+from datetime import datetime
+from os import getcwd
 
 def yn_input_check():
 
@@ -173,18 +175,21 @@ while (running == True):
     ax1.set_title("Results Overview")
     ax1.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax1.set_ylabel("Number")
+    pyplot.grid()
 
     ax2 = fig.add_subplot(gs[1, 0], sharex = ax1)
     pyplot.setp(ax2.get_xticklabels(), visible = False) #Hiding ticks for readability
     ax2.set_title("Longest Iteration")
     ax2.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax2.set_ylabel("Number")
+    pyplot.grid()
 
     ax3 = fig.add_subplot(gs[2, 0], sharex = ax1)
     ax3.set_title("Highest Number")
     ax3.set_xlabel("Iteration")
     ax3.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax3.set_ylabel("Number")
+    pyplot.grid()
 
     print("\n\nGenerating the graphs! Please Wait...\n")
 
@@ -193,20 +198,32 @@ while (running == True):
         print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
         
         ax1.plot(Iterations_Axis, Execution_Table.at[i, "Obtained Values"], linestyle = ":")
-
+    
     ax2.plot(Iterations_Axis, Execution_Table.at[Max_Iterations_Tag["Id"], "Obtained Values"], linewidth = 2, color = "k", label = "Longest Iteration")
 
     ax3.plot(Iterations_Axis, Execution_Table.at[Max_Number_Tag["Id"], "Obtained Values"], linewidth = 2, color = "b", label = "Highest Number")
 
     # Data insights
-
+    
     print("\n\nThe starting number {Starting_Number} has generated the highest number {Max_Number} during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
 
     print("\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
-
-    pyplot.grid()
     
     pyplot.show()
+    
+    # Export data
+
+    print("\nWould you like to export the data obtained during the computation in an Excel file? (y/n)\n\nWARNING! The new file would be created in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
+
+    if (yn_input_check() == True):
+
+        Datetime_String = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+
+        with ExcelWriter ("Collatz Conjecture Results ({Timestamp}).xlsx" .format(Timestamp = Datetime_String)) as writer:
+
+            Execution_Table.to_excel(writer, sheet_name = "Execution Table", index = True)
+
+            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Collatz Conjecture Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = Datetime_String))
     
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
