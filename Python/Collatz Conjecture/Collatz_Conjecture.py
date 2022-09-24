@@ -51,9 +51,13 @@ def int_input_check():
 
 def normalizeValues(Table, Range, Max_Iterations):
 
+    print("\n\nPreparing data for plotting! Please Wait...\n")
+
     for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to add as many "0" as necessary to make every array having as many values as the longest iteration
 
-        while (len(Table.at[i, "Obtained Values"]) != Max_Iterations):
+        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
+        
+        while (len(Table.at[i, "Obtained Values"]) != Max_Iterations + 1):
 
             Table.at[i, "Obtained Values"] = append(Table.at[i, "Obtained Values"], int(0))
 
@@ -120,7 +124,13 @@ while (running == True):
         "Max Iterations": 0
     }
 
+    print("\n\nProcessing! Please Wait...\n")
+
     for i in range(1, (Range[1] - Range[0] + 2), 1):
+
+        #print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = (Range[1] - Range[0] + 1)), end = "\r")
+
+        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
 
         Iteration_Array = array([Range[0] + i - 1])
 
@@ -138,8 +148,8 @@ while (running == True):
 
             Max_Number_Tag["Id"] = i
             Max_Number_Tag["Starting Number"] = (Range[0] + i - 1)
-            Max_Number_Tag["Max Number"] = max(Iteration_Array)
-            Max_Number_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array)) #To refactor
+            Max_Number_Tag["Max Number"] = int(max(Iteration_Array))
+            Max_Number_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
 
         if (Max_Iterations_Tag["Max Iterations"] < len(Iteration_Array)):
 
@@ -153,7 +163,7 @@ while (running == True):
 
     # Graph
 
-    Iterations_Axis = list(range(1, Max_Iterations_Tag["Max Iterations"] + 1, 1))
+    Iterations_Axis = list(range(0, Max_Iterations_Tag["Max Iterations"] + 1, 1))
 
     gs = gridspec.GridSpec(3, 1)
     fig = pyplot.figure()
@@ -176,7 +186,11 @@ while (running == True):
     ax3.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax3.set_ylabel("Number")
 
+    print("\n\nGenerating the graphs! Please Wait...\n")
+
     for i in range(1, (Range[1] - Range[0] + 2), 1):
+
+        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
         
         ax1.plot(Iterations_Axis, Execution_Table.at[i, "Obtained Values"], linestyle = ":")
 
@@ -184,6 +198,14 @@ while (running == True):
 
     ax3.plot(Iterations_Axis, Execution_Table.at[Max_Number_Tag["Id"], "Obtained Values"], linewidth = 2, color = "b", label = "Highest Number")
 
+    # Data insights
+
+    print("\n\nThe starting number {Starting_Number} has generated the highest number {Max_Number} during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
+
+    print("\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
+
+    pyplot.grid()
+    
     pyplot.show()
     
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
