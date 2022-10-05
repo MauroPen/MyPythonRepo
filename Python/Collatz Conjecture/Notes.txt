@@ -22,4 +22,10 @@ Notes about Collatz Conjecture program
 
 	- Needs refactoring because data cannot be plotted if saved in array format
 
+		- By modifying normalizeValues(), the generation of graphs might be affected --> Apply modifications to Excel output first DONE
+
+		- Complete refactoring
+
+- Analyze warnings to optimize code
+
 - Consider UI design eventually

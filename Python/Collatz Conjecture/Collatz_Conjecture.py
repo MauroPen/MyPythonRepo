@@ -1,7 +1,7 @@
 # Collatz Conjecture
 
 from numpy import sort, array, append, where
-from pandas import DataFrame, Series, ExcelWriter
+from pandas import DataFrame, Series, ExcelWriter, merge
 from IPython.display import display
 from matplotlib import pyplot, gridspec
 from datetime import datetime
@@ -62,6 +62,28 @@ def normalizeValues(Table, Range, Max_Iterations):
         while (len(Table.at[i, "Obtained Values"]) != Max_Iterations + 1):
 
             Table.at[i, "Obtained Values"] = append(Table.at[i, "Obtained Values"], int(0))
+
+    return Table
+
+def transformArrayIntoColumns(Table, Range, Max_Iterations):
+
+    Temp_Table = DataFrame({}, dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1)))
+
+    for i in range(1, Max_Iterations + 1, 1):
+
+        Temp_Table["Iteration " + str(i)] = Series(dtype = object) #Creating an empty column hosting the obtained values in array form
+
+        Temp_Table["Iteration " + str(i)] = Temp_Table["Iteration " + str(i)].apply(lambda column: 0)
+        
+    for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to create a DataFrame with the same rows as Execution_Table to merge
+    
+        for j in range(0, Max_Iterations + 1, 1):
+        
+            Temp_Table.at[i, "Iteration " + str(j + 1)] = Table.at[i, "Obtained Values"][j]
+
+    Table = Table.drop(columns = "Obtained Values")
+    
+    Table = merge(Table, Temp_Table, how = "inner", left_index = True, right_index = True)
 
     return Table
 
@@ -161,7 +183,7 @@ while (running == True):
 
         Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
 
-    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together
+    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (TO BE REFACTORED)
 
     # Graph
 
@@ -205,7 +227,7 @@ while (running == True):
 
     # Data insights
     
-    print("\n\nThe starting number {Starting_Number} has generated the highest number {Max_Number} during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
+    print("\n\nThe starting number {Starting_Number} has generated the highest number ({Max_Number}) during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
 
     print("\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
     
@@ -216,6 +238,8 @@ while (running == True):
     print("\nWould you like to export the data obtained during the computation in an Excel file? (y/n)\n\nWARNING! The new file would be created in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
 
     if (yn_input_check() == True):
+
+        Execution_Table = transformArrayIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
 
         Datetime_String = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
 
