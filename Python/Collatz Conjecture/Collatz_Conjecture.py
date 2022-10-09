@@ -67,19 +67,17 @@ def normalizeValues(Table, Range, Max_Iterations):
 
 def transformArrayIntoColumns(Table, Range, Max_Iterations):
 
-    Temp_Table = DataFrame({}, dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1)))
+    print("\nGenerating data export file! Please Wait...\n")
 
-    for i in range(1, Max_Iterations + 1, 1):
-
-        Temp_Table["Iteration " + str(i)] = Series(dtype = object) #Creating an empty column hosting the obtained values in array form
-
-        Temp_Table["Iteration " + str(i)] = Temp_Table["Iteration " + str(i)].apply(lambda column: 0)
+    Temp_Table = DataFrame({}, dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1))) #Creating a DataFrame with the same rows as Execution_Table to merge
         
-    for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to create a DataFrame with the same rows as Execution_Table to merge
+    for i in range(1, (Range[1] - Range[0] + 2), 1):
+
+        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
     
-        for j in range(0, Max_Iterations + 1, 1):
+        for j in range(1, Max_Iterations + 1, 1):
         
-            Temp_Table.at[i, "Iteration " + str(j + 1)] = Table.at[i, "Obtained Values"][j]
+            Temp_Table.at[i, "Iteration " + str(j)] = Table.at[i, "Obtained Values"][j - 1]
 
     Table = Table.drop(columns = "Obtained Values")
     
@@ -247,7 +245,7 @@ while (running == True):
 
             Execution_Table.to_excel(writer, sheet_name = "Execution Table", index = True)
 
-            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Collatz Conjecture Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = Datetime_String))
+            print("\n\nIn this directory: \"{Current_Working_Directory}\" a file named \"Collatz Conjecture Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = Datetime_String))
     
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     

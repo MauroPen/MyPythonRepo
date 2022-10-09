@@ -20,12 +20,16 @@ Notes about Collatz Conjecture program
 
 - Data export DONE
 
-	- Needs refactoring because data cannot be plotted if saved in array format
+	- Needs refactoring because data cannot be plotted if saved in array format DONE
 
 		- By modifying normalizeValues(), the generation of graphs might be affected --> Apply modifications to Excel output first DONE
 
 		- Complete refactoring --> To generate graphs I need an array: there is no point on deleting the "Obtained Values" array until the user decides to export data DONE
 
 - Analyze warnings to optimize code
+
+	- If "Obtained Values" can be converted into a DataFrame ("Iteration 1", ..., "Iteration n"), it should be possible to use concat() function
+
+- Consider reworking data ax2.plot axis --> The highest number of iteration might have a very low maximum number resulting in poor graph visualization
 
 - Consider UI design eventually
