@@ -183,7 +183,7 @@ while (running == True):
 
         Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
 
-    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (TO BE REFACTORED)
+    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together
 
     # Graph
 

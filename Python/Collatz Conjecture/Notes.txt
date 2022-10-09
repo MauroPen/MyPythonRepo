@@ -24,7 +24,7 @@ Notes about Collatz Conjecture program
 
 		- By modifying normalizeValues(), the generation of graphs might be affected --> Apply modifications to Excel output first DONE
 
-		- Complete refactoring
+		- Complete refactoring --> To generate graphs I need an array: there is no point on deleting the "Obtained Values" array until the user decides to export data DONE
 
 - Analyze warnings to optimize code
 
