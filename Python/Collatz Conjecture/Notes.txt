@@ -1,0 +1,35 @@
+Notes about Collatz Conjecture program
+
+- Presentation window DONE
+
+- User input DONE
+
+	- The input defines the range of starting numbers to compute the Collatz Conjecture for DONE
+
+	- Consider to adapt to the application (check if second input is higher than first, beyond being integers) DONE
+
+- Computation DONE
+
+- Graph presentation (must be done later to know the maximum values for the axis) DONE
+
+	- X: Iterations (1 - Max_Iterations) DONE
+
+	- Y: Numbers obtained (1 - Max Number) DONE
+
+- Data insights DONE
+
+- Data export DONE
+
+	- Needs refactoring because data cannot be plotted if saved in array format DONE
+
+		- By modifying normalizeValues(), the generation of graphs might be affected --> Apply modifications to Excel output first DONE
+
+		- Complete refactoring --> To generate graphs I need an array: there is no point on deleting the "Obtained Values" array until the user decides to export data DONE
+
+- Analyze warnings to optimize code DONE
+
+	- If "Obtained Values" can be converted into a DataFrame ("Iteration 1", ..., "Iteration n"), it should be possible to merge them to the original DataFrame DONE
+
+- Consider reworking data ax2.plot axis --> The highest number of iteration might have a very low maximum number resulting in poor graph visualization DONE
+
+- UI design
