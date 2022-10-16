@@ -26,10 +26,10 @@ Notes about Collatz Conjecture program
 
 		- Complete refactoring --> To generate graphs I need an array: there is no point on deleting the "Obtained Values" array until the user decides to export data DONE
 
-- Analyze warnings to optimize code
+- Analyze warnings to optimize code DONE
 
 	- If "Obtained Values" can be converted into a DataFrame ("Iteration 1", ..., "Iteration n"), it should be possible to merge them to the original DataFrame DONE
 
 - Consider reworking data ax2.plot axis --> The highest number of iteration might have a very low maximum number resulting in poor graph visualization DONE
 
-- Consider UI design eventually
+- UI design
