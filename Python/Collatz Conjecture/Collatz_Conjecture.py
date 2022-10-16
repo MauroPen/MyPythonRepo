@@ -67,23 +67,21 @@ def normalizeValues(Table, Range, Max_Iterations):
 
 def transformArrayIntoColumns(Table, Range, Max_Iterations):
 
-    print("\nGenerating data export file! Please Wait...\n")
+    Transform_Array_Into_DataFrame = DataFrame(data = Table["Obtained Values"].values.tolist(), dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = ColumnLabelsArray(Max_Iterations, 0))
 
-    Temp_Table = DataFrame({}, dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1))) #Creating a DataFrame with the same rows as Execution_Table to merge
-        
-    for i in range(1, (Range[1] - Range[0] + 2), 1):
-
-        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
+    Table = merge(Table.drop(columns = ["Starting Number", "Obtained Values"]), Transform_Array_Into_DataFrame, how = "inner", left_index = True, right_index = True)
     
-        for j in range(1, Max_Iterations + 1, 1):
-        
-            Temp_Table.at[i, "Iteration " + str(j)] = Table.at[i, "Obtained Values"][j - 1]
-
-    Table = Table.drop(columns = "Obtained Values")
-    
-    Table = merge(Table, Temp_Table, how = "inner", left_index = True, right_index = True)
-
     return Table
+
+def ColumnLabelsArray(Max_Iterations, Starting_Label): #Watch out! Labels must be coherent during the execution: in the function above we are considering to start from Iteration 0 (and remove the column "Starting Number") 
+
+    ColumnLabels = array("Iteration " + str(Starting_Label))
+
+    for j in range(Starting_Label + 1, Max_Iterations + 1, 1):
+        
+        ColumnLabels = append(ColumnLabels, "Iteration " + str(j))
+        
+    return ColumnLabels
 
 #Setting Default Values
 
