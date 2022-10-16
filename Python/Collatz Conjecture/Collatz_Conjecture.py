@@ -55,7 +55,7 @@ def normalizeValues(Table, Range, Max_Iterations):
 
     print("\n\nPreparing data for plotting! Please Wait...\n")
 
-    for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to add as many "0" as necessary to make every array having as many values as the longest iteration
+    for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to add as many "0" as necessary to make every array the same length
 
         print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
         
@@ -134,14 +134,16 @@ while (running == True):
     Max_Number_Tag = {
         "Id": 1,
         "Starting Number": Range[0],
-        "Max Number": Range[1],
+        "Max Number": Range[0],
         "Iteration": 0
     }
 
     Max_Iterations_Tag = {
         "Id": 1,
         "Starting Number": Range[0],
-        "Max Iterations": 0
+        "Max Iterations": 0,
+        "Max Number": Range[0],
+        "Iteration": 0
     }
 
     print("\n\nProcessing! Please Wait...\n")
@@ -176,6 +178,8 @@ while (running == True):
             Max_Iterations_Tag["Id"] = i
             Max_Iterations_Tag["Starting Number"] = (Range[0] + i - 1)
             Max_Iterations_Tag["Max Iterations"] = len(Iteration_Array)
+            Max_Iterations_Tag["Max Number"] = int(max(Iteration_Array))
+            Max_Iterations_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
 
         Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
 
@@ -197,19 +201,17 @@ while (running == True):
 
     ax2 = fig.add_subplot(gs[1, 0], sharex = ax1)
     pyplot.setp(ax2.get_xticklabels(), visible = False) #Hiding ticks for readability
-    ax2.set_title("Longest Iteration")
-    ax2.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
+    ax2.set_title("Highest #Iterations")
+    ax2.set_ylim([1, Max_Iterations_Tag["Max Number"] * 1.05])
     ax2.set_ylabel("Number")
     pyplot.grid()
 
     ax3 = fig.add_subplot(gs[2, 0], sharex = ax1)
     ax3.set_title("Highest Number")
-    ax3.set_xlabel("Iteration")
+    ax3.set_xlabel("Iteration #")
     ax3.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax3.set_ylabel("Number")
     pyplot.grid()
-
-    # LEGACY (TO BE DELETED)
 
     print("\n\nGenerating the graphs! Please Wait...\n")
 
@@ -219,15 +221,15 @@ while (running == True):
         
         ax1.plot(Iterations_Axis, Execution_Table.at[i, "Obtained Values"], linestyle = ":")
     
-    ax2.plot(Iterations_Axis, Execution_Table.at[Max_Iterations_Tag["Id"], "Obtained Values"], linewidth = 2, color = "k", label = "Longest Iteration")
+    ax2.plot(Iterations_Axis, Execution_Table.at[Max_Iterations_Tag["Id"], "Obtained Values"], linewidth = 2, color = "k", label = "Highest #Iterations")
 
     ax3.plot(Iterations_Axis, Execution_Table.at[Max_Number_Tag["Id"], "Obtained Values"], linewidth = 2, color = "b", label = "Highest Number")
 
     # Data insights
     
-    print("\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
+    print("\n\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
 
-    print("\n\nThe starting number {Starting_Number} has generated the highest number ({Max_Number}) during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
+    print("\nThe starting number {Starting_Number} has generated the highest number ({Max_Number}) during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
     
     pyplot.show()
     
@@ -237,6 +239,8 @@ while (running == True):
 
     if (yn_input_check() == True):
 
+        print("\n\nPreparing data for export! Please Wait...\n")
+
         Execution_Table = transformArraysIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
 
         Datetime_String = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
@@ -245,7 +249,7 @@ while (running == True):
 
             Execution_Table.to_excel(writer, sheet_name = "Execution Table", index = True)
 
-            print("\n\nIn this directory: \"{Current_Working_Directory}\" a file named \"Collatz Conjecture Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = Datetime_String))
+            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Collatz Conjecture Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = Datetime_String))
     
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     

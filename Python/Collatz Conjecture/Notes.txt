@@ -30,8 +30,6 @@ Notes about Collatz Conjecture program
 
 	- If "Obtained Values" can be converted into a DataFrame ("Iteration 1", ..., "Iteration n"), it should be possible to merge them to the original DataFrame DONE
 
-	- True complete refactoring by anticipating the transformation of the "Obtained Values" column into a DataFrame and using that to generate plots (it might be faster)
-
-- Consider reworking data ax2.plot axis --> The highest number of iteration might have a very low maximum number resulting in poor graph visualization
+- Consider reworking data ax2.plot axis --> The highest number of iteration might have a very low maximum number resulting in poor graph visualization DONE
 
 - Consider UI design eventually
