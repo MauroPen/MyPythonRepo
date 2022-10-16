@@ -65,19 +65,19 @@ def normalizeValues(Table, Range, Max_Iterations):
 
     return Table
 
-def transformArrayIntoColumns(Table, Range, Max_Iterations):
+def transformArraysIntoColumns(Table, Range, Max_Iterations):
 
-    Transform_Array_Into_DataFrame = DataFrame(data = Table["Obtained Values"].values.tolist(), dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = ColumnLabelsArray(Max_Iterations, 0))
+    Transform_Array_Into_DataFrame = DataFrame(data = Table["Obtained Values"].values.tolist(), dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = ColumnLabelsArray(Max_Iterations))
 
     Table = merge(Table.drop(columns = ["Starting Number", "Obtained Values"]), Transform_Array_Into_DataFrame, how = "inner", left_index = True, right_index = True)
     
     return Table
 
-def ColumnLabelsArray(Max_Iterations, Starting_Label): #Watch out! Labels must be coherent during the execution: in the function above we are considering to start from Iteration 0 (and remove the column "Starting Number") 
+def ColumnLabelsArray(Max_Iterations): 
 
-    ColumnLabels = array("Iteration " + str(Starting_Label))
+    ColumnLabels = array("Starting Number")
 
-    for j in range(Starting_Label + 1, Max_Iterations + 1, 1):
+    for j in range(1, Max_Iterations + 1, 1):
         
         ColumnLabels = append(ColumnLabels, "Iteration " + str(j))
         
@@ -129,7 +129,7 @@ while (running == True):
 
     Execution_Table["Obtained Values"] = Series(dtype = object) #Creating an empty column hosting the obtained values in array form
 
-    Execution_Table["Obtained Values"] = Execution_Table["Obtained Values"].apply(lambda column: [])
+    Execution_Table["Obtained Values"] = Execution_Table["Obtained Values"].apply(lambda column : [])
 
     Max_Number_Tag = {
         "Id": 1,
@@ -179,7 +179,7 @@ while (running == True):
 
         Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
 
-    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together
+    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (same-length arrays)
 
     # Graph
 
@@ -209,6 +209,8 @@ while (running == True):
     ax3.set_ylabel("Number")
     pyplot.grid()
 
+    # LEGACY (TO BE DELETED)
+
     print("\n\nGenerating the graphs! Please Wait...\n")
 
     for i in range(1, (Range[1] - Range[0] + 2), 1):
@@ -223,9 +225,9 @@ while (running == True):
 
     # Data insights
     
-    print("\n\nThe starting number {Starting_Number} has generated the highest number ({Max_Number}) during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
-
     print("\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
+
+    print("\n\nThe starting number {Starting_Number} has generated the highest number ({Max_Number}) during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
     
     pyplot.show()
     
@@ -235,7 +237,7 @@ while (running == True):
 
     if (yn_input_check() == True):
 
-        Execution_Table = transformArrayIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
+        Execution_Table = transformArraysIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
 
         Datetime_String = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
 
