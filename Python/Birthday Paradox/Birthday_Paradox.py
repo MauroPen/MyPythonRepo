@@ -1,7 +1,8 @@
 from numpy import append
-from pandas import DataFrame
-from datetime import date
+from pandas import DataFrame, ExcelWriter
+from datetime import date, datetime
 from random import randint
+from os import getcwd
 
 
 class Person:
@@ -78,7 +79,7 @@ running = bool(True)
 
 defaultValues = {
     "People": 23,
-    "Trials": 1000
+    "Trials": 500
 }
 
 startDate_Birthdays = date.today().replace(day = 1, month = 1, year = 1922).toordinal()   #Setting the lowest possible birthday admitted
@@ -150,12 +151,11 @@ while (running):
             
             else:
                 
-                other_peopleList = peopleList[(personId + 1):]
+                other_peopleList = peopleList[(personId):]
 
                 for other_personId in other_peopleList:
                     
-                    if (people[personId].birthday.day == people[other_personId].birthday.day &
-                    people[personId].birthday.month == people[other_personId].birthday.month):
+                    if ((people[personId].birthday.day == people[other_personId].birthday.day) & (people[personId].birthday.month == people[other_personId].birthday.month)):
 
                         people[personId].birthday_match = True
 
@@ -166,3 +166,25 @@ while (running):
                         peopleTable.at[(values["People"] * (trial - 1) + other_personId), "Birthday_Match"] = people[other_personId].birthday_match
 
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
+
+    # Data insights (TBD)
+    
+    # Export data
+
+    print("\n\nWould you like to export the data obtained during the execution in an Excel file? (y/n)\n\nWARNING! The new file would be created in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
+
+    if (yn_input_check() == True):
+
+        timestampString = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+
+        with ExcelWriter ("Birthday Paradox Results ({Timestamp}).xlsx" .format(Timestamp = timestampString)) as writer:
+
+            peopleTable.to_excel(writer, sheet_name = "People", index = True)
+
+            trialTable.to_excel(writer, sheet_name = "Trials", index = True)
+
+            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Birthday Paradox Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = timestampString))
+    
+    print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
+    
+    running = yn_input_check()
