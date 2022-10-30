@@ -2,6 +2,8 @@ from numpy import append
 from pandas import DataFrame, ExcelWriter
 from datetime import date, datetime
 from random import randint
+from math import factorial
+from tabulate import tabulate
 from os import getcwd
 
 
@@ -79,7 +81,7 @@ running = bool(True)
 
 defaultValues = {
     "People": 23,
-    "Trials": 500
+    "Trials": 1000
 }
 
 startDate_Birthdays = date.today().replace(day = 1, month = 1, year = 1922).toordinal()   #Setting the lowest possible birthday admitted
@@ -155,7 +157,8 @@ while (running):
 
                 for other_personId in other_peopleList:
                     
-                    if ((people[personId].birthday.day == people[other_personId].birthday.day) & (people[personId].birthday.month == people[other_personId].birthday.month)):
+                    if ((people[personId].birthday.day == people[other_personId].birthday.day) &
+                        (people[personId].birthday.month == people[other_personId].birthday.month)):
 
                         people[personId].birthday_match = True
 
@@ -167,7 +170,16 @@ while (running):
 
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
-    # Data insights (TBD)
+    # Data insights
+    
+    theoreticalProbability = round((1 - ((factorial(365)) / ((pow(365, values["People"])) * factorial(365 - values["People"])))) * 100, 2)
+
+    experimentalProbability = round(((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0)) / values["Trials"]) * 100, 2)
+
+    resultsTable = [["Theoretical probability", str(theoreticalProbability) + "%"],
+                    ["Experimental result", str(experimentalProbability) + "%"]]
+
+    print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
     
     # Export data
 
