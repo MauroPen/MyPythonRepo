@@ -177,7 +177,8 @@ while (running):
     experimentalProbability = round(((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0)) / values["Trials"]) * 100, 2)
 
     resultsTable = [["Theoretical probability", str(theoreticalProbability) + "%"],
-                    ["Experimental result", str(experimentalProbability) + "%"]]
+                    ["Experimental result", str((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0))) + "/" + str(values["Trials"])],
+                    ["Experimental probability", str(experimentalProbability) + "%"]]
 
     print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
     
