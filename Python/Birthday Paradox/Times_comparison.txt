@@ -6,3 +6,40 @@ Current algorithm (v1.0):
 
 - N = 100, T = 1000: 6m 10s - 6m 20s
 
+Nested Ifs:
+
+if (people[personId].birthday.day == people[other_personId].birthday.day):
+
+        if (people[personId].birthday.month == people[other_personId].birthday.month):
+
+- N = 23, T = 1000: 34s
+
+- N = 100, T = 1000: 6m 09s - 6m 12s
+
+Ordered list:
+
+orderedPeople = sorted(people, key = lambda person: (person.birthday.month, person.birthday.day), reverse = False)      #Ordering people to perform a single check per person
+
+        for personId in peopleList[:-1]:
+
+            if (orderedPeople[personId].birthday.day == orderedPeople[personId + 1].birthday.day):
+
+                if (orderedPeople[personId].birthday.month == orderedPeople[personId + 1].birthday.month):
+
+                    personIndex = next((person for person in people if person.id == orderedPeople[personId].id), None).id
+
+                    otherPersonIndex = next((person for person in people if person.id == orderedPeople[personId + 1].id), None).id
+                    
+                    people[personIndex].birthday_match = True
+
+                    peopleTable.at[(values["People"] * (trial - 1) + personIndex), "Birthday_Match"] = True     #Looking for the correspondent row in peopleTable
+
+                    people[otherPersonIndex].birthday_match = True
+
+                    peopleTable.at[(values["People"] * (trial - 1) + otherPersonIndex), "Birthday_Match"] = True     #Looking for the correspondent row in peopleTable
+
+- N = 23, T = 1000: 35s
+
+- N = 100, T = 1000: 6m 30s - 6m 40s
+
+No algorithm has proven to perform significantly better than the others.

@@ -129,7 +129,7 @@ while (running):
 
         trialTable.at[trial, "#People_Sharing_Birthday"] = 0
 
-        people = [0]        #Creating an array of people for each trial, first value is a dummy to align with table indices
+        people = [Person(0, date(1900, 1,1))]        #Creating an array of people for each trial, first value is a dummy to align with table indices
 
         #Creating people
         
@@ -146,7 +146,7 @@ while (running):
             peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday_Match"] = people[personId].birthday_match
 
         #Checking birthdays
-        
+
         for personId in peopleList:                         
 
             if (people[personId].birthday_match == True):   #If it has a match already then its birthday has already been checked
@@ -158,17 +158,18 @@ while (running):
                 other_peopleList = peopleList[(personId):]
 
                 for other_personId in other_peopleList:
-                    
-                    if ((people[personId].birthday.day == people[other_personId].birthday.day) &
-                        (people[personId].birthday.month == people[other_personId].birthday.month)):
 
-                        people[personId].birthday_match = True
+                    if (people[personId].birthday.day == people[other_personId].birthday.day):
 
-                        peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday_Match"] = people[personId].birthday_match
+                        if (people[personId].birthday.month == people[other_personId].birthday.month):
+                        
+                            people[personId].birthday_match = True
 
-                        people[other_personId].birthday_match = True
+                            peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday_Match"] = people[personId].birthday_match
 
-                        peopleTable.at[(values["People"] * (trial - 1) + other_personId), "Birthday_Match"] = people[other_personId].birthday_match
+                            people[other_personId].birthday_match = True
+
+                            peopleTable.at[(values["People"] * (trial - 1) + other_personId), "Birthday_Match"] = people[other_personId].birthday_match
 
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
@@ -183,7 +184,7 @@ while (running):
     resultsTable = [["Theoretical probability", str(theoreticalProbability) + "%"],
                     ["Experimental result", str((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0))) + "/" + str(values["Trials"])],
                     ["Experimental probability", str(experimentalProbability) + "%"],
-                    ["Resulting time of execution", str(timeExecutionEnd - timeExecutionStart)]]
+                    ["Time of elaboration", str(timeExecutionEnd - timeExecutionStart)]]
     
     print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
     
