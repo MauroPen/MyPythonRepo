@@ -81,7 +81,8 @@ running = bool(True)
 
 defaultValues = {
     "People": 23,
-    "Trials": 1000
+    "Trials": 1000,
+    "Matching_Birthdays": 2     #Meaning "2 or more"
 }
 
 startDate_Birthdays = date.today().replace(day = 1, month = 1, year = 1922).toordinal()   #Setting the lowest possible birthday admitted
@@ -92,7 +93,8 @@ while (running):
 
     values = {                                          #Using the default values to initialize the two values
         "People": defaultValues["People"],
-        "Trials": defaultValues["Trials"]
+        "Trials": defaultValues["Trials"],
+        "Matching_Birthdays": -1                        #Here it's different to allow cycling in case of input error
     }
 
     print("\n\nWelcome to the Birthday Paradox program!\n\nDo you want to run it in Default Mode? (y/n)\n")
@@ -108,6 +110,22 @@ while (running):
         print("\nAmazing! Now, please input the number of the trials that you would like to perform:\n")
             
         values["Trials"] = int_input_check()
+
+        print("\nFinally, please input for how many people sharing the same birthday you would like to compute the probability (Default: 2):\n")
+            
+        while (values["Matching_Birthdays"] < 0):
+        
+            values["Matching_Birthdays"] = int_input_check()
+
+            if (values["Matching_Birthdays"] > values["People"]):
+
+                print("\nThe number of people sharing the same birthday cannot be higher than the number of people considered. Please, input a number lower or equal than {People}\n" .format(People = values["People"]))
+
+                values["Matching_Birthdays"] = -1
+
+    else:
+
+        values["Matching_Birthdays"] = defaultValues["Matching_Birthdays"]
 
     #Computation
 
