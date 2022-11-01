@@ -121,6 +121,8 @@ while (running):
     
     print("\n\nExecuting trials! Please Wait...\n")
     
+    timeExecutionStart = datetime.now()
+    
     for trial in trialsList:
 
         print(" {Status}%" .format(Status = int((trial / values["Trials"]) * 100)), end = "\r")
@@ -170,16 +172,19 @@ while (running):
 
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
+    timeExecutionEnd = datetime.now()
+    
     # Data insights
     
     theoreticalProbability = round((1 - ((factorial(365)) / ((pow(365, values["People"])) * factorial(365 - values["People"])))) * 100, 2)
 
     experimentalProbability = round(((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0)) / values["Trials"]) * 100, 2)
-
+    
     resultsTable = [["Theoretical probability", str(theoreticalProbability) + "%"],
                     ["Experimental result", str((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0))) + "/" + str(values["Trials"])],
-                    ["Experimental probability", str(experimentalProbability) + "%"]]
-
+                    ["Experimental probability", str(experimentalProbability) + "%"],
+                    ["Resulting time of execution", str(timeExecutionEnd - timeExecutionStart)]]
+    
     print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
     
     # Export data
