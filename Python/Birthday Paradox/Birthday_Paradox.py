@@ -1,6 +1,6 @@
 from numpy import append
 from pandas import DataFrame, ExcelWriter
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from random import randint
 from math import factorial
 from tabulate import tabulate
@@ -135,12 +135,22 @@ while (running):
 
     peopleTable = DataFrame(columns = ["Trial", "Person_Id", "Birthday", "Birthday_Match"]) #Creating the table collecting data about all the people generated
 
-    trialTable = DataFrame(columns = ["#People_Sharing_Birthday"]) #Creating the table collecting data about all the trials performed (MIGHT BE EXPANDED)
+    trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Spent_Filling_peopleTable"]) #Creating the table collecting data about all the trials performed (MIGHT BE EXPANDED)
     
     print("\n\nExecuting trials! Please Wait...\n")
     
-    timeExecutionStart = datetime.now()
+    timeSpentGeneratingPeople = timedelta(seconds = 0)
+
+    timeSpentFillingPeopleTable = timedelta(seconds = 0)
+
+    timeSpentCreatingPeople = timedelta(seconds = 0)
+
+    timeSpentCheckingBirthdays = timedelta(seconds = 0)
+
+    timeSpentExecutingAlgorithm = timedelta(seconds = 0)
     
+    timeExecutionStart = datetime.now()
+
     for trial in trialsList:
 
         print(" {Status}%" .format(Status = int((trial / values["Trials"]) * 100)), end = "\r")
@@ -150,10 +160,20 @@ while (running):
         people = [Person(0, date(1900, 1,1))]        #Creating an array of people for each trial, first value is a dummy to align with table indices
 
         #Creating people
+
+        timeCreationStart = datetime.now()
         
         for personId in peopleList:
+
+            timeGeneratingStart = datetime.now()
     
             people = append(people, Person(personId, generate_random_birthday(startDate_Birthdays, endDate_Birthdays)))
+
+            timeGeneratingEnd = datetime.now()
+
+            timeSpentGeneratingPeople += (timeGeneratingEnd - timeGeneratingStart)
+
+            timeFillingPeopleTableStart = datetime.now()
 
             peopleTable.at[(values["People"] * (trial - 1) + personId), "Trial"] = trial
 
@@ -163,7 +183,17 @@ while (running):
 
             peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday_Match"] = people[personId].birthday_match
 
+            timeFillingPeopleTableEnd = datetime.now()
+
+            timeSpentFillingPeopleTable += (timeFillingPeopleTableEnd - timeFillingPeopleTableStart)
+
+        timeCreationEnd = datetime.now()
+
+        timeSpentCreatingPeople += (timeCreationEnd - timeCreationStart)
+
         #Checking birthdays
+
+        timeCheckStart = datetime.now()
 
         for personId in peopleList:                         
 
@@ -189,9 +219,17 @@ while (running):
 
                             peopleTable.at[(values["People"] * (trial - 1) + other_personId), "Birthday_Match"] = people[other_personId].birthday_match
 
+        timeCheckEnd = datetime.now()
+
+        timeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
+        
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
+        trialTable.at[trial, "Time_Spent_Filling_peopleTable"] = timeSpentFillingPeopleTable.microseconds
+
     timeExecutionEnd = datetime.now()
+
+    timeSpentExecutingAlgorithm = (timeExecutionEnd - timeExecutionStart)
     
     # Data insights
     
@@ -201,10 +239,19 @@ while (running):
     
     resultsTable = [["Theoretical probability", str(theoreticalProbability) + "%"],
                     ["Experimental result", str((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0))) + "/" + str(values["Trials"])],
-                    ["Experimental probability", str(experimentalProbability) + "%"],
-                    ["Time of elaboration", str(timeExecutionEnd - timeExecutionStart)]]
+                    ["Experimental probability", str(experimentalProbability) + "%"]]
+
+    timesTable = [["Time spent generating people", str(timeSpentGeneratingPeople)],
+                  ["Time spent filling peopleTable", str(timeSpentFillingPeopleTable)],
+                  ["Total time spent creating people", str(timeSpentCreatingPeople)],
+                  ["Time spent checking birthdays", str(timeSpentCheckingBirthdays)],
+                  ["Totatl time of execution", str(timeSpentExecutingAlgorithm)]]
     
     print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
+
+    print("\n\n")
+
+    print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
     
     # Export data
 
