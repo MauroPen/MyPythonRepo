@@ -1,5 +1,5 @@
 from numpy import append
-from pandas import DataFrame, ExcelWriter
+from pandas import DataFrame, RangeIndex, concat, ExcelWriter
 from datetime import date, datetime, timedelta
 from random import randint
 from math import factorial
@@ -133,8 +133,8 @@ while (running):
 
     peopleList = list(range(1, values["People"] + 1, 1))        #List for iterators
 
-    peopleTable = DataFrame(columns = ["Trial", "Person_Id", "Birthday", "Birthday_Match"]) #Creating the table collecting data about all the people generated
-
+    peopleTable = DataFrame(columns = ["Trial", "Person_Id", "Birthday", "Birthday_Match"], index = RangeIndex(1,2,1)) #Creating the table collecting data about all the people generated
+    
     trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Spent_Filling_peopleTable"]) #Creating the table collecting data about all the trials performed (MIGHT BE EXPANDED)
     
     print("\n\nExecuting trials! Please Wait...\n")
@@ -159,6 +159,8 @@ while (running):
 
         people = [Person(0, date(1900, 1,1))]        #Creating an array of people for each trial, first value is a dummy to align with table indices
 
+        peopleTrialTable = DataFrame(columns = ["Trial", "Person_Id", "Birthday", "Birthday_Match"])        #Necessary to populate peopleTable efficiently
+        
         #Creating people
 
         timeCreationStart = datetime.now()
@@ -175,17 +177,19 @@ while (running):
 
             timeFillingPeopleTableStart = datetime.now()
 
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Trial"] = trial
+            peopleTrialTable.at[personId, "Trial"] = trial
 
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Person_Id"] = people[personId].id
+            peopleTrialTable.at[personId, "Person_Id"] = people[personId].id
 
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday"] = people[personId].birthday
+            peopleTrialTable.at[personId, "Birthday"] = people[personId].birthday
 
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday_Match"] = people[personId].birthday_match
+            peopleTrialTable.at[personId, "Birthday_Match"] = False                 #By definition
 
             timeFillingPeopleTableEnd = datetime.now()
 
             timeSpentFillingPeopleTable += (timeFillingPeopleTableEnd - timeFillingPeopleTableStart)
+
+        peopleTable = concat([peopleTable, peopleTrialTable], ignore_index = True)
 
         timeCreationEnd = datetime.now()
 
@@ -225,7 +229,7 @@ while (running):
         
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
-        trialTable.at[trial, "Time_Spent_Filling_peopleTable"] = timeSpentFillingPeopleTable.microseconds
+        trialTable.at[trial, "Time_Spent_Filling_peopleTable"] = (timeSpentFillingPeopleTable.seconds * 1000000 + timeSpentFillingPeopleTable.microseconds)
 
     timeExecutionEnd = datetime.now()
 
@@ -245,7 +249,7 @@ while (running):
                   ["Time spent filling peopleTable", str(timeSpentFillingPeopleTable)],
                   ["Total time spent creating people", str(timeSpentCreatingPeople)],
                   ["Time spent checking birthdays", str(timeSpentCheckingBirthdays)],
-                  ["Totatl time of execution", str(timeSpentExecutingAlgorithm)]]
+                  ["Total time of execution", str(timeSpentExecutingAlgorithm)]]
     
     print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
 
@@ -254,6 +258,8 @@ while (running):
     print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
     
     # Export data
+
+    peopleTable = peopleTable.iloc[1:, :]       #Necessary because the first row is NaN
 
     print("\n\nWould you like to export the data obtained during the execution in an Excel file? (y/n)\n\nWARNING! The new file would be created in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
 

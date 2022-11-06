@@ -48,3 +48,9 @@ UPDATE
 
 By analysing the times of execution of the different phases it has been proven that the majority of the time of execution is taken
 not by running the algorithm performing checks among birthdays but rather filling peopleTable while creating people.
+
+1ST INTERVENTION: indexing is done in peopleTrialTable which is then concat() with peopleTable DONE
+
+    - Difference in performance (N = 100, T = 1000): 4m 49s vs 1m 31s
+
+2ND INTERVENTION: indexing is abandoned, peopleTable is populated through arrays of arrays 
