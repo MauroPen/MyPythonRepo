@@ -1,6 +1,6 @@
-from numpy import append
-from pandas import DataFrame, ExcelWriter
-from datetime import date, datetime
+from numpy import array, append, concatenate, delete
+from pandas import DataFrame, RangeIndex, concat, ExcelWriter
+from datetime import date, datetime, timedelta
 from random import randint
 from math import factorial
 from tabulate import tabulate
@@ -132,38 +132,52 @@ while (running):
     trialsList = list(range(1, values["Trials"] + 1, 1))        #List for iterators
 
     peopleList = list(range(1, values["People"] + 1, 1))        #List for iterators
+    
+    peopleArray = array([[0, 0, date(1900, 1,1), False]])       #An array collecting the data about all the people generated, first person (array) is a dummy to align indices
 
-    peopleTable = DataFrame(columns = ["Trial", "Person_Id", "Birthday", "Birthday_Match"]) #Creating the table collecting data about all the people generated
-
-    trialTable = DataFrame(columns = ["#People_Sharing_Birthday"]) #Creating the table collecting data about all the trials performed (MIGHT BE EXPANDED)
+    trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Execution"])        #A table collecting data about all the trials performed (MIGHT BE EXPANDED)
     
     print("\n\nExecuting trials! Please Wait...\n")
+
+    timeTrial = timedelta(seconds = 0)
+    
+    totalTimeSpentCreatingPeople = timedelta(seconds = 0)
+
+    totalTimeSpentCheckingBirthdays = timedelta(seconds = 0)
+
+    timeExecution = timedelta(seconds = 0)
     
     timeExecutionStart = datetime.now()
-    
+
     for trial in trialsList:
 
         print(" {Status}%" .format(Status = int((trial / values["Trials"]) * 100)), end = "\r")
 
+        timeTrialStart = datetime.now()
+
         trialTable.at[trial, "#People_Sharing_Birthday"] = 0
 
-        people = [Person(0, date(1900, 1,1))]        #Creating an array of people for each trial, first value is a dummy to align with table indices
+        people = [Person(0, date(1900, 1,1))]        #Creating an array of people for each trial, first person is a dummy to align with table indices
+
+        peopleTrialArray = array([[0, 0, date(1900, 1,1), False]])      #First person (array) is a dummy to align indices, won't be passed in concatenate
 
         #Creating people
+
+        timeCreationStart = datetime.now()
         
         for personId in peopleList:
     
             people = append(people, Person(personId, generate_random_birthday(startDate_Birthdays, endDate_Birthdays)))
 
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Trial"] = trial
+            peopleTrialArray = concatenate((peopleTrialArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
 
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Person_Id"] = people[personId].id
+        timeCreationEnd = datetime.now()
 
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday"] = people[personId].birthday
-
-            peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday_Match"] = people[personId].birthday_match
+        totalTimeSpentCreatingPeople += (timeCreationEnd - timeCreationStart)
 
         #Checking birthdays
+
+        timeCheckStart = datetime.now()
 
         for personId in peopleList:                         
 
@@ -183,15 +197,29 @@ while (running):
                         
                             people[personId].birthday_match = True
 
-                            peopleTable.at[(values["People"] * (trial - 1) + personId), "Birthday_Match"] = people[personId].birthday_match
-
+                            peopleTrialArray[personId][3] = people[personId].birthday_match
+                            
                             people[other_personId].birthday_match = True
 
-                            peopleTable.at[(values["People"] * (trial - 1) + other_personId), "Birthday_Match"] = people[other_personId].birthday_match
+                            peopleTrialArray[other_personId][3] = people[other_personId].birthday_match
 
+        timeCheckEnd = datetime.now()
+
+        totalTimeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
+
+        peopleArray = concatenate((peopleArray, peopleTrialArray[1:]))
+        
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
+        timeTrialEnd = datetime.now()
+
+        timeTrial = (timeTrialEnd - timeTrialStart)
+
+        trialTable.at[trial, "Time_Execution"] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
+
     timeExecutionEnd = datetime.now()
+
+    timeExecution = (timeExecutionEnd - timeExecutionStart)
     
     # Data insights
     
@@ -201,10 +229,17 @@ while (running):
     
     resultsTable = [["Theoretical probability", str(theoreticalProbability) + "%"],
                     ["Experimental result", str((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0))) + "/" + str(values["Trials"])],
-                    ["Experimental probability", str(experimentalProbability) + "%"],
-                    ["Time of elaboration", str(timeExecutionEnd - timeExecutionStart)]]
+                    ["Experimental probability", str(experimentalProbability) + "%"]]
+
+    timesTable = [["Total time spent creating people", str(totalTimeSpentCreatingPeople)],
+                  ["Total time spent checking birthdays", str(totalTimeSpentCheckingBirthdays)],
+                  ["Total time of execution", str(timeExecution)]]
     
     print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
+
+    print("\n")
+
+    print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
     
     # Export data
 
@@ -212,15 +247,23 @@ while (running):
 
     if (yn_input_check() == True):
 
-        timestampString = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+        timeExportStart = datetime.now()
+        
+        peopleTable = DataFrame(peopleArray[1:], columns = ["Trial", "Person_Id", "Birthday", "Birthday_Match"], index = RangeIndex(1, (values["People"] * values["Trials"]) + 1, 1))
 
-        with ExcelWriter ("Birthday Paradox Results ({Timestamp}).xlsx" .format(Timestamp = timestampString)) as writer:
+        with ExcelWriter ("Birthday Paradox Results ({Timestamp}).xlsx" .format(Timestamp = timeExportStart.strftime("%d_%m_%Y - %H_%M_%S"))) as writer:
 
             peopleTable.to_excel(writer, sheet_name = "People", index = True)
 
             trialTable.to_excel(writer, sheet_name = "Trials", index = True)
 
-            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Birthday Paradox Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = timestampString))
+            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Birthday Paradox Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = timeExportStart))
+
+        timeExportEnd = datetime.now()
+
+        timeExport = (timeExportEnd - timeExportStart)
+
+        print(tabulate([["Time spent exporting data", str(timeExport)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
     
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
