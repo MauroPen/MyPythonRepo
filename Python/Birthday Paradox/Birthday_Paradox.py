@@ -158,7 +158,9 @@ while (running):
         trialTable.at[trial, "#People_Sharing_Birthday"] = 0
 
         people = [Person(0, date(1900, 1,1))]        #Creating an array of people for each trial, first person is a dummy to align with table indices
-        
+
+        peopleTrialArray = array([[0, 0, date(1900, 1,1), False]])      #First person (array) is a dummy to align indices, won't be passed in concatenate
+
         #Creating people
 
         timeCreationStart = datetime.now()
@@ -175,7 +177,7 @@ while (running):
 
             timeFillingPeopleArrayStart = datetime.now()
 
-            peopleArray = concatenate((peopleArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
+            peopleTrialArray = concatenate((peopleTrialArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
 
             timeFillingPeopleArrayEnd = datetime.now()
 
@@ -207,15 +209,17 @@ while (running):
                         
                             people[personId].birthday_match = True
 
-                            peopleArray[(values["People"] * (trial - 1) + personId)][3] = people[personId].birthday_match
+                            peopleTrialArray[personId][3] = people[personId].birthday_match
                             
                             people[other_personId].birthday_match = True
 
-                            peopleArray[(values["People"] * (trial - 1) + other_personId)][3] = people[other_personId].birthday_match
+                            peopleTrialArray[other_personId][3] = people[other_personId].birthday_match
 
         timeCheckEnd = datetime.now()
 
         timeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
+
+        peopleArray = concatenate((peopleArray, peopleTrialArray[1:]))
         
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 

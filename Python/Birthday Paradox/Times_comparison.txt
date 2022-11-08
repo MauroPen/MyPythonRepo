@@ -63,4 +63,6 @@ not by running the algorithm performing checks among birthdays but rather fillin
 3RD INTERVENTION: adopting an array of arrays dramatically reduces the time of execution, but only if the amount of arrays stored is limited, otherwise the indexing problem hits back
 
     - The idea is to use the same approach as 1st intervention to stabilize times of execution through multiple trials
-    - Difference in performance (N = 100, T = 1000): ...
+    - Difference in performance (N = 100, T = 1000): 1m 21s vs 7s
+
+The heaviest part of the computation is now moved to the file export phase, which is less critical (it is alwyas possible to change file format).
