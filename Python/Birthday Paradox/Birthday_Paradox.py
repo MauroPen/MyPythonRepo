@@ -1,5 +1,5 @@
-from numpy import array, append, concatenate, delete
-from pandas import DataFrame, RangeIndex, concat, ExcelWriter
+from numpy import array, append, concatenate
+from pandas import DataFrame, RangeIndex, ExcelWriter
 from datetime import date, datetime, timedelta
 from random import randint
 from math import factorial
@@ -19,15 +19,15 @@ def yn_input_check():
 
     char_input = ""
 
-    while(not(char_input == "y" or char_input == "n")):
+    while(not(char_input == "y" or char_input == "Y" or char_input == "n" or char_input == "N")):
 
         char_input = input()
 
-        if char_input == "y":
+        if (char_input == "y" or char_input == "Y"):
 
             return True
 
-        elif char_input == "n":
+        elif (char_input == "n" or char_input == "N"):
 
             return False
 
@@ -91,10 +91,10 @@ endDate_Birthdays = date.today().replace(day = 31, month = 12, year = 2021).toor
 
 while (running):
 
-    values = {                                          #Using the default values to initialize the two values
+    values = {                                  #Using the default values to initialize the first two values
         "People": defaultValues["People"],
         "Trials": defaultValues["Trials"],
-        "Matching_Birthdays": -1                        #Here it's different to allow cycling in case of input error
+        "Matching_Birthdays": -1                #Here it's different to allow cycling in case of input error
     }
 
     print("\n\nWelcome to the Birthday Paradox program!\n\nDo you want to run it in Default Mode? (y/n)\n")
@@ -157,9 +157,9 @@ while (running):
 
         trialTable.at[trial, "#People_Sharing_Birthday"] = 0
 
-        people = [Person(0, date(1900, 1,1))]        #Creating an array of people for each trial, first person is a dummy to align with table indices
+        people = [Person(0, date(1900, 1, 1))]        #Creating an array of people for each trial, first person is a dummy to align with table indices
 
-        peopleTrialArray = array([[0, 0, date(1900, 1,1), False]])      #First person (array) is a dummy to align indices, won't be passed in concatenate
+        peopleTrialArray = array([[0, 0, date(1900, 1, 1), False]])      #First person (array) is a dummy to align indices, won't be passed in concatenate
 
         #Creating people
 
@@ -181,7 +181,7 @@ while (running):
 
         for personId in peopleList:                         
 
-            if (people[personId].birthday_match == True):   #If it has a match already then its birthday has already been checked
+            if (people[personId].birthday_match == True):   #If it already has a match then its birthday has already been checked
 
                 break
             
