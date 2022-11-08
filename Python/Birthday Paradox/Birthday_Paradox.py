@@ -135,25 +135,25 @@ while (running):
     
     peopleArray = array([[0, 0, date(1900, 1,1), False]])       #An array collecting the data about all the people generated, first person (array) is a dummy to align indices
 
-    trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Spent_Filling_peopleArray"]) #A table collecting data about all the trials performed (MIGHT BE EXPANDED)
+    trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Execution"])        #A table collecting data about all the trials performed (MIGHT BE EXPANDED)
     
     print("\n\nExecuting trials! Please Wait...\n")
+
+    timeTrial = timedelta(seconds = 0)
     
-    timeSpentGeneratingPeople = timedelta(seconds = 0)
+    totalTimeSpentCreatingPeople = timedelta(seconds = 0)
 
-    timeSpentFillingPeopleArray = timedelta(seconds = 0)
+    totalTimeSpentCheckingBirthdays = timedelta(seconds = 0)
 
-    timeSpentCreatingPeople = timedelta(seconds = 0)
-
-    timeSpentCheckingBirthdays = timedelta(seconds = 0)
-
-    timeSpentExecutingAlgorithm = timedelta(seconds = 0)
+    timeExecution = timedelta(seconds = 0)
     
     timeExecutionStart = datetime.now()
 
     for trial in trialsList:
 
         print(" {Status}%" .format(Status = int((trial / values["Trials"]) * 100)), end = "\r")
+
+        timeTrialStart = datetime.now()
 
         trialTable.at[trial, "#People_Sharing_Birthday"] = 0
 
@@ -166,26 +166,14 @@ while (running):
         timeCreationStart = datetime.now()
         
         for personId in peopleList:
-
-            timeGeneratingStart = datetime.now()
     
             people = append(people, Person(personId, generate_random_birthday(startDate_Birthdays, endDate_Birthdays)))
 
-            timeGeneratingEnd = datetime.now()
-
-            timeSpentGeneratingPeople += (timeGeneratingEnd - timeGeneratingStart)
-
-            timeFillingPeopleArrayStart = datetime.now()
-
             peopleTrialArray = concatenate((peopleTrialArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
-
-            timeFillingPeopleArrayEnd = datetime.now()
-
-            timeSpentFillingPeopleArray += (timeFillingPeopleArrayEnd - timeFillingPeopleArrayStart)
 
         timeCreationEnd = datetime.now()
 
-        timeSpentCreatingPeople += (timeCreationEnd - timeCreationStart)
+        totalTimeSpentCreatingPeople += (timeCreationEnd - timeCreationStart)
 
         #Checking birthdays
 
@@ -217,17 +205,21 @@ while (running):
 
         timeCheckEnd = datetime.now()
 
-        timeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
+        totalTimeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
 
         peopleArray = concatenate((peopleArray, peopleTrialArray[1:]))
         
         trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
-        trialTable.at[trial, "Time_Spent_Filling_peopleArray"] = (timeSpentFillingPeopleArray.seconds * 1000000 + timeSpentFillingPeopleArray.microseconds)
+        timeTrialEnd = datetime.now()
+
+        timeTrial = (timeTrialEnd - timeTrialStart)
+
+        trialTable.at[trial, "Time_Execution"] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
 
     timeExecutionEnd = datetime.now()
 
-    timeSpentExecutingAlgorithm = (timeExecutionEnd - timeExecutionStart)
+    timeExecution = (timeExecutionEnd - timeExecutionStart)
     
     # Data insights
     
@@ -239,15 +231,13 @@ while (running):
                     ["Experimental result", str((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0))) + "/" + str(values["Trials"])],
                     ["Experimental probability", str(experimentalProbability) + "%"]]
 
-    timesTable = [["Time spent generating people", str(timeSpentGeneratingPeople)],
-                  ["Time spent filling peopleArray", str(timeSpentFillingPeopleArray)],
-                  ["Total time spent creating people", str(timeSpentCreatingPeople)],
-                  ["Time spent checking birthdays", str(timeSpentCheckingBirthdays)],
-                  ["Total time of execution", str(timeSpentExecutingAlgorithm)]]
+    timesTable = [["Total time spent creating people", str(totalTimeSpentCreatingPeople)],
+                  ["Total time spent checking birthdays", str(totalTimeSpentCheckingBirthdays)],
+                  ["Total time of execution", str(timeExecution)]]
     
     print(tabulate(resultsTable, headers = ["Item", "Result"], tablefmt = "github", stralign = "center", showindex = "False"))
 
-    print("\n\n")
+    print("\n")
 
     print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
     
@@ -271,9 +261,9 @@ while (running):
 
         timeExportEnd = datetime.now()
 
-        timeSpentExporting = (timeExportEnd - timeExportStart)
+        timeExport = (timeExportEnd - timeExportStart)
 
-        print(tabulate([["Time spent for exporting data", str(timeSpentExporting)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
+        print(tabulate([["Time spent exporting data", str(timeExport)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
     
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
