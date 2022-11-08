@@ -53,4 +53,14 @@ not by running the algorithm performing checks among birthdays but rather fillin
 
     - Difference in performance (N = 100, T = 1000): 4m 49s vs 1m 31s
 
-2ND INTERVENTION: indexing is abandoned, peopleTable is populated through arrays of arrays 
+2ND INTERVENTION: indexing is abandoned, peopleTable is populated through an array of arrays
+
+    - The idea is to use an array of arrays instead of peopleTable as a dataframe to register all the people created and update Birthday_Match as True
+    - The dataframe is created from the array of arrays only if the user want to export the results
+    - Difference in performance (N = 23, T = 1000): 35s vs 3s
+    - Difference in performance (N = 100, T = 1000): 1m 31s vs 1m 21s
+
+3RD INTERVENTION: adopting an array of arrays dramatically reduces the time of execution, but only if the amount of arrays stored is limited, otherwise the indexing problem hits back
+
+    - The idea is to use the same approach as 1st intervention to stabilize times of execution through multiple trials
+    - Difference in performance (N = 100, T = 1000): ...
