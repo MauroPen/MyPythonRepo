@@ -135,7 +135,11 @@ while (running):
     
     peopleArray = array([[0, 0, date(1900, 1,1), False]])       #An array collecting the data about all the people generated, first person (array) is a dummy to align indices
 
-    trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Execution"])        #A table collecting data about all the trials performed (MIGHT BE EXPANDED)
+    #trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Execution"])        #An array collecting data about all the trials performed (MIGHT BE EXPANDED)
+    
+    trialArray = array([[0, timedelta(seconds = 0)]])           #An array collecting data about all the trials performed (MIGHT BE EXPANDED), first trial (array) is a dummy to align indices
+
+    totalPositiveTrials = 0                                     #Tracks the number of trials with matching birthdays
     
     print("\n\nExecuting trials! Please Wait...\n")
 
@@ -155,7 +159,7 @@ while (running):
 
         timeTrialStart = datetime.now()
 
-        trialTable.at[trial, "#People_Sharing_Birthday"] = 0
+        #trialTable.at[trial, "#People_Sharing_Birthday"] = 0
 
         people = [Person(0, date(1900, 1, 1))]        #Creating an array of people for each trial, first person is a dummy to align with table indices
 
@@ -209,13 +213,21 @@ while (running):
 
         peopleArray = concatenate((peopleArray, peopleTrialArray[1:]))
         
-        trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
+        #trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
+
+        trialArray = concatenate((trialArray, array([[count_people_sharing_birthday(people, peopleList), timedelta(seconds = 0)]])))
+
+        if (trialArray[trial][0] > 0):
+
+            totalPositiveTrials += 1
 
         timeTrialEnd = datetime.now()
 
         timeTrial = (timeTrialEnd - timeTrialStart)
 
-        trialTable.at[trial, "Time_Execution"] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
+        #trialTable.at[trial, "Time_Execution"] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
+
+        trialArray[trial][1] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
 
     timeExecutionEnd = datetime.now()
 
@@ -225,10 +237,12 @@ while (running):
     
     theoreticalProbability = round((1 - ((factorial(365)) / ((pow(365, values["People"])) * factorial(365 - values["People"])))) * 100, 2)
 
-    experimentalProbability = round(((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0)) / values["Trials"]) * 100, 2)
+    #experimentalProbability = round(((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0)) / values["Trials"]) * 100, 2)
+
+    experimentalProbability = round(((totalPositiveTrials / values["Trials"]) * 100), 2)
     
     resultsTable = [["Theoretical probability", str(theoreticalProbability) + "%"],
-                    ["Experimental result", str((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0))) + "/" + str(values["Trials"])],
+                    ["Experimental result", str(totalPositiveTrials) + "/" + str(values["Trials"])],
                     ["Experimental probability", str(experimentalProbability) + "%"]]
 
     timesTable = [["Total time spent creating people", str(totalTimeSpentCreatingPeople)],
@@ -250,6 +264,8 @@ while (running):
         timeExportStart = datetime.now()
         
         peopleTable = DataFrame(peopleArray[1:], columns = ["Trial", "Person_Id", "Birthday", "Birthday_Match"], index = RangeIndex(1, (values["People"] * values["Trials"]) + 1, 1))
+
+        trialTable = DataFrame(trialArray[1:], columns = ["#People_Sharing_Birthday", "Time_Execution"], index = RangeIndex(1, (values["Trials"] + 1), 1))
 
         with ExcelWriter ("Birthday Paradox Results ({Timestamp}).xlsx" .format(Timestamp = timeExportStart.strftime("%d_%m_%Y - %H_%M_%S"))) as writer:
 
