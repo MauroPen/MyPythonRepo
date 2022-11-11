@@ -135,8 +135,6 @@ while (running):
     
     peopleArray = array([[0, 0, date(1900, 1,1), False]])       #An array collecting the data about all the people generated, first person (array) is a dummy to align indices
 
-    #trialTable = DataFrame(columns = ["#People_Sharing_Birthday", "Time_Execution"])        #An array collecting data about all the trials performed (MIGHT BE EXPANDED)
-    
     trialArray = array([[0, timedelta(seconds = 0)]])           #An array collecting data about all the trials performed (MIGHT BE EXPANDED), first trial (array) is a dummy to align indices
 
     totalPositiveTrials = 0                                     #Tracks the number of trials with matching birthdays
@@ -158,8 +156,6 @@ while (running):
         print(" {Status}%" .format(Status = int((trial / values["Trials"]) * 100)), end = "\r")
 
         timeTrialStart = datetime.now()
-
-        #trialTable.at[trial, "#People_Sharing_Birthday"] = 0
 
         people = [Person(0, date(1900, 1, 1))]        #Creating an array of people for each trial, first person is a dummy to align with table indices
 
@@ -212,8 +208,6 @@ while (running):
         totalTimeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
 
         peopleArray = concatenate((peopleArray, peopleTrialArray[1:]))
-        
-        #trialTable.at[trial, "#People_Sharing_Birthday"] = count_people_sharing_birthday(people, peopleList)
 
         trialArray = concatenate((trialArray, array([[count_people_sharing_birthday(people, peopleList), timedelta(seconds = 0)]])))
 
@@ -225,8 +219,6 @@ while (running):
 
         timeTrial = (timeTrialEnd - timeTrialStart)
 
-        #trialTable.at[trial, "Time_Execution"] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
-
         trialArray[trial][1] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
 
     timeExecutionEnd = datetime.now()
@@ -236,8 +228,6 @@ while (running):
     # Data insights
     
     theoreticalProbability = round((1 - ((factorial(365)) / ((pow(365, values["People"])) * factorial(365 - values["People"])))) * 100, 2)
-
-    #experimentalProbability = round(((sum(trialTable.loc[:,"#People_Sharing_Birthday"] > 0)) / values["Trials"]) * 100, 2)
 
     experimentalProbability = round(((totalPositiveTrials / values["Trials"]) * 100), 2)
     
