@@ -137,6 +137,8 @@ while (running):
 
     trialArray = array([[0, timedelta(seconds = 0)]])           #An array collecting data about all the trials performed (MIGHT BE EXPANDED), first trial (array) is a dummy to align indices
 
+    trial500Array = array([[0, timedelta(seconds = 0)]])        #An array collecting data about each 500 trial performed, then moved to trialArray
+    
     totalPositiveTrials = 0                                     #Tracks the number of trials with matching birthdays
     
     print("\n\nExecuting trials! Please Wait...\n")
@@ -152,6 +154,12 @@ while (running):
     timeExecutionStart = datetime.now()
 
     for trial in trialsList:
+
+        if ((trial % 500) == 0):        #Moving the data from trial500Array to trialArray each 500 trials, then reinitializing the first one
+
+            trialArray = concatenate((trialArray, trial500Array[1:]))
+
+            trial500Array = array([[0, timedelta(seconds = 0)]])
 
         print(" {Status}%" .format(Status = int((trial / values["Trials"]) * 100)), end = "\r")
 
@@ -207,20 +215,24 @@ while (running):
 
         totalTimeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
 
-        peopleArray = concatenate((peopleArray, peopleTrialArray[1:]))
+        peopleSharingBirthday = count_people_sharing_birthday(people, peopleList)       #This variable only saves the number of people sharing the birthday for each trial
 
-        trialArray = concatenate((trialArray, array([[count_people_sharing_birthday(people, peopleList), timedelta(seconds = 0)]])))
-
-        if (trialArray[trial][0] > 0):
+        if (peopleSharingBirthday > 0):
 
             totalPositiveTrials += 1
+        
+        peopleArray = concatenate((peopleArray, peopleTrialArray[1:]))
 
         timeTrialEnd = datetime.now()
 
         timeTrial = (timeTrialEnd - timeTrialStart)
 
-        trialArray[trial][1] = (timeTrial.seconds * 1000000 + timeTrial.microseconds)
+        trial500Array = concatenate((trial500Array, array([[peopleSharingBirthday, (timeTrial.seconds * 1000000 + timeTrial.microseconds)]])))
 
+    if ((len(trial500Array)) > 1):        #Checking whether all the data have been moved from trial500Array to trialArray
+
+            trialArray = concatenate((trialArray, trial500Array[1:]))
+    
     timeExecutionEnd = datetime.now()
 
     timeExecution = (timeExecutionEnd - timeExecutionStart)
