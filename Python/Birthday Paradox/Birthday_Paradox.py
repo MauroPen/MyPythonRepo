@@ -81,8 +81,7 @@ running = bool(True)
 
 defaultValues = {
     "People": 23,
-    "Trials": 1000,
-    "Matching_Birthdays": 2     #Meaning "2 or more"
+    "Trials": 1000
 }
 
 startDate_Birthdays = date.today().replace(day = 1, month = 1, year = 1922).toordinal()   #Setting the lowest possible birthday admitted
@@ -93,8 +92,7 @@ while (running):
 
     values = {                                  #Using the default values to initialize the first two values
         "People": defaultValues["People"],
-        "Trials": defaultValues["Trials"],
-        "Matching_Birthdays": -1                #Here it's different to allow cycling in case of input error
+        "Trials": defaultValues["Trials"]
     }
 
     print("\n\nWelcome to the Birthday Paradox program!\n\nDo you want to run it in Default Mode? (y/n)\n")
@@ -111,22 +109,6 @@ while (running):
             
         values["Trials"] = int_input_check()
 
-        print("\nFinally, please input for how many people sharing the same birthday you would like to compute the probability (Default: 2):\n")
-            
-        while (values["Matching_Birthdays"] < 0):
-        
-            values["Matching_Birthdays"] = int_input_check()
-
-            if (values["Matching_Birthdays"] > values["People"]):
-
-                print("\nThe number of people sharing the same birthday cannot be higher than the number of people considered. Please, input a number lower or equal than {People}\n" .format(People = values["People"]))
-
-                values["Matching_Birthdays"] = -1
-
-    else:
-
-        values["Matching_Birthdays"] = defaultValues["Matching_Birthdays"]
-
     #Computation
 
     trialsList = list(range(1, values["Trials"] + 1, 1))        #List for iterators
@@ -135,7 +117,7 @@ while (running):
     
     peopleArray = array([[0, 0, date(1900, 1,1), False]])       #An array collecting the data about all the people generated, first person (array) is a dummy to align indices
 
-    trialArray = array([[0, timedelta(seconds = 0)]])           #An array collecting data about all the trials performed (MIGHT BE EXPANDED), first trial (array) is a dummy to align indices
+    trialArray = array([[0, timedelta(seconds = 0)]])           #An array collecting data about all the trials performed, first trial (array) is a dummy to align indices
 
     trial500Array = array([[0, timedelta(seconds = 0)]])        #An array collecting data about each 500 trial performed, then moved to trialArray
     
