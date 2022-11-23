@@ -44,3 +44,25 @@ def int_input_check():
             print("\nThe inserted value is not valid, please input an integer number higher than 0:\n")
 
             int_input = -1
+
+class Person:
+
+    def __init__(self, Id, Birthday):
+
+        self.id = Id
+        self.birthday = Birthday
+        self.birthday_match = False         #False by default, checked later
+        
+
+def count_people_sharing_birthday(people, peopleList):
+
+    counter = 0
+
+    for personId in peopleList:
+
+        if (people[personId].birthday_match == True):       #Counting how many people share birthday for each trial
+
+            counter += 1
+    
+    return counter
+
