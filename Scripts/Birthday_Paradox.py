@@ -9,13 +9,9 @@ from os import getcwd
 from Common import yn_input_check, int_input_check, Person, count_people_sharing_birthday
 
 
-
-
-
 def generate_random_birthday(startDate, endDate):
 
     return date.fromordinal(randint(startDate, endDate))
-
 
 
 #Setting Default Values
@@ -90,7 +86,7 @@ while (running):
 
         timeTrialStart = datetime.now()
 
-        people = [Person(0, date(1900, 1, 1))]        #Creating an array of people for each trial, first person is a dummy to align with table indices
+        people = [Person(0, date(1900, 1, 1), False)]        #Creating an array of people for each trial, first person is a dummy to align with table indices
 
         peopleTrialArray = array([[0, 0, date(1900, 1, 1), False]])      #First person (array) is a dummy to align indices, won't be passed in concatenate
 
@@ -100,7 +96,7 @@ while (running):
         
         for personId in peopleList:
     
-            people = append(people, Person(personId, generate_random_birthday(startDate_Birthdays, endDate_Birthdays)))
+            people = append(people, Person(personId, generate_random_birthday(startDate_Birthdays, endDate_Birthdays), False))
 
             peopleTrialArray = concatenate((peopleTrialArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
 

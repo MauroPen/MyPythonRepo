@@ -45,13 +45,14 @@ def int_input_check():
 
             int_input = -1
 
+#Pieces of code from Birthday_Paradox (TO BE REFACTORED)
 class Person:
 
-    def __init__(self, Id, Birthday):
+    def __init__(self, Id, Birthday, Birthday_Match):
 
         self.id = Id
         self.birthday = Birthday
-        self.birthday_match = False         #False by default, checked later
+        self.birthday_match = Birthday_Match         #False by default, checked later
         
 
 def count_people_sharing_birthday(people, peopleList):
