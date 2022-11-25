@@ -1,5 +1,4 @@
-
-# 1 - yn_input_check: asks for a y/n input (case insensitive) by the user. Anything else is not accepted.
+# 1 - Asks for a y/n input (case insensitive) by the user. Anything else is not accepted.
 def yn_input_check():
 
     char_input = ""
@@ -20,7 +19,7 @@ def yn_input_check():
 
             print("\nThe inserted value is not valid, please input \"y\" or \"n\"\n")
 
-#2 - int_input_check: asks for an integer by the user, then returns that value. Anything else is not accepted.
+#2 - Asks for an integer by the user, then returns that value. Anything else is not accepted.
 def int_input_check():
 
     int_input = -1
@@ -44,26 +43,3 @@ def int_input_check():
             print("\nThe inserted value is not valid, please input an integer number higher than 0:\n")
 
             int_input = -1
-
-#Pieces of code from Birthday_Paradox (TO BE REFACTORED)
-class Person:
-
-    def __init__(self, Id, Birthday, Birthday_Match):
-
-        self.id = Id
-        self.birthday = Birthday
-        self.birthday_match = Birthday_Match         #False by default, checked later
-        
-
-def count_people_sharing_birthday(people, peopleList):
-
-    counter = 0
-
-    for personId in peopleList:
-
-        if (people[personId].birthday_match == True):       #Counting how many people share birthday for each trial
-
-            counter += 1
-    
-    return counter
-

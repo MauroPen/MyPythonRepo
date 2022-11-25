@@ -1,38 +1,12 @@
 from numpy import array, append, concatenate
 from pandas import DataFrame, RangeIndex, ExcelWriter
 from datetime import date, datetime, timedelta
-from random import randint
 from math import factorial
 from tabulate import tabulate
 from os import getcwd
 
 from Common import yn_input_check, int_input_check
-from Birthday_Paradox.Dependency import Person, count_people_sharing_birthday
-
-class Person:
-
-    def __init__(self, Id, Birthday, Birthday_Match):
-
-        self.id = Id
-        self.birthday = Birthday
-        self.birthday_match = Birthday_Match         #False by default, checked later
-        
-
-def count_people_sharing_birthday(people, peopleList):
-
-    counter = 0
-
-    for personId in peopleList:
-
-        if (people[personId].birthday_match == True):       #Counting how many people share birthday for each trial
-
-            counter += 1
-    
-    return counter
-
-def generate_random_birthday(startDate, endDate):
-
-    return date.fromordinal(randint(startDate, endDate))
+from Birthday_Paradox.Dependency import Person, generate_random_birth_date,count_people_sharing_birthday
 
 
 #Setting Default Values
@@ -117,7 +91,7 @@ while (running):
         
         for personId in peopleList:
     
-            people = append(people, Person(personId, generate_random_birthday(startDate_Birthdays, endDate_Birthdays), False))
+            people = append(people, Person(personId, generate_random_birth_date(startDate_Birthdays, endDate_Birthdays), False))         #Birthday_Match is False by default and is checked later
 
             peopleTrialArray = concatenate((peopleTrialArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
 
