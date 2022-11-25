@@ -6,7 +6,7 @@ from tabulate import tabulate
 from os import getcwd
 
 from Common import yn_input_check, int_input_check
-from Birthday_Paradox.Dependency import Person, generate_random_birth_date,count_people_sharing_birthday
+from Birthday_Paradox.Dependency import Person, generate_random_birth_date, check_people_sharing_birthday, count_people_sharing_birthday
 
 
 #Setting Default Values
@@ -45,9 +45,9 @@ while (running):
 
     #Computation
 
-    trialsList = list(range(1, values["Trials"] + 1, 1))        #List for iterators
+    trialsList = tuple(range(1, values["Trials"] + 1, 1))       #List for iterators (type is "tuple" because it is not changing during execution and is more efficient)
 
-    peopleList = list(range(1, values["People"] + 1, 1))        #List for iterators
+    peopleList = tuple(range(1, values["People"] + 1, 1))       #List for iterators (type is "tuple" because it is not changing during execution and is more efficient)
     
     peopleArray = array([[0, 0, date(1900, 1,1), False]])       #An array collecting the data about all the people generated, first person (array) is a dummy to align indices
 
@@ -103,29 +103,7 @@ while (running):
 
         timeCheckStart = datetime.now()
 
-        for personId in peopleList:                         
-
-            if (people[personId].birthday_match == True):   #If it already has a match then its birthday has already been checked
-
-                break
-            
-            else:
-                
-                other_peopleList = peopleList[(personId):]
-
-                for other_personId in other_peopleList:
-
-                    if (people[personId].birthday.day == people[other_personId].birthday.day):
-
-                        if (people[personId].birthday.month == people[other_personId].birthday.month):
-                        
-                            people[personId].birthday_match = True
-
-                            peopleTrialArray[personId][3] = people[personId].birthday_match
-                            
-                            people[other_personId].birthday_match = True
-
-                            peopleTrialArray[other_personId][3] = people[other_personId].birthday_match
+        (people, peopleTrialArray) = check_people_sharing_birthday(people, peopleTrialArray, peopleList)
 
         timeCheckEnd = datetime.now()
 
