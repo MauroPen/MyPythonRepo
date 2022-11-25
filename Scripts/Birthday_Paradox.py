@@ -6,8 +6,29 @@ from math import factorial
 from tabulate import tabulate
 from os import getcwd
 
-from Common import yn_input_check, int_input_check, Person, count_people_sharing_birthday
+from Common import yn_input_check, int_input_check
+from Birthday_Paradox.Dependency import Person, count_people_sharing_birthday
 
+class Person:
+
+    def __init__(self, Id, Birthday, Birthday_Match):
+
+        self.id = Id
+        self.birthday = Birthday
+        self.birthday_match = Birthday_Match         #False by default, checked later
+        
+
+def count_people_sharing_birthday(people, peopleList):
+
+    counter = 0
+
+    for personId in peopleList:
+
+        if (people[personId].birthday_match == True):       #Counting how many people share birthday for each trial
+
+            counter += 1
+    
+    return counter
 
 def generate_random_birthday(startDate, endDate):
 

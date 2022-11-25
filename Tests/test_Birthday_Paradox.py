@@ -1,7 +1,8 @@
 import unittest
 import datetime
+import Scripts
 
-from Scripts import Common as C #Valid only when testing scripts with global variables (no personal modules)
+from Scripts.Birthday_Paradox import Dependency as C #Valid only when testing scripts with global variables (no personal modules)
 
 class TestCountPeopleSharingBirthday(unittest.TestCase):
 
