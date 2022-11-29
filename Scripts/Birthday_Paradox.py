@@ -1,4 +1,4 @@
-from numpy import array, append, concatenate
+from numpy import array, concatenate
 from pandas import DataFrame, RangeIndex, ExcelWriter
 from datetime import date, datetime, timedelta
 from math import factorial
@@ -6,7 +6,7 @@ from tabulate import tabulate
 from os import getcwd
 
 from Common import yn_input_check, int_input_check
-from Birthday_Paradox.Dependency import Person, generate_random_birth_date, check_people_sharing_birthday, count_people_sharing_birthday
+from Birthday_Paradox.Dependency import Person, create_people, generate_random_birth_date, check_people_sharing_birthday, count_people_sharing_birthday
 
 
 #Setting Default Values
@@ -88,13 +88,9 @@ while (running):
         #Creating people
 
         timeCreationStart = datetime.now()
+
+        (people, peopleTrialArray) = create_people(people, peopleTrialArray, peopleList, trial, startDate_Birthdays, endDate_Birthdays)
         
-        for personId in peopleList:
-    
-            people = append(people, Person(personId, generate_random_birth_date(startDate_Birthdays, endDate_Birthdays), False))         #Birthday_Match is False by default and is checked later
-
-            peopleTrialArray = concatenate((peopleTrialArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
-
         timeCreationEnd = datetime.now()
 
         totalTimeSpentCreatingPeople += (timeCreationEnd - timeCreationStart)
