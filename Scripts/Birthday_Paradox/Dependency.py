@@ -1,3 +1,4 @@
+from numpy import array, append, concatenate
 from datetime import date
 from random import randint
 
@@ -10,12 +11,23 @@ class Person:
         self.birthday = Birthday
         self.birthday_match = Birthday_Match
 
-#2 - Generates a random birth date
+#2 - Generates the necessary people to run a trial
+def create_people(people, peopleTrialArray, peopleList, trial, startDate_Birthdays, endDate_Birthdays):
+
+    for personId in peopleList:
+    
+            people = append(people, Person(personId, generate_random_birth_date(startDate_Birthdays, endDate_Birthdays), False))         #Birthday_Match is False by default and is checked later
+
+            peopleTrialArray = concatenate((peopleTrialArray, array([[trial, people[personId].id, people[personId].birthday, False]])))
+    
+    return (people, peopleTrialArray)
+
+#3 - Generates a random birth date
 def generate_random_birth_date(startDate, endDate):
 
     return date.fromordinal(randint(startDate, endDate))
 
-#3 - Checks and marks people sharing birthday in a specific set of people
+#4 - Checks and marks people sharing birthday in a specific set of people
 def check_people_sharing_birthday(people, peopleTrialArray, peopleList):
 
     for personId in peopleList:                         
@@ -44,7 +56,7 @@ def check_people_sharing_birthday(people, peopleTrialArray, peopleList):
 
     return (people, peopleTrialArray)
         
-#4 - Iterates through peopleList's IDs to count how many people share birthdays. Returns the total number of people sharing birhdays.
+#5 - Iterates through peopleList's IDs to count how many people share birthdays. Returns the total number of people sharing birhdays.
 def count_people_sharing_birthday(people, peopleList):
 
     counter = 0
