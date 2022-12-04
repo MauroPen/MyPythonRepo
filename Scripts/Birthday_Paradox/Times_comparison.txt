@@ -1,4 +1,4 @@
-Comparison between times of execution for different algorithms
+COMPARISON AMONG TIMES OF EXECUTION FOR DIFFERENT ALGORITHMS
 
 Current algorithm (v1.0):
 
@@ -43,3 +43,26 @@ orderedPeople = sorted(people, key = lambda person: (person.birthday.month, pers
 - N = 100, T = 1000: 6m 30s - 6m 40s
 
 No algorithm has proven to perform significantly better than the others.
+
+UPDATE
+
+By analysing the times of execution of the different phases it has been proven that the majority of the time of execution is taken
+not by running the algorithm performing checks among birthdays but rather filling peopleTable while creating people.
+
+1ST INTERVENTION: indexing is done in peopleTrialTable which is then concat() with peopleTable DONE
+
+    - Difference in performance (N = 100, T = 1000): 4m 49s vs 1m 31s
+
+2ND INTERVENTION: indexing is abandoned, peopleTable is populated through an array of arrays
+
+    - The idea is to use an array of arrays instead of peopleTable as a dataframe to register all the people created and update Birthday_Match as True
+    - The dataframe is created from the array of arrays only if the user want to export the results
+    - Difference in performance (N = 23, T = 1000): 35s vs 3s
+    - Difference in performance (N = 100, T = 1000): 1m 31s vs 1m 21s
+
+3RD INTERVENTION: adopting an array of arrays dramatically reduces the time of execution, but only if the amount of arrays stored is limited, otherwise the indexing problem hits back
+
+    - The idea is to use the same approach as 1st intervention to stabilize times of execution through multiple trials
+    - Difference in performance (N = 100, T = 1000): 1m 21s vs 7s
+
+The heaviest part of the computation is now moved to the file export phase, which is less critical (it is alwyas possible to change file format).
