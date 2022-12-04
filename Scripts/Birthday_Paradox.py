@@ -1,12 +1,14 @@
 from numpy import array, concatenate
-from pandas import DataFrame, RangeIndex, ExcelWriter
+from pandas import DataFrame, RangeIndex
 from datetime import date, datetime, timedelta
 from math import factorial
 from tabulate import tabulate
 from os import getcwd
 
-from Common import yn_input_check, int_input_check
-from Birthday_Paradox.Dependency import Person, create_people, generate_random_birth_date, check_people_sharing_birthday, count_people_sharing_birthday
+from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
+
+import Birthday_Paradox.Dependency as BP
+
 
 
 #Setting Default Values
@@ -81,7 +83,7 @@ while (running):
 
         timeTrialStart = datetime.now()
 
-        people = [Person(0, date(1900, 1, 1), False)]        #Creating an array of people for each trial, first person is a dummy to align with table indices
+        people = [BP.Person(0, date(1900, 1, 1), False)]        #Creating an array of people for each trial, first person is a dummy to align with table indices
 
         peopleTrialArray = array([[0, 0, date(1900, 1, 1), False]])      #First person (array) is a dummy to align indices, won't be passed in concatenate
 
@@ -89,7 +91,7 @@ while (running):
 
         timeCreationStart = datetime.now()
 
-        (people, peopleTrialArray) = create_people(people, peopleTrialArray, peopleList, trial, startDate_Birthdays, endDate_Birthdays)
+        (people, peopleTrialArray) = BP.create_people(people, peopleTrialArray, peopleList, trial, startDate_Birthdays, endDate_Birthdays)
         
         timeCreationEnd = datetime.now()
 
@@ -99,13 +101,13 @@ while (running):
 
         timeCheckStart = datetime.now()
 
-        (people, peopleTrialArray) = check_people_sharing_birthday(people, peopleTrialArray, peopleList)
+        (people, peopleTrialArray) = BP.check_people_sharing_birthday(people, peopleTrialArray, peopleList)
 
         timeCheckEnd = datetime.now()
 
         totalTimeSpentCheckingBirthdays += (timeCheckEnd - timeCheckStart)
 
-        peopleSharingBirthday = count_people_sharing_birthday(people, peopleList)       #This variable only saves the number of people sharing the birthday for each trial
+        peopleSharingBirthday = BP.count_people_sharing_birthday(people, peopleList)       #This variable only saves the number of people sharing the birthday for each trial
 
         if (peopleSharingBirthday > 0):
 
@@ -159,13 +161,9 @@ while (running):
 
         trialTable = DataFrame(trialArray[1:], columns = ["#People_Sharing_Birthday", "Time_Execution"], index = RangeIndex(1, (values["Trials"] + 1), 1))
 
-        with ExcelWriter ("Birthday Paradox Results ({Timestamp}).xlsx" .format(Timestamp = timeExportStart.strftime("%d_%m_%Y - %H_%M_%S"))) as writer:
-
-            peopleTable.to_excel(writer, sheet_name = "People", index = True)
-
-            trialTable.to_excel(writer, sheet_name = "Trials", index = True)
-
-            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Birthday Paradox Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = timeExportStart))
+        dataframes = [DataframeExport(peopleTable, "People", True), DataframeExport(trialTable, "Trials", True)]
+        
+        export_dataframes(dataframes, fileName = "Birthday Paradox Results")
 
         timeExportEnd = datetime.now()
 
