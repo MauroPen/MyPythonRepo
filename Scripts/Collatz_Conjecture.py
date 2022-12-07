@@ -4,7 +4,8 @@ from numpy import sort, array, append, where
 from pandas import DataFrame, Series
 from IPython.display import display
 from matplotlib import pyplot, gridspec
-from datetime import datetime
+from datetime import datetime, timedelta
+from tabulate import tabulate
 from os import getcwd
 
 from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
@@ -15,7 +16,7 @@ import Collatz_Conjecture.Dependency as CC
 
 running = bool(True)
 
-Default_Range = array([10, 100])
+Default_Range = array([10, 200])
 
 while (running == True):
 
@@ -52,6 +53,8 @@ while (running == True):
                     Range = sort(Range)
 
     # Computation
+
+    computationStartTime = datetime.now()
 
     Execution_Table = DataFrame({"Starting Number": list(range(Range[0], Range[1] + 1, 1))}, index = list(range(1, (Range[1] - Range[0] + 2), 1))) #Creating the table collecting valuesobtained for each starting number
 
@@ -113,7 +116,11 @@ while (running == True):
 
     Execution_Table = CC.normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (same-length arrays)
 
+    computationEndTime = datetime.now()
+
     # Graph
+
+    representationStartTime = datetime.now()
 
     Iterations_Axis = list(range(0, Max_Iterations_Tag["Max Iterations"] + 1, 1))
 
@@ -153,12 +160,23 @@ while (running == True):
 
     ax3.plot(Iterations_Axis, Execution_Table.at[Max_Number_Tag["Id"], "Obtained Values"], linewidth = 2, color = "b", label = "Highest Number")
 
+    representationEndTIme = datetime.now()
+
     # Data insights
+
+    totalExecutionTime = (computationEndTime - computationStartTime)
+
+    totalRepresentationTime = (representationEndTIme - representationStartTime)
     
     print("\n\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
 
     print("\nThe starting number {Starting_Number} has generated the highest number ({Max_Number}) during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
     
+    timesTable = [["Total time of execution", str(totalExecutionTime)],
+                  ["Total time spent for graphs", str(totalRepresentationTime)]]
+    
+    print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
+
     pyplot.show()
     
     # Export data

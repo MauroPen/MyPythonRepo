@@ -33,3 +33,11 @@ Notes about Collatz Conjecture program
 - Consider reworking data ax2.plot axis --> The highest number of iteration might have a very low maximum number resulting in poor graph visualization DONE
 
 - UI design
+
+TIMES ANALYSIS
+
+AS-IS:
+- Computing from 0 to 200:
+
+	- Execution: 6s (mostly because of normalizeValues())
+	- Representation: < 1s
