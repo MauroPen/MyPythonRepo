@@ -1,7 +1,7 @@
 # Collatz Conjecture
 
 from numpy import sort, array, append, where
-from pandas import DataFrame, Series, merge
+from pandas import DataFrame, Series
 from IPython.display import display
 from matplotlib import pyplot, gridspec
 from datetime import datetime
@@ -9,37 +9,7 @@ from os import getcwd
 
 from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 
-def normalizeValues(Table, Range, Max_Iterations):
-
-    print("\n\nPreparing data for plotting! Please Wait...\n")
-
-    for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to add as many "0" as necessary to make every array the same length
-
-        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
-        
-        while (len(Table.at[i, "Obtained Values"]) != Max_Iterations + 1):
-
-            Table.at[i, "Obtained Values"] = append(Table.at[i, "Obtained Values"], int(0))
-
-    return Table
-
-def transformArraysIntoColumns(Table, Range, Max_Iterations):
-
-    Transform_Array_Into_DataFrame = DataFrame(data = Table["Obtained Values"].values.tolist(), dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = ColumnLabelsArray(Max_Iterations))
-
-    Table = merge(Table.drop(columns = ["Starting Number", "Obtained Values"]), Transform_Array_Into_DataFrame, how = "inner", left_index = True, right_index = True)
-    
-    return Table
-
-def ColumnLabelsArray(Max_Iterations): 
-
-    ColumnLabels = array("Starting Number")
-
-    for j in range(1, Max_Iterations + 1, 1):
-        
-        ColumnLabels = append(ColumnLabels, "Iteration " + str(j))
-        
-    return ColumnLabels
+import Collatz_Conjecture.Dependency as CC
 
 #Setting Default Values
 
@@ -141,7 +111,7 @@ while (running == True):
 
         Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
 
-    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (same-length arrays)
+    Execution_Table = CC.normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (same-length arrays)
 
     # Graph
 
@@ -199,7 +169,7 @@ while (running == True):
 
         print("\n\nPreparing data for export! Please Wait...\n")
 
-        Execution_Table = transformArraysIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
+        Execution_Table = CC.transformArraysIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
 
         dataframes = [DataframeExport(Execution_Table, "Execution Table", True)]
 
