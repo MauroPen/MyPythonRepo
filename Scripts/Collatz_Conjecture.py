@@ -1,55 +1,13 @@
 # Collatz Conjecture
 
 from numpy import sort, array, append, where
-from pandas import DataFrame, Series, ExcelWriter, merge
+from pandas import DataFrame, Series, merge
 from IPython.display import display
 from matplotlib import pyplot, gridspec
 from datetime import datetime
 from os import getcwd
 
-def yn_input_check():
-
-    char_input = "Default"
-
-    while(not(char_input == "y" or char_input == "n")):
-
-        char_input = input()
-
-        if char_input == "y":
-
-            return True
-
-        elif char_input == "n":
-
-            return False
-
-        else:
-
-            print("\nThe inserted value is not valid, please input y or n\n")
-
-def int_input_check():
-
-    int_input = -1
-
-    while (int_input < 0):
-
-        try:
-            
-            int_input = int(input())
-    
-            while(int_input < 0):
-
-                print("\nThe inserted value is not valid, please input a number higher than 0:\n")
-
-                int_input = int(input())
-
-            return int_input
-        
-        except:
-
-            print("\nThe inserted value is not valid, please input a number higher than 0:\n")
-
-            int_input = -1
+from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 
 def normalizeValues(Table, Range, Max_Iterations):
 
@@ -243,14 +201,10 @@ while (running == True):
 
         Execution_Table = transformArraysIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
 
-        Datetime_String = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+        dataframes = [DataframeExport(Execution_Table, "Execution Table", True)]
 
-        with ExcelWriter ("Collatz Conjecture Results ({Timestamp}).xlsx" .format(Timestamp = Datetime_String)) as writer:
+        export_dataframes(dataframes, fileName = "Collatz Conjecture Results")
 
-            Execution_Table.to_excel(writer, sheet_name = "Execution Table", index = True)
-
-            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Collatz Conjecture Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = Datetime_String))
-    
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
     running = yn_input_check()
