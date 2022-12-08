@@ -116,7 +116,7 @@ while (running == True):
 
     representationStartTime = datetime.now()
 
-    Iterations_Axis = list(range(0, Max_Iterations_Tag["Max Iterations"] + 1, 1))
+    Iterations_Axis = tuple(range(0, Max_Iterations_Tag["Max Iterations"] + 1, 1))
 
     gs = gridspec.GridSpec(3, 1)
     fig = pyplot.figure()
@@ -183,7 +183,7 @@ while (running == True):
 
         print("\n\nPreparing data for export! Please Wait...\n")
 
-        Execution_Table = DataFrame(Execution_Array[1:], index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = CC.ColumnLabelsArray(Max_Iterations_Tag["Max Iterations"]))
+        Execution_Table = DataFrame(Execution_Array[1:], index = tuple(range(1, (Range[1] - Range[0] + 2), 1)), columns = CC.ColumnLabelsArray(Max_Iterations_Tag["Max Iterations"]))
 
         Dataframes = [DataframeExport(Execution_Table, "Execution Table", True)]
 
