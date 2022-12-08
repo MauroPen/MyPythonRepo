@@ -34,7 +34,7 @@ def int_input_check():
             
             int_input = int(input())
     
-            while(int_input < 0):
+            while(int_input <= 0):
 
                 print("\nThe inserted value is not valid, please input a number higher than 0:\n")
 

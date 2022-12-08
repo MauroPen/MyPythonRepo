@@ -1,93 +1,20 @@
-# Collatz Conjecture
-
-from numpy import sort, array, append, where
-from pandas import DataFrame, Series, ExcelWriter, merge
+from numpy import sort, array
+from pandas import DataFrame
 from IPython.display import display
 from matplotlib import pyplot, gridspec
 from datetime import datetime
+from tabulate import tabulate
 from os import getcwd
 
-def yn_input_check():
+from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 
-    char_input = "Default"
-
-    while(not(char_input == "y" or char_input == "n")):
-
-        char_input = input()
-
-        if char_input == "y":
-
-            return True
-
-        elif char_input == "n":
-
-            return False
-
-        else:
-
-            print("\nThe inserted value is not valid, please input y or n\n")
-
-def int_input_check():
-
-    int_input = -1
-
-    while (int_input < 0):
-
-        try:
-            
-            int_input = int(input())
-    
-            while(int_input < 0):
-
-                print("\nThe inserted value is not valid, please input a number higher than 0:\n")
-
-                int_input = int(input())
-
-            return int_input
-        
-        except:
-
-            print("\nThe inserted value is not valid, please input a number higher than 0:\n")
-
-            int_input = -1
-
-def normalizeValues(Table, Range, Max_Iterations):
-
-    print("\n\nPreparing data for plotting! Please Wait...\n")
-
-    for i in range(1, (Range[1] - Range[0] + 2), 1): #Need to add as many "0" as necessary to make every array the same length
-
-        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
-        
-        while (len(Table.at[i, "Obtained Values"]) != Max_Iterations + 1):
-
-            Table.at[i, "Obtained Values"] = append(Table.at[i, "Obtained Values"], int(0))
-
-    return Table
-
-def transformArraysIntoColumns(Table, Range, Max_Iterations):
-
-    Transform_Array_Into_DataFrame = DataFrame(data = Table["Obtained Values"].values.tolist(), dtype = int, index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = ColumnLabelsArray(Max_Iterations))
-
-    Table = merge(Table.drop(columns = ["Starting Number", "Obtained Values"]), Transform_Array_Into_DataFrame, how = "inner", left_index = True, right_index = True)
-    
-    return Table
-
-def ColumnLabelsArray(Max_Iterations): 
-
-    ColumnLabels = array("Starting Number")
-
-    for j in range(1, Max_Iterations + 1, 1):
-        
-        ColumnLabels = append(ColumnLabels, "Iteration " + str(j))
-        
-    return ColumnLabels
+import Collatz_Conjecture.Dependency as CC
 
 #Setting Default Values
 
 running = bool(True)
 
-Default_Range = array([10, 100])
+Default_Range = array([10, 200])
 
 while (running == True):
 
@@ -95,7 +22,7 @@ while (running == True):
 
     # Variables settings
 
-    Range = [1, 0] #Initialized to unsatisfy the condition in "else" 
+    Range = array([1, 0])      #Initialized to unsatisfy the condition in "else" 
 
     Default_Mode = yn_input_check()
 
@@ -125,11 +52,7 @@ while (running == True):
 
     # Computation
 
-    Execution_Table = DataFrame({"Starting Number": list(range(Range[0], Range[1] + 1, 1))}, index = list(range(1, (Range[1] - Range[0] + 2), 1))) #Creating the table collecting valuesobtained for each starting number
-
-    Execution_Table["Obtained Values"] = Series(dtype = object) #Creating an empty column hosting the obtained values in array form
-
-    Execution_Table["Obtained Values"] = Execution_Table["Obtained Values"].apply(lambda column : [])
+    computationStartTime = datetime.now()
 
     Max_Number_Tag = {
         "Id": 1,
@@ -148,66 +71,37 @@ while (running == True):
 
     print("\n\nProcessing! Please Wait...\n")
 
-    for i in range(1, (Range[1] - Range[0] + 2), 1):
+    (Execution_Array, Max_Number_Tag, Max_Iterations_Tag) = CC.mainComputation(Range, Max_Number_Tag, Max_Iterations_Tag)
 
-        #print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = (Range[1] - Range[0] + 1)), end = "\r")
-
-        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
-
-        Iteration_Array = array([Range[0] + i - 1])
-
-        while(Iteration_Array[-1] != 1):
-
-            if (Iteration_Array[-1] % 2 == 0):
-
-                Iteration_Array = append(Iteration_Array, Iteration_Array[-1] / 2)
-
-            else:
-
-                Iteration_Array = append(Iteration_Array, Iteration_Array[-1] * 3 + 1)
-
-        if (Max_Number_Tag["Max Number"] < max(Iteration_Array)):
-
-            Max_Number_Tag["Id"] = i
-            Max_Number_Tag["Starting Number"] = (Range[0] + i - 1)
-            Max_Number_Tag["Max Number"] = int(max(Iteration_Array))
-            Max_Number_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
-
-        if (Max_Iterations_Tag["Max Iterations"] < len(Iteration_Array)):
-
-            Max_Iterations_Tag["Id"] = i
-            Max_Iterations_Tag["Starting Number"] = (Range[0] + i - 1)
-            Max_Iterations_Tag["Max Iterations"] = len(Iteration_Array)
-            Max_Iterations_Tag["Max Number"] = int(max(Iteration_Array))
-            Max_Iterations_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
-
-        Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
-
-    Execution_Table = normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (same-length arrays)
+    Execution_Array = CC.normalizeArray(Execution_Array, Range, Max_Iterations_Tag["Max Iterations"])   #Necessary to allow plotting values all together (same-length arrays)
+    
+    computationEndTime = datetime.now()
 
     # Graph
 
-    Iterations_Axis = list(range(0, Max_Iterations_Tag["Max Iterations"] + 1, 1))
+    representationStartTime = datetime.now()
+
+    Iterations_Axis = tuple(range(0, Max_Iterations_Tag["Max Iterations"] + 1, 1))
 
     gs = gridspec.GridSpec(3, 1)
     fig = pyplot.figure()
 
     ax1 = fig.add_subplot(gs[0, 0])
-    pyplot.setp(ax1.get_xticklabels(), visible = False) #Hiding ticks for readability
+    pyplot.setp(ax1.get_xticklabels(), visible = False)     #Hiding ticks for readability
     ax1.set_title("Results Overview")
     ax1.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax1.set_ylabel("Number")
     pyplot.grid()
 
     ax2 = fig.add_subplot(gs[1, 0], sharex = ax1)
-    pyplot.setp(ax2.get_xticklabels(), visible = False) #Hiding ticks for readability
-    ax2.set_title("Highest #Iterations")
+    pyplot.setp(ax2.get_xticklabels(), visible = False)     #Hiding ticks for readability
+    ax2.set_title("Highest Number of Iterations: {Iterations} (Starting Number: {Starting_Number})" .format(Iterations = Max_Iterations_Tag["Max Iterations"], Starting_Number = Max_Iterations_Tag["Starting Number"]))
     ax2.set_ylim([1, Max_Iterations_Tag["Max Number"] * 1.05])
     ax2.set_ylabel("Number")
     pyplot.grid()
 
     ax3 = fig.add_subplot(gs[2, 0], sharex = ax1)
-    ax3.set_title("Highest Number")
+    ax3.set_title("Highest Number Obtained: {Max_Number} (Starting Number: {Starting_Number})" .format(Max_Number = Max_Number_Tag["Max Number"], Starting_Number = Max_Number_Tag["Starting Number"]))
     ax3.set_xlabel("Iteration #")
     ax3.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax3.set_ylabel("Number")
@@ -219,18 +113,29 @@ while (running == True):
 
         print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
         
-        ax1.plot(Iterations_Axis, Execution_Table.at[i, "Obtained Values"], linestyle = ":")
+        ax1.plot(Iterations_Axis, Execution_Array[i], linestyle = ":")
     
-    ax2.plot(Iterations_Axis, Execution_Table.at[Max_Iterations_Tag["Id"], "Obtained Values"], linewidth = 2, color = "k", label = "Highest #Iterations")
+    ax2.plot(Iterations_Axis, Execution_Array[Max_Iterations_Tag["Id"]], linewidth = 2, color = "k", label = "Highest #Iterations")
 
-    ax3.plot(Iterations_Axis, Execution_Table.at[Max_Number_Tag["Id"], "Obtained Values"], linewidth = 2, color = "b", label = "Highest Number")
+    ax3.plot(Iterations_Axis, Execution_Array[Max_Number_Tag["Id"]], linewidth = 2, color = "b", label = "Highest Number")
+
+    representationEndTime = datetime.now()
 
     # Data insights
+
+    totalExecutionTime = (computationEndTime - computationStartTime)
+
+    totalRepresentationTime = (representationEndTime - representationStartTime)
     
     print("\n\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
 
     print("\nThe starting number {Starting_Number} has generated the highest number ({Max_Number}) during its iteration number {Iteration}\n" .format(Starting_Number = Max_Number_Tag["Starting Number"], Max_Number = Max_Number_Tag["Max Number"], Iteration = Max_Number_Tag["Iteration"]))
     
+    timesTable = [["Total time of execution", str(totalExecutionTime)],
+                  ["Total time spent for graphs", str(totalRepresentationTime)]]
+    
+    print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
+
     pyplot.show()
     
     # Export data
@@ -239,18 +144,22 @@ while (running == True):
 
     if (yn_input_check() == True):
 
+        timeExportStart = datetime.now()
+
         print("\n\nPreparing data for export! Please Wait...\n")
 
-        Execution_Table = transformArraysIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
+        Execution_Table = DataFrame(Execution_Array[1:], index = tuple(range(1, (Range[1] - Range[0] + 2), 1)), columns = CC.ColumnLabelsArray(Max_Iterations_Tag["Max Iterations"]))
 
-        Datetime_String = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+        Dataframes = [DataframeExport(Execution_Table, "Execution Table", True)]
 
-        with ExcelWriter ("Collatz Conjecture Results ({Timestamp}).xlsx" .format(Timestamp = Datetime_String)) as writer:
+        export_dataframes(Dataframes, fileName = "Collatz Conjecture Results")
 
-            Execution_Table.to_excel(writer, sheet_name = "Execution Table", index = True)
+        timeExportEnd = datetime.now()
 
-            print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"Collatz Conjecture Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = Datetime_String))
-    
+        timeExport = (timeExportEnd - timeExportStart)
+
+        print(tabulate([["Time spent exporting data", str(timeExport)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
+
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
     running = yn_input_check()
