@@ -1,4 +1,4 @@
-from numpy import sort, array, append, concatenate, where
+from numpy import sort, array
 from pandas import DataFrame
 from IPython.display import display
 from matplotlib import pyplot, gridspec
@@ -22,7 +22,7 @@ while (running == True):
 
     # Variables settings
 
-    Range = [1, 0]      #Initialized to unsatisfy the condition in "else" 
+    Range = array([1, 0])      #Initialized to unsatisfy the condition in "else" 
 
     Default_Mode = yn_input_check()
 
@@ -54,8 +54,6 @@ while (running == True):
 
     computationStartTime = datetime.now()
 
-    Execution_Array = array([[0, [0]]], dtype = object)       #Initialized with meaningless values that will be ignored
-
     Max_Number_Tag = {
         "Id": 1,
         "Starting Number": Range[0],
@@ -73,40 +71,7 @@ while (running == True):
 
     print("\n\nProcessing! Please Wait...\n")
 
-    for i in range(1, (Range[1] - Range[0] + 2), 1):
-
-        #print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = (Range[1] - Range[0] + 1)), end = "\r")
-
-        print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
-
-        Iteration_Array = array([Range[0] + i - 1])
-
-        while(Iteration_Array[-1] != 1):
-
-            if (Iteration_Array[-1] % 2 == 0):
-
-                Iteration_Array = append(Iteration_Array, Iteration_Array[-1] / 2)
-
-            else:
-
-                Iteration_Array = append(Iteration_Array, Iteration_Array[-1] * 3 + 1)
-
-        if (Max_Number_Tag["Max Number"] < max(Iteration_Array)):
-
-            Max_Number_Tag["Id"] = i
-            Max_Number_Tag["Starting Number"] = (Range[0] + i - 1)
-            Max_Number_Tag["Max Number"] = int(max(Iteration_Array))
-            Max_Number_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
-
-        if (Max_Iterations_Tag["Max Iterations"] < len(Iteration_Array)):
-
-            Max_Iterations_Tag["Id"] = i
-            Max_Iterations_Tag["Starting Number"] = (Range[0] + i - 1)
-            Max_Iterations_Tag["Max Iterations"] = len(Iteration_Array)
-            Max_Iterations_Tag["Max Number"] = int(max(Iteration_Array))
-            Max_Iterations_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
-
-        Execution_Array = concatenate((Execution_Array, array([[i, [Iteration_Array.astype(int)]]], dtype = object)))
+    (Execution_Array, Max_Number_Tag, Max_Iterations_Tag) = CC.mainComputation(Range, Max_Number_Tag, Max_Iterations_Tag)
 
     Execution_Array = CC.normalizeArray(Execution_Array, Range, Max_Iterations_Tag["Max Iterations"])   #Necessary to allow plotting values all together (same-length arrays)
     
@@ -154,13 +119,13 @@ while (running == True):
 
     ax3.plot(Iterations_Axis, Execution_Array[Max_Number_Tag["Id"]], linewidth = 2, color = "b", label = "Highest Number")
 
-    representationEndTIme = datetime.now()
+    representationEndTime = datetime.now()
 
     # Data insights
 
     totalExecutionTime = (computationEndTime - computationStartTime)
 
-    totalRepresentationTime = (representationEndTIme - representationStartTime)
+    totalRepresentationTime = (representationEndTime - representationStartTime)
     
     print("\n\nThe starting number {Starting_Number} has triggered the highest number of iterations: {Iterations}\n" .format(Starting_Number = Max_Iterations_Tag["Starting Number"], Iterations = Max_Iterations_Tag["Max Iterations"]))
 

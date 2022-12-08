@@ -1,7 +1,49 @@
-from numpy import array, full, concatenate, append
+from numpy import array, where, concatenate, append, full
 from pandas import DataFrame, merge
 
-#1 - Adds as many "0" as necessary to make every array the same length
+#1 - The main computation of the Collatz Conjecture program
+def mainComputation(Range, Max_Number_Tag, Max_Iterations_Tag):
+
+    Execution_Array = array([[0, [0]]], dtype = object)       #Initialized with meaningless values that will be ignored
+
+    for i in range(1, (Range[1] - Range[0] + 2), 1):
+
+            #print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = (Range[1] - Range[0] + 1)), end = "\r")
+
+            print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
+
+            Iteration_Array = array([Range[0] + i - 1])
+
+            while(Iteration_Array[-1] != 1):
+
+                if (Iteration_Array[-1] % 2 == 0):
+
+                    Iteration_Array = append(Iteration_Array, Iteration_Array[-1] / 2)
+
+                else:
+
+                    Iteration_Array = append(Iteration_Array, Iteration_Array[-1] * 3 + 1)
+
+            if (Max_Number_Tag["Max Number"] < max(Iteration_Array)):
+
+                Max_Number_Tag["Id"] = i
+                Max_Number_Tag["Starting Number"] = (Range[0] + i - 1)
+                Max_Number_Tag["Max Number"] = int(max(Iteration_Array))
+                Max_Number_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
+
+            if (Max_Iterations_Tag["Max Iterations"] < len(Iteration_Array)):
+
+                Max_Iterations_Tag["Id"] = i
+                Max_Iterations_Tag["Starting Number"] = (Range[0] + i - 1)
+                Max_Iterations_Tag["Max Iterations"] = len(Iteration_Array)
+                Max_Iterations_Tag["Max Number"] = int(max(Iteration_Array))
+                Max_Iterations_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
+
+            Execution_Array = concatenate((Execution_Array, array([[i, [Iteration_Array.astype(int)]]], dtype = object)))
+
+    return (Execution_Array, Max_Number_Tag, Max_Iterations_Tag)
+
+#2 - Adds as many "0" as necessary to make every array the same length
 def normalizeArray(Array, Range, Max_Iterations):
 
     print("\n\nPreparing data for plotting! Please Wait...\n")
@@ -20,7 +62,7 @@ def normalizeArray(Array, Range, Max_Iterations):
 
     return Final_Array
 
-#2 - Generates the column labels necessary for the DataFrame to export
+#3 - Generates the column labels necessary for the DataFrame to export
 def ColumnLabelsArray(Max_Iterations):
 
     ColumnLabels = array("Starting Number")
