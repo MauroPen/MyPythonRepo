@@ -45,5 +45,5 @@ AS-IS:
 
 DATAFRAME TO ARRAY OF ARRAYS:
 
-	- Execution (mostly thanks to normalizeArray()) < 1s
+	- Execution: < 1s (mostly thanks to normalizeArray())
 	- Representation: < 1s

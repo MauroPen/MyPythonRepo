@@ -179,6 +179,8 @@ while (running == True):
 
     if (yn_input_check() == True):
 
+        timeExportStart = datetime.now()
+
         print("\n\nPreparing data for export! Please Wait...\n")
 
         Execution_Table = DataFrame(Execution_Array[1:], index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = CC.ColumnLabelsArray(Max_Iterations_Tag["Max Iterations"]))
@@ -186,6 +188,12 @@ while (running == True):
         Dataframes = [DataframeExport(Execution_Table, "Execution Table", True)]
 
         export_dataframes(Dataframes, fileName = "Collatz Conjecture Results")
+
+        timeExportEnd = datetime.now()
+
+        timeExport = (timeExportEnd - timeExportStart)
+
+        print(tabulate([["Time spent exporting data", str(timeExport)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
 
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
