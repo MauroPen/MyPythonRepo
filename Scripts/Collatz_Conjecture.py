@@ -1,10 +1,8 @@
-# Collatz Conjecture
-
-from numpy import sort, array, append, where
-from pandas import DataFrame, Series
+from numpy import sort, array, append, concatenate, where
+from pandas import DataFrame
 from IPython.display import display
 from matplotlib import pyplot, gridspec
-from datetime import datetime, timedelta
+from datetime import datetime
 from tabulate import tabulate
 from os import getcwd
 
@@ -24,7 +22,7 @@ while (running == True):
 
     # Variables settings
 
-    Range = [1, 0] #Initialized to unsatisfy the condition in "else" 
+    Range = [1, 0]      #Initialized to unsatisfy the condition in "else" 
 
     Default_Mode = yn_input_check()
 
@@ -56,11 +54,7 @@ while (running == True):
 
     computationStartTime = datetime.now()
 
-    Execution_Table = DataFrame({"Starting Number": list(range(Range[0], Range[1] + 1, 1))}, index = list(range(1, (Range[1] - Range[0] + 2), 1))) #Creating the table collecting valuesobtained for each starting number
-
-    Execution_Table["Obtained Values"] = Series(dtype = object) #Creating an empty column hosting the obtained values in array form
-
-    Execution_Table["Obtained Values"] = Execution_Table["Obtained Values"].apply(lambda column : [])
+    Execution_Array = array([[0, [0]]], dtype = object)       #Initialized with meaningless values that will be ignored
 
     Max_Number_Tag = {
         "Id": 1,
@@ -112,10 +106,10 @@ while (running == True):
             Max_Iterations_Tag["Max Number"] = int(max(Iteration_Array))
             Max_Iterations_Tag["Iteration"] = where(Iteration_Array == max(Iteration_Array))[0][0]
 
-        Execution_Table.at[i, "Obtained Values"] = Iteration_Array.astype(int)
+        Execution_Array = concatenate((Execution_Array, array([[i, [Iteration_Array.astype(int)]]], dtype = object)))
 
-    Execution_Table = CC.normalizeValues(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"]) #Necessary to allow plotting values all together (same-length arrays)
-
+    Execution_Array = CC.normalizeArray(Execution_Array, Range, Max_Iterations_Tag["Max Iterations"])   #Necessary to allow plotting values all together (same-length arrays)
+    
     computationEndTime = datetime.now()
 
     # Graph
@@ -128,21 +122,21 @@ while (running == True):
     fig = pyplot.figure()
 
     ax1 = fig.add_subplot(gs[0, 0])
-    pyplot.setp(ax1.get_xticklabels(), visible = False) #Hiding ticks for readability
+    pyplot.setp(ax1.get_xticklabels(), visible = False)     #Hiding ticks for readability
     ax1.set_title("Results Overview")
     ax1.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax1.set_ylabel("Number")
     pyplot.grid()
 
     ax2 = fig.add_subplot(gs[1, 0], sharex = ax1)
-    pyplot.setp(ax2.get_xticklabels(), visible = False) #Hiding ticks for readability
-    ax2.set_title("Highest #Iterations")
+    pyplot.setp(ax2.get_xticklabels(), visible = False)     #Hiding ticks for readability
+    ax2.set_title("Highest Number of Iterations: {Iterations} (Starting Number: {Starting_Number})" .format(Iterations = Max_Iterations_Tag["Max Iterations"], Starting_Number = Max_Iterations_Tag["Starting Number"]))
     ax2.set_ylim([1, Max_Iterations_Tag["Max Number"] * 1.05])
     ax2.set_ylabel("Number")
     pyplot.grid()
 
     ax3 = fig.add_subplot(gs[2, 0], sharex = ax1)
-    ax3.set_title("Highest Number")
+    ax3.set_title("Highest Number Obtained: {Max_Number} (Starting Number: {Starting_Number})" .format(Max_Number = Max_Number_Tag["Max Number"], Starting_Number = Max_Number_Tag["Starting Number"]))
     ax3.set_xlabel("Iteration #")
     ax3.set_ylim([1, Max_Number_Tag["Max Number"] * 1.05])
     ax3.set_ylabel("Number")
@@ -154,11 +148,11 @@ while (running == True):
 
         print(" {Status}%" .format(Status = int((i / (Range[1] - Range[0] + 1)) * 100)), end = "\r")
         
-        ax1.plot(Iterations_Axis, Execution_Table.at[i, "Obtained Values"], linestyle = ":")
+        ax1.plot(Iterations_Axis, Execution_Array[i], linestyle = ":")
     
-    ax2.plot(Iterations_Axis, Execution_Table.at[Max_Iterations_Tag["Id"], "Obtained Values"], linewidth = 2, color = "k", label = "Highest #Iterations")
+    ax2.plot(Iterations_Axis, Execution_Array[Max_Iterations_Tag["Id"]], linewidth = 2, color = "k", label = "Highest #Iterations")
 
-    ax3.plot(Iterations_Axis, Execution_Table.at[Max_Number_Tag["Id"], "Obtained Values"], linewidth = 2, color = "b", label = "Highest Number")
+    ax3.plot(Iterations_Axis, Execution_Array[Max_Number_Tag["Id"]], linewidth = 2, color = "b", label = "Highest Number")
 
     representationEndTIme = datetime.now()
 
@@ -187,11 +181,11 @@ while (running == True):
 
         print("\n\nPreparing data for export! Please Wait...\n")
 
-        Execution_Table = CC.transformArraysIntoColumns(Execution_Table, Range, Max_Iterations_Tag["Max Iterations"])
+        Execution_Table = DataFrame(Execution_Array[1:], index = list(range(1, (Range[1] - Range[0] + 2), 1)), columns = CC.ColumnLabelsArray(Max_Iterations_Tag["Max Iterations"]))
 
-        dataframes = [DataframeExport(Execution_Table, "Execution Table", True)]
+        Dataframes = [DataframeExport(Execution_Table, "Execution Table", True)]
 
-        export_dataframes(dataframes, fileName = "Collatz Conjecture Results")
+        export_dataframes(Dataframes, fileName = "Collatz Conjecture Results")
 
     print("\nComputation ended!\n\nDo you want to start over? (y/n)\n")
     
