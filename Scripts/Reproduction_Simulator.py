@@ -82,7 +82,7 @@ running = bool(True)
 
 default_Starting_N = int(25)
 
-default_Period = int(50)
+default_Period = int(100)
 
 default_b = float(0.2)
 
@@ -90,7 +90,7 @@ default_d = float(0.1)
 
 default_c = float(0.001)
 
-default_Repeat = int(50)
+default_Repeat = int(200)
 
 while (running == True):
 
@@ -181,7 +181,9 @@ while (running == True):
 
     # Computation
 
-    Period_Arr = list(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
+    timeExecutionStart = datetime.now()
+
+    Period_Arr = tuple(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
 
     N_Tab = DataFrame({"Period 0": full(Repeat, Starting_N)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resulting N each time for each iteration
 
@@ -215,6 +217,8 @@ while (running == True):
     ax2.set_ylabel("Delta")
 
     print("\n\nProcessing! Please Wait...\n")
+
+    timeSimulationStart = datetime.now()
 
     for i in range(1, Repeat + 1, 1): #Iterating the same simulation multiple times
 
@@ -270,7 +274,13 @@ while (running == True):
 
     Avg_Tab = DataFrame({"Period": Period_Arr, "Average Population": Avg_N, "Average Delta": Avg_D}, index = list(range(0, Period + 1, 1)))
 
+    timeSimulationEnd = datetime.now()
+
+    timeSimulation = (timeSimulationEnd - timeSimulationStart)
+
     # Plot Average Simulation Results
+
+    timePlottingStart = datetime.now()
 
     ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
 
@@ -304,6 +314,8 @@ while (running == True):
     
     if (Compute_Avg_Delta_Population == True): 
 
+        timeAverageDeltaPopulationStart = datetime.now()
+
         # Plot Actual Average Delta in function of Population
         
         N_Array = compute_unique_Tab_Values(N_Tab, Period, Repeat)
@@ -328,6 +340,16 @@ while (running == True):
         ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
         
         ax3.legend(loc = "upper left", fontsize = 6)
+
+        timeAverageDeltaPopulationEnd = datetime.now()
+
+        timeAverageDeltaPopulation = (timeAverageDeltaPopulationEnd - timeAverageDeltaPopulationStart)
+
+    (timePlottingEnd, timeExecutionEnd) = (datetime.now(), datetime.now())
+
+    timePlotting = (timePlottingEnd - timePlottingStart)
+
+    timeExecution = (timeExecutionEnd - timeExecutionStart)
 
     # Results Presentation
 
@@ -360,6 +382,15 @@ while (running == True):
         print("\n\nAverage Population per Period: \n")
         
         print(tabulate(Avg_Tab, headers = Avg_Tab.columns, tablefmt = "github", numalign = "center", showindex = "False"))
+
+        timesTable = [["Total time for running simulations", str(timeSimulation)],
+                      ["Total time spent plotting", str(timePlotting)],
+                      ["Total time of execution", str(timeExecution)]]
+        
+        print("\n")
+
+        print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
+
     
     # Export Results
 
