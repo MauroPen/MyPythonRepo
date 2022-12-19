@@ -48,7 +48,32 @@ def int_input_check():
 
             int_input = -1
 
-#3 - An entity used to export dataframes
+#3 - Asks for a number by the user, then returns that value. Anything else is not accepted.
+def probability_input_check():
+
+    float_input = -1.0
+
+    while (float_input < 0):
+
+        try:
+
+            float_input = float(input())
+
+            while (not(float_input >= 0 and float_input <= 1)):
+
+                print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+
+                float_input = float(input())
+
+            return float_input
+
+        except:
+
+            print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
+
+            float_input = -1
+
+#4 - An entity used to export dataframes
 class DataframeExport:
 
     def __init__(self, Table, Sheet_Name, Index):
@@ -57,7 +82,7 @@ class DataframeExport:
         self.Sheet_Name = Sheet_Name
         self.Index = Index              #Boolean
 
-#4 - Exports pandas dataframes in an Excel file with multiple sheets
+#5 - Exports pandas dataframes in an Excel file with multiple sheets
 def export_dataframes(dataframes, fileName):        # "dataframes" is meant to be an array of DataframeExport (#3) objects
 
     fileName = fileName + " (" + datetime.now().strftime("%d_%m_%Y - %H_%M_%S") + ").xlsx"

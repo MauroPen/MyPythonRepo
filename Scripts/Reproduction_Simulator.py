@@ -16,76 +16,7 @@ if not warnoptions:
 
     simplefilter("ignore")
 
-
-def int_input_check():
-
-    int_input = -1
-
-    while (int_input < 0):
-
-        try:
-            
-            int_input = int(input())
-    
-            while(int_input < 0):
-
-                print("\nThe inserted value is not valid, please input a number higher than 0:\n")
-
-                int_input = int(input())
-
-            return int_input
-        
-        except:
-
-            print("\nThe inserted value is not valid, please input a number higher than 0:\n")
-
-            int_input = -1
-
-
-def float_input_check():
-
-    float_input = -1.0
-
-    while (float_input < 0):
-
-        try:
-
-            float_input = float(input())
-
-            while (not(float_input >= 0 and float_input <= 1)):
-
-                print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
-
-                float_input = float(input())
-
-            return float_input
-
-        except:
-
-            print("\nThe inserted value is not valid, please input a number between 0 and 1:\n")
-
-            float_input = -1
-    
-
-def yn_input_check():
-
-    char_input = "Default"
-
-    while(not(char_input == "y" or char_input == "n")):
-
-        char_input = input()
-
-        if char_input == "y":
-
-            return True
-
-        elif char_input == "n":
-
-            return False
-
-        else:
-
-            print("\nThe inserted value is not valid, please input y or n\n")
+from Common import yn_input_check, int_input_check, probability_input_check
 
 
 def compute_mean(Tab, Period, Starting_Value):
@@ -195,15 +126,15 @@ while (running == True):
 
         print("\nGreat! Now, please input the Birth Rate:\n")
         
-        b = float_input_check()
+        b = probability_input_check()
 
         print("\nAwesome! Now, please input the desired Death Rate:\n")
 
-        d = float_input_check()
+        d = probability_input_check()
 
         print("\n\nFantastic! Now, please input the Crowding Coefficient. \n\nWARNING! This coefficient will positively affect the Death Rate of your population for each period (recommended value: 0.001):\n")
 
-        c = float_input_check()
+        c = probability_input_check()
 
         print("\nFinally, please input the number of times that you want this simulation to be repeated:\n")
 
