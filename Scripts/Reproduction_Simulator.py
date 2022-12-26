@@ -1,36 +1,32 @@
 # Reproduction Simulator
 
 from math import isnan
-from IPython.display import display
-from numpy import random, mean, linspace, full, unique
+from numpy import array, concatenate, random, mean, linspace, full, unique
 from matplotlib import pyplot, gridspec
 from pandas import DataFrame, Series, option_context, ExcelWriter
 from tabulate import tabulate
 from os import getcwd
 from datetime import datetime
-from sys import warnoptions
-
-if not warnoptions:
-
-    from warnings import simplefilter
-
-    simplefilter("ignore")
 
 from Common import yn_input_check, int_input_check, probability_input_check
 
 
-def compute_mean(Tab, Period, Starting_Value):
+def compute_mean_Arr(Array, Repeat, Period, Starting_Value):
 
-    Avg_Array = [Starting_Value]
+    Avg_Array = [Starting_Value * Repeat]
 
     for i in range(1, Period + 1, 1):
 
-        Avg_Array.append([])
+        Avg_Array.append(0)
 
-        Avg_Array[i] = mean(Tab["Period " + str(i)])
+        for j in range(1, Repeat + 1, 1):
+
+            Avg_Array[i] += Array[j][i]
+
+    Avg_Array[:] = [value / Repeat for value in Avg_Array]
 
     return Avg_Array
-
+    
 
 def compute_unique_Tab_Values(Tab, Period, Repeat): # This is a function extracting only the values for N obtained during the simulation
 
@@ -64,6 +60,37 @@ def compute_avg_Delta_Population(Unique_Array, Tab1, Tab2, Period, Repeat):
                 if (Tab1["Period " + str(j)][k] == i):
                     
                     collector.append(Tab2["Period " + str(j + 1)][k])
+            
+        if (isnan(mean(collector)) == True):
+
+            Avg_Values.append(0)
+
+        else:
+
+            Avg_Values.append(mean(collector))
+
+    return Avg_Values
+
+
+def compute_Avg_Delta_Population(Unique_N, N_Array, D_Array, Period, Repeat):
+
+    Avg_Values = []
+
+    print("\n\nAlmost done! Please, wait while computing the Average Delta in function of the Population...\n")
+
+    for N in range(int(min(Unique_N)), int(max(Unique_N)) + 1, 1):
+
+        print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = N, Total_Iterations = int(max(Unique_N))), end = "\r")
+
+        collector = [] #Collects the values of D to average for each N
+
+        for j in range(0, Period, 1): # Only "Period" because there is no data available for the last Period of simulation
+
+            for k in range(1, Repeat + 1, 1):
+            
+                if (N_Array[k][j] == N):
+                    
+                    collector.append(D_Array[k][j + 1])
             
         if (isnan(mean(collector)) == True):
 
@@ -153,31 +180,6 @@ while (running == True):
             default_c = c
             default_Repeat = Repeat
 
-    # Computation of Average Delta in function of the Population? (y/n)
-    
-    print("\n\nDo you want to compute the Average Delta in function of the Population too? (y/n)\n\nWARNING! This computation may require longer times of execution of the program.\n")
-
-    Compute_Avg_Delta_Population = yn_input_check()
-
-    # Export Results in .csv Files? (y/n)
-    
-    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create one or more new files in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
-    
-    if (yn_input_check() == True):
-
-        print("\n\nDo you want to export the results in a single .xlsx file (1), in three separated .csv files (2), or both (3)? If you changed your mind, just enter \"4\"\n")
-
-        Export_File = int_input_check()
-        
-        while (Export_File < 1 or Export_File > 4):
-        
-            print("\nThe inserted value is not valid, please input a number between 1 and 4:\n")
-
-            Export_File = int_input_check()
-
-    else:
-
-        Export_File = 0
 
     # Computation
 
@@ -185,25 +187,13 @@ while (running == True):
 
     Period_Arr = tuple(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
 
-    N_Tab = DataFrame({"Period 0": full(Repeat, Starting_N)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resulting N each time for each iteration
+    N_Array = array([full(Period + 1, 0)])        #Collects the values taken by N from the different simulations, first one is a dummy 
 
-    D_Tab = DataFrame({"Period 0": full(Repeat, 0)}, dtype = int, index = list(range(1, Repeat + 1, 1))) #Collects the resulting D each time for each iteration
-
-    for i in range(1, Period + 1, 1) :
-        
-        N_Tab["Period " + str(i)] = Series(dtype = int)
-        
-        D_Tab["Period " + str(i)] = Series(dtype = int)
+    D_Array = array([full(Period + 1, 0)])       #Collects the values taken by D from the different simulations, first one is a dummy 
 
     # Plot Simulation Results
 
-    if (Compute_Avg_Delta_Population == True):
-
-        gs = gridspec.GridSpec(2, 2)
-
-    else:
-
-        gs = gridspec.GridSpec(2, 1)
+    gs = gridspec.GridSpec(2, 1)
 
     fig = pyplot.figure()
     ax1 = fig.add_subplot(gs[0, 0])
@@ -220,17 +210,17 @@ while (running == True):
 
     timeSimulationStart = datetime.now()
 
-    for i in range(1, Repeat + 1, 1): #Iterating the same simulation multiple times
+    for iteration in range(1, Repeat + 1, 1): #Iterating the same simulation multiple times
 
-        print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = Repeat), end = "\r")
+        print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = iteration, Total_Iterations = Repeat), end = "\r")
 
         N_Arr = [Starting_N] #Collects the resulting N each time
 
         D_Arr =  [0] #Collects the resuling D for each Iteration
 
-        for j in range(1, Period + 1, 1):
+        for period in range(1, Period + 1, 1):
 
-            N = N_Arr[j - 1] #Sets the starting population for calculation
+            N = N_Arr[period - 1] #Sets the starting population for calculation
 
             D = 0 #Collects the Delta each Period
 
@@ -263,16 +253,14 @@ while (running == True):
         ax1.plot(Period_Arr, N_Arr, linestyle = ":")
 
         ax2.plot(Period_Arr, D_Arr, linestyle = ":")
-
-        N_Tab.loc[i] = N_Arr
         
-        D_Tab.loc[i] = D_Arr
+        N_Array = concatenate((N_Array, array([N_Arr])))
 
-    Avg_N = compute_mean(N_Tab, Period, Starting_N)
+        D_Array = concatenate((D_Array, array([D_Arr])))
 
-    Avg_D = compute_mean(D_Tab, Period, 0)
+    Avg_N_Array = compute_mean_Arr(N_Array, Repeat, Period, Starting_N)
 
-    Avg_Tab = DataFrame({"Period": Period_Arr, "Average Population": Avg_N, "Average Delta": Avg_D}, index = list(range(0, Period + 1, 1)))
+    Avg_D_Array = compute_mean_Arr(D_Array, Repeat, Period, 0)
 
     timeSimulationEnd = datetime.now()
 
@@ -282,9 +270,13 @@ while (running == True):
 
     timePlottingStart = datetime.now()
 
-    ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
+    #ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
 
-    ax2.plot(Period_Arr, Avg_D, linewidth = 3, color = "k", label = "Average Delta Population")
+    ax1.plot(Period_Arr, Avg_N_Array, linewidth = 3, color = "k", label = "Average Population Growth")
+
+    #ax2.plot(Period_Arr, Avg_D, linewidth = 3, color = "k", label = "Average Delta Population")
+
+    ax2.plot(Period_Arr, Avg_D_Array, linewidth = 3, color = "k", label = "Average Delta Population")
     
     # Plot Theoretical Population Growth
 
@@ -297,7 +289,7 @@ while (running == True):
     ax1.plot(Period_Arr, yn, linewidth = 2, color = "m",  label = "Expected Population Growth")
 
     ax1.legend(loc = "upper left", fontsize = 6)
-    
+
     # Plot Theoretical Delta Population Function
 
     yd = [0]
@@ -309,41 +301,6 @@ while (running == True):
     ax2.plot(Period_Arr, yd, linewidth = 2, color = "m", label = "Expected Delta Population")
 
     ax2.legend(loc = "upper left", fontsize = 6)
-
-    # Plot Average Delta in function of the Population
-    
-    if (Compute_Avg_Delta_Population == True): 
-
-        timeAverageDeltaPopulationStart = datetime.now()
-
-        # Plot Actual Average Delta in function of Population
-        
-        N_Array = compute_unique_Tab_Values(N_Tab, Period, Repeat)
-
-        Avg_D_N = compute_avg_Delta_Population(N_Array, N_Tab, D_Tab, Period, Repeat)
-        
-        ax3 = fig.add_subplot(gs[:, 1])
-        ax3.set_title("Delta in Function of Population")
-        ax3.set_xlabel("Population") 
-        ax3.set_ylabel("Delta", rotation = -90)
-        ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
-        ax3.set_xlim(min(N_Array), len(Avg_D_N) + 1)
-        
-        ax3.plot(Avg_D_N, color = "k", label = "Average Delta in function of Population")
-   
-        # Plot Theoretical Average Delta in function of Population
-
-        xdn = linspace(0, len(Avg_D_N) + 1, 1000)
-
-        ydn = xdn * (b - d - c * xdn)
-
-        ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
-        
-        ax3.legend(loc = "upper left", fontsize = 6)
-
-        timeAverageDeltaPopulationEnd = datetime.now()
-
-        timeAverageDeltaPopulation = (timeAverageDeltaPopulationEnd - timeAverageDeltaPopulationStart)
 
     (timePlottingEnd, timeExecutionEnd) = (datetime.now(), datetime.now())
 
@@ -360,7 +317,7 @@ while (running == True):
     print("\nCrowding Coefficient set: ", c)
     print("\nNumber of Iterations done: ", Repeat)
 
-    print("\n\nAverage Final Population: ", Avg_N[Period])
+    print("\n\nAverage Final Population: ", Avg_N_Array[Period])
     print("\nTheoretical Final Population: ", "{:.2f}" .format(yn[Period]))
 
     with option_context("display.max_rows", None,
@@ -368,20 +325,6 @@ while (running == True):
                         "display.width", 1000,
                         "display.colheader_justify", "center",
                         "display.precision", 2): #Sets options of visualization for display() valid only for the "with" instance
-
-        print("\n\nResults of the simulation:")
-
-        print("\nPopulation: per Period:\n")
-        
-        display(N_Tab)
-
-        print("\nDelta Population: per Period:\n")
-        
-        display(D_Tab)
-        
-        print("\n\nAverage Population per Period: \n")
-        
-        print(tabulate(Avg_Tab, headers = Avg_Tab.columns, tablefmt = "github", numalign = "center", showindex = "False"))
 
         timesTable = [["Total time for running simulations", str(timeSimulation)],
                       ["Total time spent plotting", str(timePlotting)],
@@ -391,6 +334,74 @@ while (running == True):
 
         print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
 
+    pyplot.show()
+
+    # Computation of Average Delta in function of the Population? (y/n) TO BE REFACTORED
+    
+    print("\n\nDo you want to compute the Average Delta in function of the Population too? (y/n)\n\nWARNING! This computation may require longer times of execution of the program.\n")
+
+    Compute_Avg_Delta_Population = yn_input_check()
+
+    # Plot Average Delta in function of the Population
+    
+    if (Compute_Avg_Delta_Population == True):
+
+        gs = gridspec.GridSpec(2, 2)
+
+        timeAverageDeltaPopulationStart = datetime.now()
+
+        # Plot Actual Average Delta in function of Population
+        
+        #N_Array = compute_unique_Tab_Values(N_Tab, Period, Repeat)
+
+        Unique_N = unique(N_Array[1:])
+
+        #Avg_D_N = compute_avg_Delta_Population(N_Array, N_Tab, D_Tab, Period, Repeat)
+
+        Avg_D_N_Array = compute_Avg_Delta_Population(Unique_N, N_Array, D_Array, Period, Repeat)
+        
+        ax3 = fig.add_subplot(gs[:, 1])
+        ax3.set_title("Delta in Function of Population")
+        ax3.set_xlabel("Population") 
+        ax3.set_ylabel("Delta", rotation = -90)
+        ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
+        ax3.set_xlim(min(Unique_N), len(Avg_D_N_Array) + 1)
+        
+        ax3.plot(Avg_D_N_Array, color = "k", label = "Average Delta in function of Population")
+   
+        # Plot Theoretical Average Delta in function of Population
+
+        xdn = linspace(min(Unique_N), max(Unique_N), 1000)
+
+        ydn = xdn * (b - d - c * xdn)
+
+        ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
+        
+        ax3.legend(loc = "upper left", fontsize = 6)
+
+        timeAverageDeltaPopulationEnd = datetime.now()
+
+        timeAverageDeltaPopulation = (timeAverageDeltaPopulationEnd - timeAverageDeltaPopulationStart)
+
+    # Export Results in .csv Files? (y/n) TO BE REFACTORED
+    
+    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create one or more new files in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
+    
+    if (yn_input_check() == True):
+
+        print("\n\nDo you want to export the results in a single .xlsx file (1), in three separated .csv files (2), or both (3)? If you changed your mind, just enter \"4\"\n")
+
+        Export_File = int_input_check()
+        
+        while (Export_File < 1 or Export_File > 4):
+        
+            print("\nThe inserted value is not valid, please input a number between 1 and 4:\n")
+
+            Export_File = int_input_check()
+
+    else:
+
+        Export_File = 0
     
     # Export Results
 
@@ -425,8 +436,6 @@ while (running == True):
         Avg_Tab.to_csv("Average_Delta_Population ({Timestamp}).csv" .format(Timestamp = datetime_string), index = False)
 
         print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Average_Delta_Population ({Timestamp}).csv\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
-
-    pyplot.show()
 
     print("\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
     
