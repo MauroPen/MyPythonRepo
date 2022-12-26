@@ -1,14 +1,12 @@
-# Reproduction Simulator
-
 from math import isnan
-from numpy import array, concatenate, random, mean, linspace, full, unique
+from numpy import array, concatenate, random, mean, linspace, full, unique, append
 from matplotlib import pyplot, gridspec
-from pandas import DataFrame, Series, option_context, ExcelWriter
+from pandas import DataFrame, RangeIndex
 from tabulate import tabulate
 from os import getcwd
 from datetime import datetime
 
-from Common import yn_input_check, int_input_check, probability_input_check
+from Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
 
 def compute_mean_Arr(Array, Repeat, Period, Starting_Value):
@@ -26,19 +24,6 @@ def compute_mean_Arr(Array, Repeat, Period, Starting_Value):
     Avg_Array[:] = [value / Repeat for value in Avg_Array]
 
     return Avg_Array
-    
-
-def compute_unique_Tab_Values(Tab, Period, Repeat): # This is a function extracting only the values for N obtained during the simulation
-
-    Tab_Values = []
-
-    for i in range(0, Period + 1, 1):
-
-        for j in range(1, Repeat + 1, 1):
-            
-            Tab_Values.append(Tab["Period " + str(i)][j])
-
-    return unique(Tab_Values)
 
 
 def compute_avg_Delta_Population(Unique_Array, Tab1, Tab2, Period, Repeat):
@@ -180,14 +165,13 @@ while (running == True):
             default_c = c
             default_Repeat = Repeat
 
-
     # Computation
 
     timeExecutionStart = datetime.now()
 
-    Period_Arr = tuple(range(0, Period + 1, 1)) #Indexes the periods, necessary for plots
+    Period_Arr = tuple(range(0, Period + 1, 1))  #Indexes the periods, necessary for plots
 
-    N_Array = array([full(Period + 1, 0)])        #Collects the values taken by N from the different simulations, first one is a dummy 
+    N_Array = array([full(Period + 1, 0)])       #Collects the values taken by N from the different simulations, first one is a dummy 
 
     D_Array = array([full(Period + 1, 0)])       #Collects the values taken by D from the different simulations, first one is a dummy 
 
@@ -214,15 +198,15 @@ while (running == True):
 
         print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = iteration, Total_Iterations = Repeat), end = "\r")
 
-        N_Arr = [Starting_N] #Collects the resulting N each time
+        N_Arr = [Starting_N]                  #Collects the resulting N each time
 
-        D_Arr =  [0] #Collects the resuling D for each Iteration
+        D_Arr =  [0]                          #Collects the resuling D for each Iteration
 
         for period in range(1, Period + 1, 1):
 
-            N = N_Arr[period - 1] #Sets the starting population for calculation
+            N = N_Arr[period - 1]             #Sets the starting population for calculation
 
-            D = 0 #Collects the Delta each Period
+            D = 0                             #Collects the Delta each Period
 
             for k in range(1, N + 1, 1):
 
@@ -246,9 +230,9 @@ while (running == True):
 
             N += D
             
-            D_Arr.append(D) #Updating with the new values
+            D_Arr.append(D)                 #Updating with the new values
 
-            N_Arr.append(N) #Updating with the new values
+            N_Arr.append(N)                 #Updating with the new values
         
         ax1.plot(Period_Arr, N_Arr, linestyle = ":")
 
@@ -270,11 +254,7 @@ while (running == True):
 
     timePlottingStart = datetime.now()
 
-    #ax1.plot(Period_Arr, Avg_N, linewidth = 3, color = "k", label = "Average Population Growth")
-
     ax1.plot(Period_Arr, Avg_N_Array, linewidth = 3, color = "k", label = "Average Population Growth")
-
-    #ax2.plot(Period_Arr, Avg_D, linewidth = 3, color = "k", label = "Average Delta Population")
 
     ax2.plot(Period_Arr, Avg_D_Array, linewidth = 3, color = "k", label = "Average Delta Population")
     
@@ -320,19 +300,13 @@ while (running == True):
     print("\n\nAverage Final Population: ", Avg_N_Array[Period])
     print("\nTheoretical Final Population: ", "{:.2f}" .format(yn[Period]))
 
-    with option_context("display.max_rows", None,
-                        "display.max_columns", 10,
-                        "display.width", 1000,
-                        "display.colheader_justify", "center",
-                        "display.precision", 2): #Sets options of visualization for display() valid only for the "with" instance
-
-        timesTable = [["Total time for running simulations", str(timeSimulation)],
+    timesTable = [["Total time for running simulations", str(timeSimulation)],
                       ["Total time spent plotting", str(timePlotting)],
                       ["Total time of execution", str(timeExecution)]]
         
-        print("\n")
+    print("\n")
 
-        print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
+    print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
 
     pyplot.show()
 
@@ -351,12 +325,8 @@ while (running == True):
         timeAverageDeltaPopulationStart = datetime.now()
 
         # Plot Actual Average Delta in function of Population
-        
-        #N_Array = compute_unique_Tab_Values(N_Tab, Period, Repeat)
 
         Unique_N = unique(N_Array[1:])
-
-        #Avg_D_N = compute_avg_Delta_Population(N_Array, N_Tab, D_Tab, Period, Repeat)
 
         Avg_D_N_Array = compute_Avg_Delta_Population(Unique_N, N_Array, D_Array, Period, Repeat)
         
@@ -383,59 +353,35 @@ while (running == True):
 
         timeAverageDeltaPopulation = (timeAverageDeltaPopulationEnd - timeAverageDeltaPopulationStart)
 
-    # Export Results in .csv Files? (y/n) TO BE REFACTORED
+    # Export Results
     
-    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create one or more new files in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
+    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create a new file in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
     
     if (yn_input_check() == True):
 
-        print("\n\nDo you want to export the results in a single .xlsx file (1), in three separated .csv files (2), or both (3)? If you changed your mind, just enter \"4\"\n")
+        timeExportStart = datetime.now()
 
-        Export_File = int_input_check()
+        Columns_Period_Arr = []
         
-        while (Export_File < 1 or Export_File > 4):
+        for period in Period_Arr:
+
+            Columns_Period_Arr = append(Columns_Period_Arr, "Period {number}" .format(number = period))
+
+        N_Tab = DataFrame(N_Array[1:], columns = Columns_Period_Arr, index = RangeIndex(1, Repeat + 1, 1))
         
-            print("\nThe inserted value is not valid, please input a number between 1 and 4:\n")
+        D_Tab = DataFrame(D_Array[1:], columns = Columns_Period_Arr, index = RangeIndex(1, Repeat + 1, 1))
 
-            Export_File = int_input_check()
+        Avg_D_N_Tab = DataFrame({"Average Population": Avg_N_Array, "Average Delta": Avg_D_Array}, index = RangeIndex(0, Period + 1, 1))
 
-    else:
+        dataframes = [DataframeExport(N_Tab, "Population Overtime", True), DataframeExport(D_Tab, "Delta Population Overtime", True), DataframeExport(Avg_D_N_Tab, "Average Values Overtime", True)]
 
-        Export_File = 0
-    
-    # Export Results
+        export_dataframes(dataframes, fileName = "Reproduction Simulator Results")
 
-    datetime_string = datetime.now().strftime("%d_%m_%Y - %H_%M_%S")
+        timeExportEnd = datetime.now()
 
-    if (Export_File == 1 or Export_File == 3):
+        timeExport = (timeExportEnd - timeExportStart)
 
-        # Export the values obtained in a single .xlsx file
-
-        with ExcelWriter ("Simulation Results ({Timestamp}).xlsx" .format(Timestamp = datetime_string)) as writer:
-
-            N_Tab.to_excel(writer, sheet_name = "Population Overtime", index = True)
-            
-            D_Tab.to_excel(writer, sheet_name = "Delta Population Overtime", index = True)
-
-            Avg_Tab.to_excel(writer, sheet_name = "Average Delta Population", index = False)
-
-            print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Simulation Results ({Timestamp}).xlsx\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
-
-    if (Export_File == 2 or Export_File == 3):
-        
-        # Export the values obtained in three different .csv files
-
-        N_Tab.to_csv("Population_Overtime ({Timestamp}).csv" .format(Timestamp = datetime_string), index = True)
-
-        print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Population_Overtime ({Timestamp}).csv\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
-
-        D_Tab.to_csv("Delta_Population_Overtime ({Timestamp}).csv" .format(Timestamp = datetime_string), index = True)
-
-        print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Delta_Population_Overtime ({Timestamp}).csv\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
-
-        Avg_Tab.to_csv("Average_Delta_Population ({Timestamp}).csv" .format(Timestamp = datetime_string), index = False)
-
-        print("\nIn this directory: {Current_Working_Directory}\nA file named: \"Average_Delta_Population ({Timestamp}).csv\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), Timestamp = datetime_string))
+        print(tabulate([["Time spent exporting data", str(timeExport)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
 
     print("\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
     
