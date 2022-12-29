@@ -1,4 +1,3 @@
-from math import isnan
 from numpy import array, concatenate, random, mean, linspace, full, unique, append
 from matplotlib import pyplot, gridspec
 from pandas import DataFrame, RangeIndex
@@ -8,84 +7,7 @@ from datetime import datetime
 
 from Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
-
-def compute_mean_Arr(Array, Repeat, Period, Starting_Value):
-
-    Avg_Array = [Starting_Value * Repeat]
-
-    for i in range(1, Period + 1, 1):
-
-        Avg_Array.append(0)
-
-        for j in range(1, Repeat + 1, 1):
-
-            Avg_Array[i] += Array[j][i]
-
-    Avg_Array[:] = [value / Repeat for value in Avg_Array]
-
-    return Avg_Array
-
-
-def compute_avg_Delta_Population(Unique_Array, Tab1, Tab2, Period, Repeat):
-
-    Avg_Values = []
-
-    print("\n\nAlmost done! Please, wait while computing the Average Delta in function of the Population...\n")
-
-    for i in range(0, int(max(Unique_Array)) + 1, 1):
-
-        print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = i, Total_Iterations = int(max(Unique_Array))), end = "\r")
-
-        collector = [] #Collects the values of D to average for each N
-
-        for j in range(0, Period, 1): # Only "Period" because there is no data available for the last Period of simulation
-
-            for k in range(1, Repeat + 1, 1):
-            
-                if (Tab1["Period " + str(j)][k] == i):
-                    
-                    collector.append(Tab2["Period " + str(j + 1)][k])
-            
-        if (isnan(mean(collector)) == True):
-
-            Avg_Values.append(0)
-
-        else:
-
-            Avg_Values.append(mean(collector))
-
-    return Avg_Values
-
-
-def compute_Avg_Delta_Population(Unique_N, N_Array, D_Array, Period, Repeat):
-
-    Avg_Values = []
-
-    print("\n\nAlmost done! Please, wait while computing the Average Delta in function of the Population...\n")
-
-    for N in range(int(min(Unique_N)), int(max(Unique_N)) + 1, 1):
-
-        print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = N, Total_Iterations = int(max(Unique_N))), end = "\r")
-
-        collector = [] #Collects the values of D to average for each N
-
-        for j in range(0, Period, 1): # Only "Period" because there is no data available for the last Period of simulation
-
-            for k in range(1, Repeat + 1, 1):
-            
-                if (N_Array[k][j] == N):
-                    
-                    collector.append(D_Array[k][j + 1])
-            
-        if (isnan(mean(collector)) == True):
-
-            Avg_Values.append(0)
-
-        else:
-
-            Avg_Values.append(mean(collector))
-
-    return Avg_Values
+from Reproduction_Simulator.Dependency import compute_mean, compute_avg_delta_population
 
 
 #Setting Default Values
@@ -243,9 +165,9 @@ while (running == True):
 
         D_Array = concatenate((D_Array, array([D_Arr])))
 
-    Avg_N_Array = compute_mean_Arr(N_Array, Repeat, Period, Starting_N)
+    Avg_N_Array = compute_mean(N_Array, Repeat, Period, Starting_N)
 
-    Avg_D_Array = compute_mean_Arr(D_Array, Repeat, Period, 0)
+    Avg_D_Array = compute_mean(D_Array, Repeat, Period, 0)
 
     timeSimulationEnd = datetime.now()
 
@@ -345,9 +267,9 @@ while (running == True):
     
     print("\n\nDo you want to compute the Average Delta in function of the Population too? (y/n)\n\nWARNING! This computation may require longer times of execution of the program.\n")
 
-    Compute_Avg_Delta_Population = yn_input_check()
+    Compute_avg_delta_population = yn_input_check()
     
-    if (Compute_Avg_Delta_Population == True):
+    if (Compute_avg_delta_population == True):
 
         timeAverageDeltaPopulationStart = datetime.now()
 
@@ -359,7 +281,7 @@ while (running == True):
 
         Unique_N = unique(N_Array)
 
-        Avg_D_N_Array = compute_Avg_Delta_Population(Unique_N, N_Array, D_Array, Period, Repeat)
+        Avg_D_N_Array = compute_avg_delta_population(Unique_N, N_Array, D_Array, Period, Repeat)
         
         ax3 = fig.add_subplot(gs[0, 0])
         ax3.set_title("Delta in Function of Population")
