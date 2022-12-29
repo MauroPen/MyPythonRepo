@@ -3,7 +3,7 @@ from matplotlib import pyplot, gridspec
 from pandas import DataFrame, RangeIndex
 from tabulate import tabulate
 from os import getcwd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
@@ -87,7 +87,17 @@ while (running == True):
             default_c = c
             default_Repeat = Repeat
 
+    print("\nDo you want to compute the Average Delta in function of the Population too? (y/n)\n\nWARNING! This computation may require longer times of execution of the program.\n")
+
+    Compute_avg_delta_population = yn_input_check()
+
     # Computation
+
+    timeSimulation = timedelta(seconds = 0)
+
+    timeAverageDeltaPopulation = timedelta(seconds = 0)
+    
+    timeExecution = timedelta(seconds = 0)
 
     timeExecutionStart = datetime.now()
 
@@ -99,7 +109,13 @@ while (running == True):
 
     # Plot Simulation Results
 
-    gs = gridspec.GridSpec(2, 1)
+    if (Compute_avg_delta_population == True):
+
+        gs = gridspec.GridSpec(2, 2)
+
+    else:
+
+        gs = gridspec.GridSpec(2, 1)
 
     fig = pyplot.figure()
 
@@ -175,8 +191,6 @@ while (running == True):
 
     # Plot Average Simulation Results
 
-    timePlottingStart = datetime.now()
-
     ax1.plot(Period_Arr, Avg_N_Array, linewidth = 3, color = "k", label = "Average Population Growth")
 
     ax2.plot(Period_Arr, Avg_D_Array, linewidth = 3, color = "k", label = "Average Delta Population")
@@ -204,10 +218,43 @@ while (running == True):
     ax2.plot(Period_Arr, yd, linewidth = 2, color = "m", label = "Expected Delta Population")
 
     ax2.legend(loc = "upper left", fontsize = 6)
+        
+    # Computation of Average Delta in function of the Population
+    
+    if (Compute_avg_delta_population == True):
 
-    (timePlottingEnd, timeExecutionEnd) = (datetime.now(), datetime.now())
+        timeAverageDeltaPopulationStart = datetime.now()
 
-    timePlotting = (timePlottingEnd - timePlottingStart)
+        Unique_N = unique(N_Array)
+
+        Avg_D_N_Array = compute_avg_delta_population(Unique_N, N_Array, D_Array, Period, Repeat)
+
+        timeAverageDeltaPopulationEnd = datetime.now()
+
+        timeAverageDeltaPopulation = (timeAverageDeltaPopulationEnd - timeAverageDeltaPopulationStart)
+        
+        # Plot Actual Average Delta in function of Population
+
+        ax3 = fig.add_subplot(gs[:, 1])
+        ax3.set_title("Delta in Function of Population")
+        ax3.set_xlabel("Population") 
+        ax3.set_ylabel("Delta", rotation = -90)
+        ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
+        ax3.set_xlim(Unique_N[1], len(Avg_D_N_Array) + 1)
+        
+        ax3.plot(Avg_D_N_Array, color = "k", label = "Average Delta in function of Population")
+   
+        # Plot Theoretical Average Delta in function of Population
+
+        xdn = linspace(min(Unique_N), max(Unique_N), 1000)
+
+        ydn = xdn * (b - d - c * xdn)
+
+        ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
+        
+        ax3.legend(loc = "upper left", fontsize = 6)
+
+    timeExecutionEnd = datetime.now()
 
     timeExecution = (timeExecutionEnd - timeExecutionStart)
 
@@ -224,7 +271,7 @@ while (running == True):
     print("\nTheoretical Final Population: ", "{:.2f}" .format(yn[Period]))
 
     timesTable = [["Total time for running simulations", str(timeSimulation)],
-                  ["Total time spent plotting", str(timePlotting)],
+                  ["Time spent computing the Average Delta in function of Population", str(timeAverageDeltaPopulation)],
                   ["Total time of execution", str(timeExecution)]]
         
     print("\n")
@@ -232,7 +279,7 @@ while (running == True):
     print(tabulate(timesTable, headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
 
     pyplot.show()
-    
+
     # Export Results
     
     print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create a new file in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
@@ -262,53 +309,6 @@ while (running == True):
         timeExport = (timeExportEnd - timeExportStart)
 
         print(tabulate([["Time spent exporting data", str(timeExport)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
-    
-    # Computation of Average Delta in function of the Population? (y/n) TO BE REFACTORED
-    
-    print("\n\nDo you want to compute the Average Delta in function of the Population too? (y/n)\n\nWARNING! This computation may require longer times of execution of the program.\n")
-
-    Compute_avg_delta_population = yn_input_check()
-    
-    if (Compute_avg_delta_population == True):
-
-        timeAverageDeltaPopulationStart = datetime.now()
-
-        # Plot Actual Average Delta in function of Population
-
-        gs = gridspec.GridSpec(1, 1)
-
-        fig = pyplot.figure()
-
-        Unique_N = unique(N_Array)
-
-        Avg_D_N_Array = compute_avg_delta_population(Unique_N, N_Array, D_Array, Period, Repeat)
-        
-        ax3 = fig.add_subplot(gs[0, 0])
-        ax3.set_title("Delta in Function of Population")
-        ax3.set_xlabel("Population") 
-        ax3.set_ylabel("Delta", rotation = -90)
-        ax3.yaxis.set_label_coords(1.05, 0.5) #Moving Y label for readability
-        ax3.set_xlim(Unique_N[1], len(Avg_D_N_Array) + 1)
-        
-        ax3.plot(Avg_D_N_Array, color = "k", label = "Average Delta in function of Population")
-   
-        # Plot Theoretical Average Delta in function of Population
-
-        xdn = linspace(min(Unique_N), max(Unique_N), 1000)
-
-        ydn = xdn * (b - d - c * xdn)
-
-        ax3.plot(xdn, ydn, linewidth = 2, color = "m", label = "Expected Delta in function of Population")
-        
-        ax3.legend(loc = "upper left", fontsize = 6)
-
-        timeAverageDeltaPopulationEnd = datetime.now()
-
-        timeAverageDeltaPopulation = (timeAverageDeltaPopulationEnd - timeAverageDeltaPopulationStart)
-
-        print(tabulate([["Time spent computing the Average Delta in function of Population", str(timeAverageDeltaPopulation)]], headers = ["Phase", "Duration"], tablefmt = "github", stralign = "center", showindex = "False"))
-
-        pyplot.show()
 
     print("\nSimulation ended!\n\nDo you want to start over? (y/n)\n")
     

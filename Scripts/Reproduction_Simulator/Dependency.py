@@ -1,4 +1,13 @@
-from numpy import append
+from numpy import append, mean
+from math import isnan
+from sys import warnoptions     #Necessary to avoid some annoying warnings about "mean"
+
+if not warnoptions: 
+
+    from warnings import simplefilter
+
+    simplefilter("ignore")
+
 
 #1 - Computes the average Population per period for each simulation
 def compute_mean(Array, Repeat, Period, Starting_Value):
