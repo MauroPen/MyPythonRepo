@@ -1,4 +1,4 @@
-from numpy import array, concatenate, random, mean, linspace, full, unique, append
+from numpy import array, concatenate, mean, linspace, full, unique, append
 from matplotlib import pyplot, gridspec
 from pandas import DataFrame, RangeIndex
 from tabulate import tabulate
@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 
 from Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
-from Reproduction_Simulator.Dependency import compute_mean, compute_avg_delta_population
+from Reproduction_Simulator.Dependency import main_computation, compute_mean, compute_avg_delta_population
 
 
 #Setting Default Values
@@ -137,41 +137,7 @@ while (running == True):
 
         print("Current Iteration: {Iteration} / {Total_Iterations}" .format(Iteration = iteration, Total_Iterations = Repeat), end = "\r")
 
-        N_Arr = [Starting_N]                  #Collects the resulting N each time
-
-        D_Arr =  [0]                          #Collects the resuling D for each Iteration
-
-        for period in range(1, Period + 1, 1):
-
-            N = N_Arr[period - 1]             #Sets the starting population for calculation
-
-            D = 0                             #Collects the Delta each Period
-
-            for k in range(1, N + 1, 1):
-
-                br = random.binomial(1, b, 1)[0]
-
-                if (br == 1):
-
-                    D += 1
-                
-                if (d + (c * N) <= 1):
-                    
-                    dr = random.binomial(1, d + (c * N), 1)[0]
-
-                    if (dr == 1):
-
-                        D -= 1
-
-                else:
-
-                    D-= 1
-
-            N += D
-            
-            D_Arr.append(D)                 #Updating with the new values
-
-            N_Arr.append(N)                 #Updating with the new values
+        (N_Arr, D_Arr) = main_computation(Starting_N, Period, b, d, c)
         
         ax1.plot(Period_Arr, N_Arr, linestyle = ":")
 
