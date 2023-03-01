@@ -31,7 +31,7 @@ while(running):
 
     else:
 
-        print("\n{digits} pi digits have been checked to find {input}.\nHereby, all of pi digits until the first occurrence of {input} are printed:\n".format(digits = result["Digits Checked"], input = number))
+        print("\n{digits} pi digits have been checked to find {input}.\nHereby, all pi digits until the first occurrence of {input} are printed:\n".format(digits = result["Digits Checked"], input = number))
         print(result["Pi Until"][:-len(number)], end = "")
         print(bcolors.OKGREEN + bcolors.BOLD + str(number) + bcolors.ENDC)
 
