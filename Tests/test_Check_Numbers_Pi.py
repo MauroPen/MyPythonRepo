@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 
-from Scripts.Check_Numbers_Pi.Dependency import main_computation, retrieve_pi
+from Scripts.Check_Numbers_Pi.Dependency import main_computation, check_occurrencies, retrieve_pi
 
 class TestMainComputation(TestCase):
 
@@ -29,6 +29,28 @@ class TestMainComputation(TestCase):
         }
 
         result = main_computation(testInput)
+
+        self.assertTrue(expectedResult == result, "Test failed! Wrong results have been obtained.")
+
+class TestCheckOccurrencies(TestCase):
+
+    def test_check_occurrencies(self):
+
+        testInput = "6497"
+
+        expectedResult = 83
+
+        result = check_occurrencies(testInput, main_computation(testInput)["Digits Checked"])
+
+        self.assertTrue(expectedResult == result, "Test failed! Wrong results have been obtained.")
+
+    def test_check_single_occurrency(self):
+
+        testInput = "666666"
+
+        expectedResult = 1
+
+        result = check_occurrencies(testInput, main_computation(testInput)["Digits Checked"])
 
         self.assertTrue(expectedResult == result, "Test failed! Wrong results have been obtained.")
 
