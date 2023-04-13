@@ -21,7 +21,7 @@ def retrieve_pi():
     
     return str(math_pi.pi(1, 1000000)).replace(".","")  # Converting pi into string and removing decimal point
 
-#3 - Main computation (returning a dictionary)
+#3 - Main computation --> returning a dictionary
 def main_computation(digitsToBeFound):
 
     result = {
@@ -54,3 +54,26 @@ def main_computation(digitsToBeFound):
     result["Pi Until"] = pi
     
     return result
+
+#4 - Number of occurrencies --> to be used after checking the combination with main_computation
+def check_occurrencies(combination, digits_until):
+
+    occurrencies = 1        #At least 1, the function is meant to be used after main_computation
+    
+    pi = retrieve_pi()
+
+    digitsChecked = digits_until + len(combination)     #First occurrency is already included
+
+    for piDigit in pi[(digitsChecked):]:
+
+        if piDigit == combination[0]:
+
+            piCompare = pi[digitsChecked:(digitsChecked + len(combination))]
+
+            if piCompare == combination:
+
+                occurrencies += 1
+
+        digitsChecked += 1
+
+    return occurrencies

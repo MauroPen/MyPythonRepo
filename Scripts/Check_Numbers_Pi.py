@@ -1,7 +1,7 @@
 import math_pi
 
 from Common import yn_input_check
-from Check_Numbers_Pi.Dependency import number_check, main_computation
+from Check_Numbers_Pi.Dependency import number_check, main_computation, check_occurrencies
 
 class bcolors:
     HEADER = '\033[95m'
@@ -34,6 +34,12 @@ while(running):
         print("\n{digits} pi digits have been checked to find {input}.\nHereby, all pi digits until the first occurrence of {input} are printed:\n".format(digits = result["Digits Checked"], input = number))
         print(result["Pi Until"][:-len(number)], end = "")
         print(bcolors.OKGREEN + bcolors.BOLD + str(number) + bcolors.ENDC)
+
+        print("\nWould you like to check how many times the combination is present within pi's first million of digits? y/n")
+        
+        if (yn_input_check()):
+
+            print("\nThe combination {Combination} has been found {Occurrencies} times.".format(Combination = number, Occurrencies = check_occurrencies(number, result["Digits Checked"])))
 
     print("\nWould you like to start over? y/n")
     running = yn_input_check()
