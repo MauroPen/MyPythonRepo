@@ -77,3 +77,14 @@ def check_occurrencies(combination, digits_until):
         digitsChecked += 1
 
     return occurrencies
+
+#5 - Print the whole pi until combination --> deprecated to save it in a .txt file
+def print_whole_pi_until(pi_until):
+
+    temp_list = []
+
+    temp_list[:0] = pi_until
+
+    for digit in temp_list:
+
+        print(digit, end = "")
