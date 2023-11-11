@@ -83,7 +83,7 @@ class DataframeExport:
         self.Index = Index              #Boolean
 
 #5 - Exports pandas dataframes in an Excel file with multiple sheets
-def export_dataframes(dataframes, fileName):        # "dataframes" is meant to be an array of DataframeExport (#3) objects
+def export_dataframes(dataframes, fileName):        # "dataframes" is meant to be an array of DataframeExport (#4) objects
 
     fileName = fileName + " (" + datetime.now().strftime("%d_%m_%Y - %H_%M_%S") + ").xlsx"
     
