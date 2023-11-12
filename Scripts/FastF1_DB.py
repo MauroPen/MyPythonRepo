@@ -10,10 +10,11 @@ calendarExport = DataframeExport(importCalendars, "Schedule", False)
 
 export_dataframes([calendarExport], "Schedule")
 
-
+# Test import races
 
 importSessions = import_sessions(fromYear = 1950, toYear = 1951, importPractice = False, importQualifying = False)
 
 sessionsExport = DataframeExport(importSessions, "Sessions", False)
 
 export_dataframes([sessionsExport], "Sessions")
+
