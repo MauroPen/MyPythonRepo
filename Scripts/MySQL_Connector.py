@@ -11,11 +11,11 @@ def mysql_connect(DBhost = "localhost", DBusername = "root", DBpassword = ""):
             password = DBpassword
         )
 
-        print("\n\n Connected to MySQL instance successfully!\n")
+        print("\nConnected to MySQL instance successfully!\n")
 
     except:
 
-        print("\n\nAn error occured!\n")
+        print("\nAn error occured!\n")
 
     return DBConnection
 
@@ -42,7 +42,7 @@ def mysql_create_database(DBConnection, nameDatabase):
 
             mySQLcursor.execute("CREATE DATABASE {nameDB}" .format(nameDB = nameDatabase))
 
-            print("\n\n A new database named {nameDB} has been created successfully!\n" .format(nameDB = nameDatabase))
+            print("\n\nA new database named {nameDB} has been created successfully!\n" .format(nameDB = nameDatabase))
 
         except:
 
@@ -55,24 +55,41 @@ def mysql_drop_database(DBConnection, nameDatabase):
 
     try:
 
-        DBConnectionTest = mysql.connector.connect(
-            host = DBConnection._host,
-            username = DBConnection._user,
-            password = DBConnection._password,
-            database = nameDatabase
-        )
+        mySQLcursor = DBConnection.cursor()
+
+        mySQLcursor.execute("DROP DATABASE {nameDB}" .format(nameDB = nameDatabase))
+
+        print("\n\nThe database named {nameDB} has been dropped successfully!\n" .format(nameDB = nameDatabase))
 
     except:
+        
+        try:
 
-        print("\n\n No database named {nameDB} exists in {host}!\n" .format(nameDB = nameDatabase, host = DBConnection.host))
+            DBConnectionTest = mysql.connector.connect(
+                host = DBConnection._host,
+                username = DBConnection._user,
+                password = DBConnection._password,
+                database = nameDatabase
+            )
+
+        except:
+
+            print("\n\nNo database named {nameDB} exists in {host}!\n" .format(nameDB = nameDatabase, host = DBConnection._host))
+
+
+#4- Show Databases in MySQL instance
+
+def mysql_show_databases(DBConnection):
 
     try:
 
         mySQLcursor = DBConnection.cursor()
 
-        mySQLcursor.execute("DROP DATABASE {nameDB}" .format(nameDB = nameDatabase))
+        mySQLcursor.execute("SHOW DATABASES")
 
-        print("\n\n The database named {nameDB} has been dropped successfully!\n" .format(nameDB = nameDatabase))
+        for database in mySQLcursor:
+            
+            print(database)
 
     except:
 
