@@ -1,10 +1,11 @@
 from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 
 from FastF1_DB.Import import import_calendars, import_sessions
-from MySQL_Connector import mysql_connect, mysql_create_database, mysql_drop_database, mysql_show_databases
+from MySQL_Connector import mysql_connect, mysql_connect_fastf1, mysql_create_database, mysql_drop_database, mysql_show_databases
 
 running = True
 mainMenu = True
+DBDefaultName = "fastf1"
 
 # Init
 
@@ -14,7 +15,12 @@ while(running):
 
     if (yn_input_check()):
 
+        print("\nAttempting to connect to your MYSQL instance, please wait...\n")
+
         DBConnection = mysql_connect()
+
+        [hostName, username, password] = [DBConnection._host, DBConnection._user, DBConnection._password]
+
 
     else:
 
@@ -30,52 +36,46 @@ while(running):
 
         password = input()
 
-        print("\nAttempting to connect to your database, please wait...\n")
+        print("\nAttempting to connect to your MYSQL instance, please wait...\n")
 
         DBConnection = mysql_connect(hostName, username, password)
 
-    print("\nA list of the databases found in your MySQL instance is following:\n")
+    print("\nAttempting to connect to your fastf1 database, please wait...\n")
 
-    mysql_show_databases(DBConnection)
+    DBConnection = mysql_connect_fastf1(hostName, username, password, DBDefaultName)
     
     while(mainMenu):
     
-        print("\nWhat do you want to do? Please, input a number from 1 to 5:\n\n1 - Create a new database\n\n2 - Drop a database\n\n3 - Show databases\n\n4 - Import FastF1 data (TBD)\n\n5 - Exit\n")
+        print("\nWhat do you want to do? Please, input a number from 1 to 3:\n\n1 - Check F1 data\n\n2 - Quit\n\n3 - Drop fastf1 database and quit\n")
         
         match int_input_check():
 
-            case 1:                                                     #Create a new database
-
-                print("\nPlease, input the name of the new database:\n")
-
-                nameDatabase = input()
-
-                mysql_create_database(DBConnection, nameDatabase)
-
-            case 2:                                                     #Drop a database
-
-                mysql_show_databases(DBConnection)
-                
-                print("\nPlease, input the name of the database that you want to drop:\n")
-
-                nameDatabaseDrop = input()
-
-                mysql_drop_database(DBConnection, nameDatabaseDrop)
-
-            case 3:                                                     #Show databases
-
-                mysql_show_databases(DBConnection)
-
-            case 4:                                                     #Insert data
+            case 1:                                                     #Check data (update, insert)
 
                 print("\nIn development!\n")
 
-            case 5:                                                     #Exit main menu
+            case 2:                                                     #Quit
 
-                mainMenu = False
+                print ("\nAre you sure that you want to exit?\n")
+
+                if(yn_input_check()):
                 
-                running = False
-            
+                    mainMenu = False
+                
+                    running = False
+
+            case 3:                                                     #Drop fastf1 database and quit
+
+                print ("\nDo you really want to drop fastf1 database and all its data before exit?\n")
+
+                if(yn_input_check()):
+
+                    mysql_drop_database(DBConnection, DBDefaultName)
+
+                    mainMenu = False
+                
+                    running = False
+
             case _:
 
                 print("\nYour selection is not valid, please enter a valid number.\n")
