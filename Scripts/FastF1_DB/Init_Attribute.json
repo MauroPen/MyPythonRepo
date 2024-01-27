@@ -1,18 +1,145 @@
 {
     "attributes": [
         {
-            "name": "id",
+            "name": "Id",
             "primary_key": true,
             "data_type": "INT",
             "not_null": true,
             "auto_increment": true
         },
         {
-            "name": "championship_year",
+            "name": "ChampionshipYear",
             "primary_key": false,
             "data_type": "INT",
             "not_null": false,
             "auto_increment": false
-        }
+        },
+        {
+            "name": "RoundNumber",
+            "primary_key": false,
+            "data_type": "INT",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Session",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "DriverNumber",
+            "primary_key": false,
+            "data_type": "INT",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "BroadcastName",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Abbreviation",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "TeamName",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "TeamColor",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "FirstName",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "LastName",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "FullName",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Position",
+            "primary_key": false,
+            "data_type": "INT",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "GridPosition",
+            "primary_key": false,
+            "data_type": "INT",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Q1",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Q2",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Q3",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Time",
+            "primary_key": false,
+            "data_type": "INT",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Status",
+            "primary_key": false,
+            "data_type": "VARCHAR(255)",
+            "not_null": false,
+            "auto_increment": false
+        },
+        {
+            "name": "Points",
+            "primary_key": false,
+            "data_type": "INT",
+            "not_null": false,
+            "auto_increment": false
+        }                                                                                                                
+        
     ]
 }

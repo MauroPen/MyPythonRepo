@@ -4,7 +4,7 @@ from os import getcwd
 
 import fastf1
 
-#1 - Import calendarss
+#1 - Import calendars
 
 def import_calendars(fromYear = 1950, toYear = 2023, cachePath = ''):
 
@@ -139,4 +139,3 @@ def import_sessions(fromYear = 1950, toYear = 2023, cachePath = '', importPracti
                 schema = concat([schema, session_race.results], ignore_index = True)
 
     return schema
-
