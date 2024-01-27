@@ -1,7 +1,9 @@
 from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
+from MySQL_Connector import mysql_connect, mysql_drop_database
 
+from FastF1_DB.Dependency import init_fastf1DB, init_fastf1Tables
 from FastF1_DB.Import import import_calendars, import_sessions
-from MySQL_Connector import mysql_connect, mysql_connect_fastf1, mysql_create_database, mysql_drop_database, mysql_show_databases
+
 
 running = True
 mainMenu = True
@@ -17,10 +19,21 @@ while(running):
 
         print("\nAttempting to connect to your MYSQL instance, please wait...\n")
 
-        DBConnection = mysql_connect()
+        try:
+        
+            DBConnection = mysql_connect()
 
-        [hostName, username, password] = [DBConnection._host, DBConnection._user, DBConnection._password]
+            [hostName, username, password] = [DBConnection._host, DBConnection._user, DBConnection._password]
 
+        except:
+
+            print("\nAn error occured!\n")
+
+            mainMenu = False
+
+            running = False
+
+            break
 
     else:
 
@@ -40,10 +53,26 @@ while(running):
 
         DBConnection = mysql_connect(hostName, username, password)
 
-    print("\nAttempting to connect to your fastf1 database, please wait...\n")
+    print("\nAttempting to connect to your {nameDB} database, please wait...\n" .format(nameDB = DBDefaultName))
 
-    DBConnection = mysql_connect_fastf1(hostName, username, password, DBDefaultName)
+    try:
     
+        DBConnection = mysql_connect(hostName, username, password, DBDefaultName)
+    
+    except:
+
+        print("\nNo database named {nameDB} exists in {host}! Would you like to create it now?\n" .format(nameDB = DBDefaultName, host = hostName))
+
+        while(yn_input_check() == False):
+
+            print("\nThe application cannot be executed without a fastf1 database in your MySQL instance! Please, confirm with \"y\" that you want to create a new database named {nameDB}\n" .format(nameDB = DBDefaultName))
+
+        init_fastf1DB(DBConnection)
+
+        DBConnection = mysql_connect(hostName, username, password, DBDefaultName)
+
+        init_fastf1Tables(DBConnection)
+
     while(mainMenu):
     
         print("\nWhat do you want to do? Please, input a number from 1 to 3:\n\n1 - Check F1 data\n\n2 - Quit\n\n3 - Drop fastf1 database and quit\n")
