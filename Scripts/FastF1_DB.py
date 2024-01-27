@@ -17,7 +17,7 @@ while(running):
 
     if (yn_input_check()):
 
-        print("\nAttempting to connect to your MYSQL instance, please wait...\n")
+        print("\nAttempting to connect to your MySQL instance, please wait...\n")
 
         try:
         
@@ -49,9 +49,21 @@ while(running):
 
         password = input()
 
-        print("\nAttempting to connect to your MYSQL instance, please wait...\n")
+        print("\nAttempting to connect to your MySQL instance, please wait...\n")
 
-        DBConnection = mysql_connect(hostName, username, password)
+        try:
+        
+            DBConnection = mysql_connect(hostName, username, password)
+        
+        except:
+
+            print("\nAn error occured!\n")
+
+            mainMenu = False
+
+            running = False
+
+            break
 
     print("\nAttempting to connect to your {nameDB} database, please wait...\n" .format(nameDB = DBDefaultName))
 
