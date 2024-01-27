@@ -87,7 +87,7 @@ while(running):
 
     while(mainMenu):
     
-        print("\nWhat do you want to do? Please, input a number from 1 to 3:\n\n1 - Check F1 data\n\n2 - Quit\n\n3 - Drop fastf1 database and quit\n")
+        print("\n\nWhat do you want to do? Please, input a number from 1 to 3:\n\n1 - Check F1 data\n\n2 - Quit\n\n3 - Drop fastf1 database and quit\n")
         
         match int_input_check():
 

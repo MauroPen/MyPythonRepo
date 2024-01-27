@@ -1,5 +1,7 @@
 import mysql.connector
 
+from tabulate import tabulate
+
 #1 - Connection with MySQL instance
 
 def mysql_connect(DBhost = "localhost", DBusername = "root", DBpassword = "", DBName = ""):
@@ -146,11 +148,15 @@ def mysql_create_table(DBConnection, nameTable, attributeList):
 
     print("\n\nA new table named {nameTable} has been created successfully in {nameDB}!\n" .format(nameTable = nameTable, nameDB = DBConnection.database))
 
-    print("Its attributes are:\n")
+    print("Its attributes are:\n\n")
+    
+    attributesTable = []
 
-    for attribute in attributeList:             #Visualization can be improved through tabulate
+    for attribute in attributeList:
 
-        print(attribute, end = "\n")
+        attributesTable.append([attribute.name, str(attribute.primary_key), attribute.data_type, str(attribute.not_null), str(attribute.auto_increment)])
+
+    print(tabulate(attributesTable, headers = ["Attribute Name", "Data Type", "Primary Key", "Not Null", "Auto Increment"], tablefmt = "github", stralign = "center", showindex = "False"))
 
 
 #7 - Drop table in MySQL Database
