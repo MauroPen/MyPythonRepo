@@ -98,6 +98,10 @@ class Attribute:
         self.data_type = Data_Type
         self.not_null = Not_Null
         self.auto_increment = Auto_Increment
+    
+    def __str__(self):
+        
+        return f"Attribute name: {self.name} (primary_key = {self.primary_key}, data_type = {self.data_type}, not_null = {self.not_null}, auto_increment = {self.auto_increment}"
 
         
 #6 - Create table in MySQL Database
@@ -141,6 +145,12 @@ def mysql_create_table(DBConnection, nameTable, attributeList):
     mySQLcursor.execute(query)
 
     print("\n\nA new table named {nameTable} has been created successfully in {nameDB}!\n" .format(nameTable = nameTable, nameDB = DBConnection.database))
+
+    print("Its attributes are:\n")
+
+    for attribute in attributeList:             #Visualization can be improved through tabulate
+
+        print(attribute, end = "\n")
 
 
 #7 - Drop table in MySQL Database

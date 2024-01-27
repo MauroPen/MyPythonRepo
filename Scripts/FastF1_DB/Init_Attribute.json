@@ -1,0 +1,18 @@
+{
+    "attributes": [
+        {
+            "name": "id",
+            "primary_key": true,
+            "data_type": "INT",
+            "not_null": true,
+            "auto_increment": true
+        },
+        {
+            "name": "championship_year",
+            "primary_key": false,
+            "data_type": "INT",
+            "not_null": false,
+            "auto_increment": false
+        }
+    ]
+}
