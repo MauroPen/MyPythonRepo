@@ -168,3 +168,21 @@ def mysql_drop_table(DBConnection, nameTable):
     mySQLcursor.execute("DROP TABLE IF EXISTS {nameTable}" .format(nameDB = nameTable))
 
     print("\n\nThe Table named {nameTable} has been dropped successfully!\n" .format(nameDB = nameTable))
+
+
+#8 - Retrieve attributes from existing table as an array of strings
+
+def retrieve_attributes(DBConnection, nameTable):
+        
+    query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{nameTable}' ORDER BY ORDINAL_POSITION" .format(nameTable = nameTable)
+    
+    mySQLcursor = DBConnection.cursor()
+
+    mySQLcursor.execute(query)
+
+    myresult = mySQLcursor.fetchall()
+
+    attributeArray = [tup[0] for tup in myresult]     #Extract the first element from each tuple
+
+    return attributeArray
+

@@ -19,4 +19,4 @@ def init_fastf1Tables(DBConnection):
     
     attributeList = [Attribute(attribute["name"], attribute["primary_key"], attribute["data_type"], attribute["not_null"], attribute["auto_increment"]) for attribute in data["attributes"]]
     
-    mysql_create_table(DBConnection, "Prova_Table", attributeList)
+    mysql_create_table(DBConnection, "sessions", attributeList)
