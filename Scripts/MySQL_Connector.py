@@ -108,13 +108,13 @@ class Attribute:
         
 #6 - Create table in MySQL Database
 
-def mysql_create_table(DBConnection, nameTable, attributeList):
+def mysql_create_table(DBConnection, nameTable, attributesList):
 
     query = "CREATE TABLE {nameTable} (" .format(nameTable = nameTable)
 
     iteration = 0
             
-    for attribute in attributeList:
+    for attribute in attributesList:
 
         iteration += 1
 
@@ -134,7 +134,7 @@ def mysql_create_table(DBConnection, nameTable, attributeList):
 
             query = query + " " + "PRIMARY KEY"
                 
-        if(iteration < len(attributeList)):
+        if(iteration < len(attributesList)):
 
             query = query + ", "
 
@@ -152,7 +152,7 @@ def mysql_create_table(DBConnection, nameTable, attributeList):
     
     attributesTable = []
 
-    for attribute in attributeList:
+    for attribute in attributesList:
 
         attributesTable.append([attribute.name, str(attribute.primary_key), attribute.data_type, str(attribute.not_null), str(attribute.auto_increment)])
 
@@ -174,15 +174,57 @@ def mysql_drop_table(DBConnection, nameTable):
 
 def retrieve_attributes(DBConnection, nameTable):
         
-    query = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{nameTable}' ORDER BY ORDINAL_POSITION" .format(nameTable = nameTable)
+    query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{nameTable}' ORDER BY ORDINAL_POSITION" .format(nameTable = nameTable)
     
     mySQLcursor = DBConnection.cursor()
 
     mySQLcursor.execute(query)
 
-    myresult = mySQLcursor.fetchall()
+    attributesArray = mySQLcursor.fetchall()            #An array of tuples (Attribute, Type(Attribute))
 
-    attributeArray = [tup[0] for tup in myresult]     #Extract the first element from each tuple
+    return attributesArray
 
-    return attributeArray
 
+#9 - Insert rows in MySQL Database
+
+def mysql_insert(DBConnection, nameTable, values):      #"values" must be an array of tuples coherent with the table's structure
+
+    attributesArray = retrieve_attributes(DBConnection, nameTable)
+
+    attributesNames = [tup[0] for tup in attributesArray]
+
+    attributesTypes = [tup[1] for tup in attributesArray]
+
+    query = "INSERT INTO {nameTable} ({attributesNames}) VALUES (" .format(nameTable = nameTable, attributesNames = ", ".join(attributesNames))
+
+    iteration = 0
+    
+    for attribute in attributesTypes:
+
+        iteration += 1
+
+        match (attribute):
+
+            case "int":
+
+                query = query + "%d"
+
+            case "varchar":
+
+                query = query + "%s"
+                
+        if(iteration < len(attributesTypes)):
+
+            query = query + ", "
+
+        else:
+
+            query = query + ")"
+
+    mySQLcursor = DBConnection.cursor()
+    
+    mySQLcursor.executemany(query, values)
+
+    mydb.commit()
+
+    print(mySQLcursor.rowcount, "was inserted.")

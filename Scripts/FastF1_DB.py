@@ -9,7 +9,7 @@ running = True
 mainMenu = True
 DBDefaultName = "fastf1"
 
-# Init
+# App Start
 
 while(running):
 
