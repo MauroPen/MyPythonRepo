@@ -225,6 +225,6 @@ def mysql_insert(DBConnection, nameTable, values):      #"values" must be an arr
     
     mySQLcursor.executemany(query, values)
 
-    mydb.commit()
+    DBConnection.commit()
 
     print(mySQLcursor.rowcount, "was inserted.")
