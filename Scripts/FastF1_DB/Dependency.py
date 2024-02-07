@@ -1,4 +1,5 @@
 import json
+import pandas as pd
 
 from MySQL_Connector import mysql_create_database, mysql_create_table, Attribute, mysql_insert
 from FastF1_DB.Import import import_sessions
@@ -28,7 +29,7 @@ def init_fastf1_sessions(DBConnection, fromYear = 1950, toYear = 1950, importPra
 
     importSessions = import_sessions(fromYear, toYear, importPractice, importQualifying)
 
-    # Data type conversions
+    # Managing NULL values and data type conversions
 
     importSessions["Position"] = importSessions["Position"].astype(int)
 
@@ -39,8 +40,10 @@ def init_fastf1_sessions(DBConnection, fromYear = 1950, toYear = 1950, importPra
     importSessions["Q2"] = importSessions["Q2"].astype(str)
 
     importSessions["Q3"] = importSessions["Q3"].astype(str)
+ 
+    importSessions["Time"] = importSessions["Time"].fillna(pd.Timedelta(seconds = 0))
 
-    importSessions["Time"] = importSessions["Time"].astype(str)
+    importSessions["Time"] = importSessions["Time"].dt.total_seconds().astype(int) / 10**9
 
     importSessions["Points"] = importSessions["Points"].astype(int)
 

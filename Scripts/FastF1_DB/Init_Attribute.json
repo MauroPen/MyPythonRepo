@@ -122,7 +122,7 @@
         {
             "name": "Time",
             "primary_key": false,
-            "data_type": "VARCHAR(255)",
+            "data_type": "FLOAT",
             "not_null": false,
             "auto_increment": false
         },
