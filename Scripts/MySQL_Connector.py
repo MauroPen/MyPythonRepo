@@ -203,15 +203,7 @@ def mysql_insert(DBConnection, nameTable, values):      #"values" must be an arr
 
         iteration += 1
 
-        match (attribute):
-
-            case "int":
-
-                query = query + "%d"
-
-            case "varchar":
-
-                query = query + "%s"
+        query = query + "%s"
                 
         if(iteration < len(attributesTypes)):
 
@@ -227,4 +219,4 @@ def mysql_insert(DBConnection, nameTable, values):      #"values" must be an arr
 
     DBConnection.commit()
 
-    print(mySQLcursor.rowcount, "was inserted.")
+    print("\n\nOperation concluded successfully. {numRows} rows have been inserted.\n" .format(numRows = mySQLcursor.rowcount))
