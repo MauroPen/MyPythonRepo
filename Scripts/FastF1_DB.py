@@ -8,8 +8,8 @@ from FastF1_DB.Import import import_calendars, import_sessions
 running = True
 mainMenu = True
 DBDefaultName = "fastf1"
-defaultFromYear = 1950
-defaultToYear = 1950
+defaultFromYear = 2022
+defaultToYear = 2022
 
 # App Start
 

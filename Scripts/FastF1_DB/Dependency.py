@@ -1,5 +1,5 @@
 import json
-import pandas as pd
+from pandas import DataFrame, Timedelta
 
 from MySQL_Connector import mysql_create_database, mysql_create_table, Attribute, mysql_insert
 from FastF1_DB.Import import import_sessions
@@ -27,32 +27,38 @@ def init_fastf1Tables(DBConnection):
 
 def init_fastf1_sessions(DBConnection, fromYear = 1950, toYear = 1950, importPractice = False, importQualifying = False):
 
-    importSessions = import_sessions(fromYear, toYear, importPractice, importQualifying)
+    schema = DataFrame(columns = ['ChampionshipYear', 'RoundNumber', 'Session', 'DriverNumber', 'BroadcastName', 'Abbreviation', 'TeamName',
+       'TeamColor', 'FirstName', 'LastName', 'FullName', 'Position',
+       'GridPosition', 'Q1', 'Q2', 'Q3', 'Time', 'Status', 'Points'])
+    
+    year = fromYear
+    
+    while (year <= toYear):
+  
+        importSessions = import_sessions(schema, year, importPractice = importPractice, importQualifying = importQualifying)
+        
+        # Managing NULL values and data type conversions
 
-    # Managing NULL values and data type conversions
+        importSessions["Position"] = importSessions["Position"].astype(str)
 
-    importSessions["Position"] = importSessions["Position"].astype(int)
+        importSessions["GridPosition"] = importSessions["GridPosition"].astype(str)
 
-    importSessions["GridPosition"] = importSessions["GridPosition"].astype(int)
+        importSessions["Q1"] = importSessions["Q1"].astype(str)
 
-    importSessions["Q1"] = importSessions["Q1"].astype(str)
+        importSessions["Q2"] = importSessions["Q2"].astype(str)
 
-    importSessions["Q2"] = importSessions["Q2"].astype(str)
+        importSessions["Q3"] = importSessions["Q3"].astype(str)
+    
+        importSessions["Time"] = importSessions["Time"].fillna(Timedelta(seconds = 0))
 
-    importSessions["Q3"] = importSessions["Q3"].astype(str)
- 
-    importSessions["Time"] = importSessions["Time"].fillna(pd.Timedelta(seconds = 0))
+        importSessions["Time"] = importSessions["Time"].dt.total_seconds()
 
-    importSessions["Time"] = importSessions["Time"].dt.total_seconds().astype(int) / 10**9
+        importSessions["Points"] = importSessions["Points"].astype(int)
 
-    importSessions["Points"] = importSessions["Points"].astype(int)
+        # Iterate on DataFrame rows using itertuples and including indices
 
-    # Increase by one the indices of the DataFrame
+        sessionsTuples = [tuple(row[1:20]) for row in importSessions.itertuples()]
 
-    importSessions.index += 1
+        mysql_insert(DBConnection, "sessions", sessionsTuples)
 
-    # Iterate on DataFrame rows using itertuples and including indices
-
-    sessionsTuples = [tuple(row[0:20]) for row in importSessions.itertuples()]
-
-    mysql_insert(DBConnection, "sessions", sessionsTuples)
+        year += 1

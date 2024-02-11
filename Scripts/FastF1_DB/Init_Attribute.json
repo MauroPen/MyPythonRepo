@@ -87,14 +87,14 @@
         {
             "name": "Position",
             "primary_key": false,
-            "data_type": "INT",
+            "data_type": "VARCHAR(255)",
             "not_null": false,
             "auto_increment": false
         },
         {
             "name": "GridPosition",
             "primary_key": false,
-            "data_type": "INT",
+            "data_type": "VARCHAR(255)",
             "not_null": false,
             "auto_increment": false
         },

@@ -174,7 +174,7 @@ def mysql_drop_table(DBConnection, nameTable):
 
 def retrieve_attributes(DBConnection, nameTable):
         
-    query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{nameTable}' ORDER BY ORDINAL_POSITION" .format(nameTable = nameTable)
+    query = "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{nameTable}' AND COLUMN_NAME NOT IN ('Id') ORDER BY ORDINAL_POSITION" .format(nameTable = nameTable)
     
     mySQLcursor = DBConnection.cursor()
 
