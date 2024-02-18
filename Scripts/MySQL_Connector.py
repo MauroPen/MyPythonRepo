@@ -220,3 +220,35 @@ def mysql_insert(DBConnection, nameTable, values):      #"values" must be an arr
     DBConnection.commit()
 
     print("\n\nOperation concluded successfully. {numRows} rows have been inserted.\n" .format(numRows = mySQLcursor.rowcount))
+
+#10 - Restore MySQL Database
+
+def mysql_restore_database(DBConnection, sqldumpfile):
+
+    mySQLcursor = DBConnection.cursor()
+
+    # Read SQL file
+    with open(sqldumpfile, "r", encoding = "utf-8") as file:
+
+        sqlStatements = file.read().split(";")
+
+        # Execute each statement
+        for sqlStatement in sqlStatements:
+
+            try:
+                # Ignore commented lines
+                if not sqlStatement.strip().startswith("--") and not sqlStatement.strip().startswith("/*"):
+
+                    if sqlStatement.strip() != "":
+
+                        mySQLcursor.execute(sqlStatement)
+
+            except mysql.connector.Error as err:
+
+                print("Error: {}".format(err))
+
+                DBConnection.rollback()
+
+                break  # Exit loop on error
+        
+        DBConnection.commit()

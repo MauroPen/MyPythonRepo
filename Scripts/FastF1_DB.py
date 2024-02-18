@@ -1,15 +1,15 @@
 from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 from MySQL_Connector import mysql_connect, mysql_drop_database
 
-from FastF1_DB.Dependency import init_fastf1DB, init_fastf1Tables, init_fastf1_sessions
+from FastF1_DB.Dependency import init_fastf1DB, init_fastf1Tables, init_fastf1_sessions, init_fastf1_database
 from FastF1_DB.Import import import_calendars, import_sessions
 
 
 running = True
 mainMenu = True
 DBDefaultName = "fastf1"
-defaultFromYear = 2022
-defaultToYear = 2022
+defaultFromYear = 1950
+defaultToYear = 2021
 
 # App Start
 
@@ -85,11 +85,15 @@ while(running):
 
         DBConnection = mysql_connect(hostName, username, password, DBDefaultName)
 
+        init_fastf1_database(DBConnection)
+
+        """
         init_fastf1Tables(DBConnection)
 
         print("\n\nYour fastf1 Database is going to be populated with the results of races from {fromYear} to {toYear}. The operation may take some minutes.\n" .format(fromYear = defaultFromYear, toYear = defaultToYear))
 
         init_fastf1_sessions(DBConnection, fromYear = defaultFromYear, toYear = defaultToYear, importPractice = False, importQualifying = False)
+        """
 
     while(mainMenu):
     

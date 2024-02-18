@@ -1,7 +1,7 @@
 import json
 from pandas import DataFrame, Timedelta
 
-from MySQL_Connector import mysql_create_database, mysql_create_table, Attribute, mysql_insert
+from MySQL_Connector import mysql_create_database, mysql_create_table, Attribute, mysql_insert, mysql_restore_database
 from FastF1_DB.Import import import_sessions
 
 
@@ -15,7 +15,7 @@ def init_fastf1DB(DBConnection):
 
 def init_fastf1Tables(DBConnection):
 
-    with open('MyPythonRepo\Scripts\FastF1_DB\Init_Attribute.json', 'r') as file:
+    with open("MyPythonRepo\Scripts\FastF1_DB\Init_Attribute.json", "r") as file:
         
         data = json.load(file)
     
@@ -62,3 +62,9 @@ def init_fastf1_sessions(DBConnection, fromYear = 1950, toYear = 1950, importPra
         mysql_insert(DBConnection, "sessions", sessionsTuples)
 
         year += 1
+
+#4 - Initalize fastf1 database through dump file
+
+def init_fastf1_database(DBConnection):
+
+    mysql_restore_database(DBConnection, "MyPythonRepo\Scripts\FastF1_DB\Dump_fastf1_2021.sql")
