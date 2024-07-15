@@ -1,5 +1,5 @@
 import mysql.connector
-
+    
 from tabulate import tabulate
 
 #1 - Connection with MySQL instance
