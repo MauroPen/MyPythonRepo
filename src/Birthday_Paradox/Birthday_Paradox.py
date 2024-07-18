@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 from numpy import array, concatenate
 from pandas import DataFrame, RangeIndex
@@ -12,8 +12,6 @@ from tabulate import tabulate
 
 
 from shared.Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
-
-#import Birthday_Paradox.Dependency as BP
 
 import Dependency as BP
 
@@ -43,11 +41,11 @@ while (running):
 
     if (not defaultMode):
 
-        print("\nPlease input the number of people that you would like to consider for the computation:\n")
+        print("\nPlease input the number of people that you would like to consider for the computation (for reference, default is 23):\n")
             
         values["People"] = int_input_check()
 
-        print("\nAmazing! Now, please input the number of the trials that you would like to perform:\n")
+        print("\nAmazing! Now, please input the number of the trials that you would like to perform (for reference, default is 1000):\n")
             
         values["Trials"] = int_input_check()
 

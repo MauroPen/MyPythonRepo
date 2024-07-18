@@ -1,8 +1,14 @@
+import os
+import sys
+
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
 from unittest import TestCase, main
 from numpy import array
 from datetime import date
 
-from Scripts.Collatz_Conjecture.Dependency import mainComputation, normalizeArray, ColumnLabelsArray       #Valid only when testing scripts with absolute modules (no personal modules)
+from Collatz_Conjecture.Dependency import mainComputation, normalizeArray, ColumnLabelsArray       #Valid only when testing scripts with absolute modules (no personal modules)
 
 class TestMainComputation(TestCase):
 

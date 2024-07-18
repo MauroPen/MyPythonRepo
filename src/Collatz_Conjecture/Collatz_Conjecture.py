@@ -1,14 +1,18 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
 from numpy import sort, array
 from pandas import DataFrame
 from IPython.display import display
 from matplotlib import pyplot, gridspec
 from datetime import datetime
 from tabulate import tabulate
-from os import getcwd
 
-from Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
+from shared.Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 
-import Collatz_Conjecture.Dependency as CC
+import Dependency as CC
 
 #Setting Default Values
 
@@ -34,11 +38,11 @@ while (running == True):
 
         while (Range[0] > Range[1]):
 
-            print("\nPlease input the number that you would like to start the computation from:\n")
+            print("\nPlease input the number that you would like to start the computation from (for reference, default is 10):\n")
             
             Range[0] = int_input_check()
 
-            print("\nAmazing! Now, please input the last number of the computation:\n")
+            print("\nAmazing! Now, please input the last number of the computation (for reference, default is 200):\n")
             
             Range[1] = int_input_check()
 
@@ -140,7 +144,7 @@ while (running == True):
     
     # Export data
 
-    print("\nWould you like to export the data obtained during the computation in an Excel file? (y/n)\n\nWARNING! The new file would be created in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
+    print("\nWould you like to export the data obtained during the computation in an Excel file? (y/n)\n\nWARNING! The new file would be created in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = os.getcwd()))
 
     if (yn_input_check() == True):
 
