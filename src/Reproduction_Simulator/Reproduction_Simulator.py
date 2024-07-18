@@ -1,13 +1,17 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
 from numpy import array, concatenate, mean, linspace, full, unique, append
 from matplotlib import pyplot, gridspec
 from pandas import DataFrame, RangeIndex
 from tabulate import tabulate
-from os import getcwd
 from datetime import datetime, timedelta
 
-from Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
+from shared.Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
-from Reproduction_Simulator.Dependency import main_computation, compute_mean, compute_avg_delta_population
+from Dependency import main_computation, compute_mean, compute_avg_delta_population
 
 
 #Setting Default Values
@@ -248,7 +252,7 @@ while (running == True):
 
     # Export Results
     
-    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create a new file in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = getcwd()))
+    print("\n\nDo you want to export the results of the simulation? (y/n)\n\nWARNING! This will create a new file in your current working directory, which is: {Current_Working_Directory}\n" .format(Current_Working_Directory = os.getcwd()))
     
     if (yn_input_check() == True):
 

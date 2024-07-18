@@ -6,11 +6,8 @@ def run_Birthday_Paradox():
 def run_Collatz_Conjecture():
     os.system('python MyPythonRepo/src/Collatz_Conjecture/Collatz_Conjecture.py')
 
-def run_program3():
-    os.system('python program3/main_program3.py')
-
-def run_program4():
-    os.system('python program4/main_program4.py')
+def run_Reproduction_Simulator():
+    os.system('python MyPythonRepo/src/Reproduction_Simulator/Reproduction_Simulator.py')
 
 def main_menu():
 
@@ -23,6 +20,8 @@ def main_menu():
         print("1. Run Birthday Paradox\n")
 
         print("2. Run Collatz Conjecture\n")
+
+        print("3. Run Reproduction Simulator\n")
 
         print("5. Exit\n")
 
@@ -38,9 +37,14 @@ def main_menu():
 
                 run_Collatz_Conjecture()
 
+            case 3:
+
+                run_Reproduction_Simulator()
+
             case 5:
 
                 print("\nExiting...\n")
+
                 break
         
             case _:

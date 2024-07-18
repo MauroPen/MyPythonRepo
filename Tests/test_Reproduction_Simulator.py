@@ -1,7 +1,12 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
 from unittest import TestCase, main
 from numpy import array, full
 
-from Scripts.Reproduction_Simulator.Dependency import compute_mean       #Valid only when testing scripts with absolute modules (no personal modules)
+from Reproduction_Simulator.Dependency import compute_mean       #Valid only when testing scripts with absolute modules (no personal modules)
 
 class TestComputeMean(TestCase):
 
