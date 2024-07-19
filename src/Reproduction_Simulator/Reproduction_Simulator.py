@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 from shared.Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
-from Dependency import main_computation, compute_mean, compute_avg_delta_population
+from Reproduction_Simulator.Dependency import main_computation, compute_mean, compute_avg_delta_population
 
 
 #Setting Default Values

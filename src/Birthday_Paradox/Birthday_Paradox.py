@@ -13,7 +13,7 @@ from tabulate import tabulate
 
 from shared.Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 
-import Dependency as BP
+import Birthday_Paradox.Dependency as BP
 
 #Setting Default Values
 

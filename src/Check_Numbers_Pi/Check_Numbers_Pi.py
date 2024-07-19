@@ -1,7 +1,10 @@
 import re
 import os
+import sys
 
-from Common import yn_input_check
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
+
+from shared.Common import yn_input_check
 from Check_Numbers_Pi.Dependency import number_check, main_computation, check_occurrencies
 
 class bcolors:

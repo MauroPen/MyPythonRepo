@@ -9,6 +9,9 @@ def run_Collatz_Conjecture():
 def run_Reproduction_Simulator():
     os.system('python MyPythonRepo/src/Reproduction_Simulator/Reproduction_Simulator.py')
 
+def run_Check_Numbers_Pi():
+    os.system('python MyPythonRepo/src/Check_Numbers_Pi/Check_Numbers_Pi.py')
+
 def main_menu():
 
     print("\nWelcome to MyPythonRepo!\n\nPlease choose an option from the Main Menu below.\n")
@@ -22,6 +25,8 @@ def main_menu():
         print("2. Run Collatz Conjecture\n")
 
         print("3. Run Reproduction Simulator\n")
+
+        print("4. Run Check Numbers Pi\n")
 
         print("5. Exit\n")
 
@@ -40,6 +45,10 @@ def main_menu():
             case 3:
 
                 run_Reproduction_Simulator()
+
+            case 4:
+
+                run_Check_Numbers_Pi()
 
             case 5:
 

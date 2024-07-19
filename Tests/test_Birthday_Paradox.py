@@ -1,8 +1,13 @@
+import os
+import sys
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
 from unittest import TestCase, main
 from numpy import array
 from datetime import date
 
-from Scripts.Birthday_Paradox.Dependency import Person, check_people_sharing_birthday, count_people_sharing_birthday       #Valid only when testing scripts with absolute modules (no personal modules)
+from Birthday_Paradox.Dependency import Person, check_people_sharing_birthday, count_people_sharing_birthday       #Valid only when testing scripts with absolute modules (no personal modules)
 
 class TestCheckPeopleSharingBirthday(TestCase):
 
