@@ -12,6 +12,9 @@ def run_Reproduction_Simulator():
 def run_Check_Numbers_Pi():
     os.system('python MyPythonRepo/src/Check_Numbers_Pi/Check_Numbers_Pi.py')
 
+def run_Fibonacci():
+    os.system('python MyPythonRepo/src/Fibonacci_Series/Fibonacci_Series.py')
+
 def main_menu():
 
     print("\nWelcome to MyPythonRepo!\n\nPlease choose an option from the Main Menu below.\n")
@@ -28,7 +31,9 @@ def main_menu():
 
         print("4. Run Check Numbers Pi\n")
 
-        print("5. Exit\n")
+        print("5. Run Fibonacci\n")
+
+        print("6. Exit\n")
 
         choice = int(input("Select an option: \n"))
 
@@ -51,6 +56,10 @@ def main_menu():
                 run_Check_Numbers_Pi()
 
             case 5:
+
+                run_Fibonacci()
+
+            case 6:
 
                 print("\nExiting...\n")
 
