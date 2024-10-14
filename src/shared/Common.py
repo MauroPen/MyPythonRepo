@@ -94,3 +94,37 @@ def export_dataframes(dataframes, fileName):        # "dataframes" is meant to b
                 dataframes[dataframe].Table.to_excel(writer, sheet_name = dataframes[dataframe].Sheet_Name, index = dataframes[dataframe].Index)
 
             print("\nIn this directory: \"{Current_Working_Directory}\" a file named \"{File_Name}\" has been successfully created!\n" .format(Current_Working_Directory = getcwd(), File_Name = fileName))
+
+#6 - Returns the correct ordinal suffix in english given a number
+
+def get_ordinal(number):
+    
+    numStr = str(number)                            # Conversion into a string to process it
+
+    if len(numStr) > 1 and numStr[-2] == '1':       # Managing exceptions ("11", "12", "13")
+
+        suffix = "th"
+
+    else:
+        
+        lastDigit = numStr[-1]                     # General case
+        
+        match lastDigit:
+
+            case "1":
+                
+                suffix = "st"
+
+            case "2":
+
+                suffix = "nd"
+
+            case "3":
+
+                suffix = "rd"
+
+            case _:    
+                
+                suffix = "th"
+
+    return numStr + suffix
