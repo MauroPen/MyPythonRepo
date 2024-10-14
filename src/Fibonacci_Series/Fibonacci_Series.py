@@ -29,7 +29,7 @@ while (running == True):
 
     print("\nThe {Ordinal} term of the Fibonacci series is: {Fibonacci}\n".format(Ordinal = get_ordinal(number), Fibonacci = fibonacci(number)))
 
-    print("\nWould you like to know how the Fibonacci series looks like until this number?\n")
+    print("\nWould you like to know how the Fibonacci series looks like until this number? (y/n)\n")
 
     if (yn_input_check()):
 

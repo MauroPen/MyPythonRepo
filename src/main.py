@@ -31,7 +31,7 @@ def main_menu():
 
         print("4. Run Check Numbers Pi\n")
 
-        print("5. Run Fibonacci\n")
+        print("5. Run Fibonacci Series\n")
 
         print("6. Exit\n")
 
