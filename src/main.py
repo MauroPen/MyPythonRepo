@@ -1,19 +1,19 @@
 import os
 
 def run_Birthday_Paradox():
-    os.system('python MyPythonRepo/src/Birthday_Paradox/Birthday_Paradox.py')
+    os.system('py MyPythonRepo/src/Birthday_Paradox/Birthday_Paradox.py')
 
 def run_Collatz_Conjecture():
-    os.system('python MyPythonRepo/src/Collatz_Conjecture/Collatz_Conjecture.py')
+    os.system('py MyPythonRepo/src/Collatz_Conjecture/Collatz_Conjecture.py')
 
 def run_Reproduction_Simulator():
-    os.system('python MyPythonRepo/src/Reproduction_Simulator/Reproduction_Simulator.py')
+    os.system('py MyPythonRepo/src/Reproduction_Simulator/Reproduction_Simulator.py')
 
 def run_Check_Numbers_Pi():
-    os.system('python MyPythonRepo/src/Check_Numbers_Pi/Check_Numbers_Pi.py')
+    os.system('py MyPythonRepo/src/Check_Numbers_Pi/Check_Numbers_Pi.py')
 
 def run_Fibonacci():
-    os.system('python MyPythonRepo/src/Fibonacci_Series/Fibonacci_Series.py')
+    os.system('py MyPythonRepo/src/Fibonacci_Series/Fibonacci_Series.py')
 
 def main_menu():
 
