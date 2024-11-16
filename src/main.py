@@ -1,19 +1,19 @@
-import os
+import subprocess
 
 def run_Birthday_Paradox():
-    os.system('py src/Birthday_Paradox/Birthday_Paradox.py')
+    subprocess.run(["python", f"src/Birthday_Paradox/Birthday_Paradox.py"])
 
 def run_Collatz_Conjecture():
-    os.system('py src/Collatz_Conjecture/Collatz_Conjecture.py')
+    subprocess.run(["python", f"src/Collatz_Conjecture/Collatz_Conjecture.py"])
 
 def run_Reproduction_Simulator():
-    os.system('py src/Reproduction_Simulator/Reproduction_Simulator.py')
+    subprocess.run(["python", f"src/Reproduction_Simulator/Reproduction_Simulator.py"])
 
 def run_Check_Numbers_Pi():
-    os.system('py src/Check_Numbers_Pi/Check_Numbers_Pi.py')
+    subprocess.run(["python", f"src/Check_Numbers_Pi/Check_Numbers_Pi.py"])
 
 def run_Fibonacci():
-    os.system('py src/Fibonacci_Series/Fibonacci_Series.py')
+    subprocess.run(["python", f"src/Fibonacci_Series/Fibonacci_Series.py"])
 
 def main_menu():
 
