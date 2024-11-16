@@ -1,18 +1,45 @@
 import subprocess
 
+from Dependency_Manager import check_modules
+
 def run_Birthday_Paradox():
+    
+    print ("\nChecking dependencies to run Birthday Paradox...")
+
+    modules = ["numpy", "pandas", "datetime", "math", "tabulate"]
+    check_modules(modules)
+
     subprocess.run(["python", f"src/Birthday_Paradox/Birthday_Paradox.py"])
 
 def run_Collatz_Conjecture():
+    
+    print ("\nChecking dependencies to run Collatz Conjecture...")
+
+    modules = ["numpy", "pandas", "IPython", "matplotlib", "datetime", "tabulate"]
+    check_modules(modules)
+    
     subprocess.run(["python", f"src/Collatz_Conjecture/Collatz_Conjecture.py"])
 
 def run_Reproduction_Simulator():
+    
+    print ("\nChecking dependencies to run Reproduction Simulator...")
+
+    modules = ["numpy", "pandas", "matplotlib", "datetime", "tabulate", "math"]
+    check_modules(modules)
+    
     subprocess.run(["python", f"src/Reproduction_Simulator/Reproduction_Simulator.py"])
 
 def run_Check_Numbers_Pi():
+    
+    print ("\nChecking dependencies to run Check Numbers Pi...")
+
+    modules = ["math_pi"]
+    check_modules(modules)
+    
     subprocess.run(["python", f"src/Check_Numbers_Pi/Check_Numbers_Pi.py"])
 
 def run_Fibonacci():
+    
     subprocess.run(["python", f"src/Fibonacci_Series/Fibonacci_Series.py"])
 
 def main_menu():
