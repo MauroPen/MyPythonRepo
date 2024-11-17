@@ -7,7 +7,7 @@ def run_Birthday_Paradox(base_dir):
     
     print ("\nChecking dependencies to run Birthday Paradox...")
 
-    modules = ["numpy", "pandas", "math", "tabulate"]
+    modules = ["numpy", "pandas", "math", "tabulate", "openpyxl"]
     check_modules(modules)
 
     birthdayParadoxPath = os.path.join(base_dir, "Birthday_Paradox", "Birthday_Paradox.py")
@@ -18,7 +18,7 @@ def run_Collatz_Conjecture(base_dir):
     
     print ("\nChecking dependencies to run Collatz Conjecture...")
 
-    modules = ["numpy", "pandas", "IPython", "matplotlib", "tabulate"]
+    modules = ["numpy", "pandas", "IPython", "matplotlib", "tabulate", "openpyxl"]
     check_modules(modules)
     
     collatzConjecturePath = os.path.join(base_dir, "Collatz_Conjecture", "Collatz_Conjecture.py")
@@ -29,7 +29,7 @@ def run_Reproduction_Simulator(base_dir):
     
     print ("\nChecking dependencies to run Reproduction Simulator...")
 
-    modules = ["numpy", "pandas", "matplotlib", "tabulate", "math"]
+    modules = ["numpy", "pandas", "matplotlib", "tabulate", "math", "openpyxl"]
     check_modules(modules)
     
     reproductionSimulatorPath = os.path.join(base_dir, "Reproduction_Simulator", "Reproduction_Simulator.py")
