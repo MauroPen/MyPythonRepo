@@ -4,10 +4,10 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 from numpy import array, concatenate, mean, linspace, full, unique, append
-from matplotlib import pyplot, gridspec
 from pandas import DataFrame, RangeIndex
-from tabulate import tabulate
+from matplotlib import pyplot, gridspec
 from datetime import datetime, timedelta
+from tabulate import tabulate
 
 from shared.Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
