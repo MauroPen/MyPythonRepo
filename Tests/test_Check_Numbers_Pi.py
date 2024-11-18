@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../s
 
 from unittest import TestCase, main
 
-from Check_Numbers_Pi.Dependency import main_computation, check_occurrencies, retrieve_pi
+from Check_Numbers_Pi.dependency import main_computation, check_occurrencies, retrieve_pi
 
 class TestMainComputation(TestCase):
 

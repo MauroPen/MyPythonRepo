@@ -7,7 +7,7 @@ from unittest import TestCase, main
 from numpy import array
 from datetime import date
 
-from Collatz_Conjecture.Dependency import mainComputation, normalizeArray, ColumnLabelsArray       #Valid only when testing scripts with absolute modules (no personal modules)
+from Collatz_Conjecture.dependency import mainComputation, normalizeArray, ColumnLabelsArray       #Valid only when testing scripts with absolute modules (no personal modules)
 
 class TestMainComputation(TestCase):
 

@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../s
 
 from unittest import TestCase, main
 
-from Fibonacci_Series.Dependency import fibonacci
+from Fibonacci_Series.dependency import fibonacci
 
 class TestMainComputation(TestCase):
 

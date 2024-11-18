@@ -9,9 +9,9 @@ from matplotlib import pyplot, gridspec
 from datetime import datetime, timedelta
 from tabulate import tabulate
 
-from shared.Common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
+from shared.common import yn_input_check, int_input_check, probability_input_check, DataframeExport, export_dataframes
 
-from Reproduction_Simulator.Dependency import main_computation, compute_mean, compute_avg_delta_population
+from Reproduction_Simulator.dependency import main_computation, compute_mean, compute_avg_delta_population
 
 
 #Setting Default Values
@@ -54,19 +54,19 @@ while (running == True):
 
     else:
 
-        print("\nPlease input the Inital Number of Population that you want to set:\n")
+        print("\nPlease input the Inital Population that you want to set (for reference, default value is 25):\n")
         
         Starting_N = int_input_check()
 
-        print("\nAmazing! Now, please input the length of the Period of time that you want to consider for the simulation:\n")
+        print("\nAmazing! Now, please input the length of the Period of time that you want to consider for the simulation (for reference, default value is 100):\n")
         
         Period = int_input_check()
 
-        print("\nGreat! Now, please input the Birth Rate:\n")
+        print("\nGreat! Now, please input the Birth Rate (for reference, default value is 0,2):\n")
         
         b = probability_input_check()
 
-        print("\nAwesome! Now, please input the desired Death Rate:\n")
+        print("\nAwesome! Now, please input the desired Death Rate (for reference, default value is 0,1):\n")
 
         d = probability_input_check()
 
@@ -74,7 +74,7 @@ while (running == True):
 
         c = probability_input_check()
 
-        print("\nFinally, please input the number of times that you want this simulation to be repeated:\n")
+        print("\nFinally, please input the number of times that you want this simulation to be repeated (for reference, default value is 200):\n")
 
         Repeat = int_input_check()
 

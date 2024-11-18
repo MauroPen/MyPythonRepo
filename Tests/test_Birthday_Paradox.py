@@ -7,7 +7,7 @@ from unittest import TestCase, main
 from numpy import array
 from datetime import date
 
-from Birthday_Paradox.Dependency import Person, check_people_sharing_birthday, count_people_sharing_birthday       #Valid only when testing scripts with absolute modules (no personal modules)
+from Birthday_Paradox.dependency import Person, check_people_sharing_birthday, count_people_sharing_birthday       #Valid only when testing scripts with absolute modules (no personal modules)
 
 class TestCheckPeopleSharingBirthday(TestCase):
 

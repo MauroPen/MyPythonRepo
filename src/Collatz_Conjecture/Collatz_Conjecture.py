@@ -10,9 +10,9 @@ from matplotlib import pyplot, gridspec
 from datetime import datetime
 from tabulate import tabulate
 
-from shared.Common import yn_input_check, int_input_check, DataframeExport, export_dataframes
+from shared.common import yn_input_check, int_input_check, DataframeExport, export_dataframes
 
-import Collatz_Conjecture.Dependency as CC
+import Collatz_Conjecture.dependency as CC
 
 #Setting Default Values
 

@@ -1,66 +1,71 @@
 import os
 import subprocess
 
-from Dependency_Manager import check_modules
+from dependency_manager import retrieve_modules, check_modules
 
-def run_Birthday_Paradox(base_dir):
+def run_Birthday_Paradox(baseDir):
     
     print ("\nChecking dependencies to run Birthday Paradox...")
 
-    modules = ["numpy", "pandas", "math", "tabulate", "openpyxl"]
+    modules = retrieve_modules(baseDir, "Birthday Paradox")
+
     check_modules(modules)
 
-    birthdayParadoxPath = os.path.join(base_dir, "Birthday_Paradox", "Birthday_Paradox.py")
+    birthdayParadoxPath = os.path.join(baseDir, "Birthday_Paradox", "birthday_paradox.py")
     
     subprocess.run(["python", birthdayParadoxPath])
 
-def run_Collatz_Conjecture(base_dir):
+def run_Collatz_Conjecture(baseDir):
     
     print ("\nChecking dependencies to run Collatz Conjecture...")
 
-    modules = ["numpy", "pandas", "IPython", "matplotlib", "tabulate", "openpyxl"]
+    modules = retrieve_modules(baseDir, "Collatz Conjecture")
+
     check_modules(modules)
     
-    collatzConjecturePath = os.path.join(base_dir, "Collatz_Conjecture", "Collatz_Conjecture.py")
+    collatzConjecturePath = os.path.join(baseDir, "Collatz_Conjecture", "collatz_conjecture.py")
     
     subprocess.run(["python", collatzConjecturePath])
 
-def run_Reproduction_Simulator(base_dir):
+def run_Reproduction_Simulator(baseDir):
     
     print ("\nChecking dependencies to run Reproduction Simulator...")
 
-    modules = ["numpy", "pandas", "matplotlib", "tabulate", "math", "openpyxl"]
+    modules = retrieve_modules(baseDir, "Reproduction Simulator")
+
     check_modules(modules)
     
-    reproductionSimulatorPath = os.path.join(base_dir, "Reproduction_Simulator", "Reproduction_Simulator.py")
+    reproductionSimulatorPath = os.path.join(baseDir, "Reproduction_Simulator", "reproduction_simulator.py")
     
     subprocess.run(["python", reproductionSimulatorPath])
 
-def run_Check_Numbers_Pi(base_dir):
+def run_Check_Numbers_Pi(baseDir):
     
     print ("\nChecking dependencies to run Check Numbers Pi...")
 
-    modules = ["pandas", "math_pi"]
+    modules = retrieve_modules(baseDir, "Check Numbers Pi")
+
     check_modules(modules)
     
-    checkNumbersPiPath = os.path.join(base_dir, "Check_Numbers_Pi", "Check_Numbers_Pi.py")
+    checkNumbersPiPath = os.path.join(baseDir, "Check_Numbers_Pi", "check_numbers_pi.py")
     
     subprocess.run(["python", checkNumbersPiPath])
 
-def run_Fibonacci_Series(base_dir):
+def run_Fibonacci_Series(baseDir):
     
     print ("\nChecking dependencies to run Fibonacci Series...")
 
-    modules = ["pandas"]
+    modules = retrieve_modules(baseDir, "Fibonacci Series")
+
     check_modules(modules)
     
-    fibonacciSeriesPath = os.path.join(base_dir, 'Fibonacci_Series', 'Fibonacci_Series.py')
+    fibonacciSeriesPath = os.path.join(baseDir, 'Fibonacci_Series', 'fibonacci_series.py')
     
     subprocess.run(["python", fibonacciSeriesPath])
 
 def main_menu():
 
-    base_dir = os.path.dirname(os.path.abspath(__file__))       #Gets the current directory from main.py
+    baseDir = os.path.dirname(os.path.abspath(__file__))       #Gets the current directory from main.py
     
     print("\nWelcome to MyPythonRepo!\n\nPlease choose an option from the Main Menu below.\n")
 
@@ -86,23 +91,23 @@ def main_menu():
 
             case 1:
 
-                run_Birthday_Paradox(base_dir)
+                run_Birthday_Paradox(baseDir)
 
             case 2:
 
-                run_Collatz_Conjecture(base_dir)
+                run_Collatz_Conjecture(baseDir)
 
             case 3:
 
-                run_Reproduction_Simulator(base_dir)
+                run_Reproduction_Simulator(baseDir)
 
             case 4:
 
-                run_Check_Numbers_Pi(base_dir)
+                run_Check_Numbers_Pi(baseDir)
 
             case 5:
 
-                run_Fibonacci_Series(base_dir)
+                run_Fibonacci_Series(baseDir)
 
             case 6:
 
