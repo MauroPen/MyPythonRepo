@@ -1,0 +1,22 @@
+[
+        {
+            "program": "Birthday Paradox",
+            "modules": ["numpy", "pandas", "math", "tabulate", "openpyxl"]
+        },
+        {
+            "program": "Collatz Conjecture",
+            "modules": ["numpy", "pandas", "IPython", "matplotlib", "tabulate", "openpyxl"]
+        },
+        {
+            "program": "Reproduction Simulator",
+            "modules": ["numpy", "pandas", "matplotlib", "tabulate", "math", "openpyxl"]
+        },
+        {
+            "program": "Check Numbers Pi",
+            "modules": ["pandas", "math_pi"]
+        },
+        {
+            "program": "Fibonacci Series",
+            "modules": ["pandas"]
+        }
+]
