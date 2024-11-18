@@ -4,8 +4,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-from shared.Common import yn_input_check
-from Check_Numbers_Pi.Dependency import number_check, main_computation, check_occurrencies
+from shared.common import yn_input_check
+from Check_Numbers_Pi.dependency import number_check, main_computation, check_occurrencies
 
 class bcolors:
     HEADER = '\033[95m'

@@ -11,7 +11,7 @@ def run_Birthday_Paradox(baseDir):
 
     check_modules(modules)
 
-    birthdayParadoxPath = os.path.join(baseDir, "Birthday_Paradox", "Birthday_Paradox.py")
+    birthdayParadoxPath = os.path.join(baseDir, "Birthday_Paradox", "birthday_paradox.py")
     
     subprocess.run(["python", birthdayParadoxPath])
 
@@ -23,7 +23,7 @@ def run_Collatz_Conjecture(baseDir):
 
     check_modules(modules)
     
-    collatzConjecturePath = os.path.join(baseDir, "Collatz_Conjecture", "Collatz_Conjecture.py")
+    collatzConjecturePath = os.path.join(baseDir, "Collatz_Conjecture", "collatz_conjecture.py")
     
     subprocess.run(["python", collatzConjecturePath])
 
@@ -35,7 +35,7 @@ def run_Reproduction_Simulator(baseDir):
 
     check_modules(modules)
     
-    reproductionSimulatorPath = os.path.join(baseDir, "Reproduction_Simulator", "Reproduction_Simulator.py")
+    reproductionSimulatorPath = os.path.join(baseDir, "Reproduction_Simulator", "reproduction_simulator.py")
     
     subprocess.run(["python", reproductionSimulatorPath])
 
@@ -47,7 +47,7 @@ def run_Check_Numbers_Pi(baseDir):
 
     check_modules(modules)
     
-    checkNumbersPiPath = os.path.join(baseDir, "Check_Numbers_Pi", "Check_Numbers_Pi.py")
+    checkNumbersPiPath = os.path.join(baseDir, "Check_Numbers_Pi", "check_numbers_pi.py")
     
     subprocess.run(["python", checkNumbersPiPath])
 
@@ -59,7 +59,7 @@ def run_Fibonacci_Series(baseDir):
 
     check_modules(modules)
     
-    fibonacciSeriesPath = os.path.join(baseDir, 'Fibonacci_Series', 'Fibonacci_Series.py')
+    fibonacciSeriesPath = os.path.join(baseDir, 'Fibonacci_Series', 'fibonacci_series.py')
     
     subprocess.run(["python", fibonacciSeriesPath])
 

@@ -4,8 +4,8 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
-from shared.Common import yn_input_check, int_input_check, get_ordinal
-from Fibonacci_Series.Dependency import fibonacci, print_fibonacci_series
+from shared.common import yn_input_check, int_input_check, get_ordinal
+from Fibonacci_Series.dependency import fibonacci, print_fibonacci_series
 
 running = bool(True)
 
