@@ -2,7 +2,7 @@
 
 Welcome to MyPythonRepo!
 
-This is my first repo where I upload little Python projects to learn this coding language and the basics of Git.
+This is my first repo where I upload little Python (v3.11.2) projects to learn this coding language and the basics of Git.
 
 The code is organized in two folders:
 
